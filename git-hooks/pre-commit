@@ -1,0 +1,30 @@
+#/bin/sh
+
+COLOR_RESET=$'\e[0m'
+COLOR_RED=$'\e[31m'
+COLOR_GREEN=$'\e[32m'
+COLOR_YELLOW=$'\e[33m'
+
+run_step()
+{
+	STEP=$1
+	NAME=$2
+	shift; shift;
+	CMD=$@
+
+	printf "${COLOR_YELLOW}[%s]${COLOR_RESET} %-20s" "${STEP}" "${NAME}"
+	OUTPUT=$(eval "${CMD}" 2>&1)
+	RETVAL=$?
+
+	if [ ${RETVAL} -eq 0 ]; then
+		echo "${COLOR_GREEN}OK!${COLOR_RESET}"
+	else
+		echo "${COLOR_RED}FAILED!${COLOR_RESET}\n\n${OUTPUT}"
+		exit 1
+	fi
+}
+
+MODIFIED_PHP=$(git diff --diff-filter=AM --name-only --cached | grep \.php$)
+
+run_step "1/2" "psalm" "echo ${MODIFIED_PHP} | xargs -r docker compose exec php vendor/bin/psalm"
+run_step "2/2" "php-cs-fixer" "echo ${MODIFIED_PHP} | xargs -r docker compose exec php vendor/bin/php-cs-fixer check --config /app/.php-cs-fixer.dist.php -- "

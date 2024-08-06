@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="en" datatype="plaintext" original="file.ext">
+    <body>
+      <trans-unit id="entity.access_log.browser.too_long">
+        <source>entity.access_log.browser.too_long</source>
+        <target>Property "browser" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.access_log.ip.not_blank">
+        <source>entity.access_log.ip.not_blank</source>
+        <target>Property "ip" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.access_log.ip.too_long">
+        <source>entity.access_log.ip.too_long</source>
+        <target>Property "ip" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.access_log.referer.too_long">
+        <source>entity.access_log.referer.too_long</source>
+        <target>Property "referer" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.access_log.referer_title.too_long">
+        <source>entity.access_log.referer_title.too_long</source>
+        <target>Property "refererTitle" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.access_log.title.not_blank">
+        <source>entity.access_log.title.not_blank</source>
+        <target>Property "title" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.access_log.title.too_long">
+        <source>entity.access_log.title.too_long</source>
+        <target>Property "title" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.access_log.uri.not_blank">
+        <source>entity.access_log.uri.not_blank</source>
+        <target>Property "uri" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.access_log.uri.too_long">
+        <source>entity.access_log.uri.too_long</source>
+        <target>Property "uri" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.access_log.username.too_long">
+        <source>entity.access_log.username.too_long</source>
+        <target>Property "username" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.availability.availability.not_blank">
+        <source>entity.availability.availability.not_blank</source>
+        <target>Property "availability" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.availability.availability.too_long">
+        <source>entity.availability.availability.too_long</source>
+        <target>Property "availability" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.cart_item.item_id.greater_than">
+        <source>entity.cart_item.item_id.greater_than</source>
+        <target>Property "itemId" must be greater than { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.cart_item.quantity.greater_than">
+        <source>entity.cart_item.quantity.greater_than</source>
+        <target>Property "quantity" must be greater than { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.cart_item.user_id.greater_than">
+        <source>entity.cart_item.user_id.greater_than</source>
+        <target>Property "userId" must be greater than { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.category.description.too_long">
+        <source>entity.category.description.too_long</source>
+        <target>Property "description" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.category.name.not_blank">
+        <source>entity.category.name.not_blank</source>
+        <target>Property "name" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.category.name.too_long">
+        <source>entity.category.name.too_long</source>
+        <target>Property "name" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.category.parent.greater_than_or_equal">
+        <source>entity.category.parent.greater_than_or_equal</source>
+        <target>Property "parent" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.category.slug.not_blank">
+        <source>entity.category.slug.not_blank</source>
+        <target>Property "slug" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.category.slug.too_long">
+        <source>entity.category.slug.too_long</source>
+        <target>Property "slug" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.category_closure.child.greater_than_or_equal">
+        <source>entity.category_closure.child.greater_than_or_equal</source>
+        <target>Property "child" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.category_closure.depth.greater_than_or_equal">
+        <source>entity.category_closure.depth.greater_than_or_equal</source>
+        <target>Property "depth" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.category_closure.parent.greater_than_or_equal">
+        <source>entity.category_closure.parent.greater_than_or_equal</source>
+        <target>Property "parent" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.category_hierarchy.lft.greater_than">
+        <source>entity.category_hierarchy.lft.greater_than</source>
+        <target>Property "lft" must be greater than { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.category_hierarchy.rgt.greater_than">
+        <source>entity.category_hierarchy.rgt.greater_than</source>
+        <target>Property "rgt" must be greater than { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.category_hierarchy.sets.not_blank">
+        <source>entity.category_hierarchy.sets.not_blank</source>
+        <target>Property "sets" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.cost_modifier.modifier.greater_than_or_equal">
+        <source>entity.cost_modifier.modifier.greater_than_or_equal</source>
+        <target>Property "modifier" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_address1.not_blank">
+        <source>entity.customer.bill_address1.not_blank</source>
+        <target>Property "billAddress1" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_address1.requires_digits">
+        <source>entity.customer.bill_address1.requires_digits</source>
+        <target>Property "billAddress1" must contain digits</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_address1.too_long">
+        <source>entity.customer.bill_address1.too_long</source>
+        <target>Property "billAddress1" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_address2.too_long">
+        <source>entity.customer.bill_address2.too_long</source>
+        <target>Property "billAddress2" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_city.not_blank">
+        <source>entity.customer.bill_city.not_blank</source>
+        <target>Property "billCity" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_city.too_long">
+        <source>entity.customer.bill_city.too_long</source>
+        <target>Property "billCity" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_company.too_long">
+        <source>entity.customer.bill_company.too_long</source>
+        <target>Property "billCompany" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_country.not_us">
+        <source>entity.customer.bill_country.not_us</source>
+        <target>Property "billCountry" must be "US"</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_name.not_blank">
+        <source>entity.customer.bill_name.not_blank</source>
+        <target>Property "billName" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_name.too_long">
+        <source>entity.customer.bill_name.too_long</source>
+        <target>Property "billName" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_state.not_blank">
+        <source>entity.customer.bill_state.not_blank</source>
+        <target>Property "billState" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_state.too_long">
+        <source>entity.customer.bill_state.too_long</source>
+        <target>Property "billState" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_state.too_short">
+        <source>entity.customer.bill_state.too_short</source>
+        <target>Property "billState" is too short (min length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_zip_code.not_blank">
+        <source>entity.customer.bill_zip_code.not_blank</source>
+        <target>Property "billZipCode" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_zip_code.requires_leading_digits_5">
+        <source>entity.customer.bill_zip_code.requires_leading_digits_5</source>
+        <target>Property "billZipCode" must begin with 5 digits</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.bill_zip_code.too_long">
+        <source>entity.customer.bill_zip_code.too_long</source>
+        <target>Property "billZipCode" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.email.invalid">
+        <source>entity.customer.email.invalid</source>
+        <target>Property "email" does not contain a valid email address</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.email.not_blank">
+        <source>entity.customer.email.not_blank</source>
+        <target>Property "email" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.email.too_long">
+        <source>entity.customer.email.too_long</source>
+        <target>Property "email" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.phone_number.not_blank">
+        <source>entity.customer.phone_number.not_blank</source>
+        <target>Property "phoneNumber" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.phone_number.requires_digits">
+        <source>entity.customer.phone_number.requires_digits</source>
+        <target>Property "phoneNumber" must contain digits</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.phone_number.too_long">
+        <source>entity.customer.phone_number.too_long</source>
+        <target>Property "phoneNumber" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_address1.not_blank">
+        <source>entity.customer.ship_address1.not_blank</source>
+        <target>Property "shipAddress1" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_address1.requires_digits">
+        <source>entity.customer.ship_address1.requires_digits</source>
+        <target>Property "shipAddress1" must contain digits</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_address1.too_long">
+        <source>entity.customer.ship_address1.too_long</source>
+        <target>Property "shipAddress1" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_address2.too_long">
+        <source>entity.customer.ship_address2.too_long</source>
+        <target>Property "shipAddress2" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_city.not_blank">
+        <source>entity.customer.ship_city.not_blank</source>
+        <target>Property "shipCity" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_city.too_long">
+        <source>entity.customer.ship_city.too_long</source>
+        <target>Property "shipCity" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_company.too_long">
+        <source>entity.customer.ship_company.too_long</source>
+        <target>Property "shipCompany" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_country.not_us">
+        <source>entity.customer.ship_country.not_us</source>
+        <target>Property "shipCountry" must be "US"</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_name.not_blank">
+        <source>entity.customer.ship_name.not_blank</source>
+        <target>Property "shipName" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_name.too_long">
+        <source>entity.customer.ship_name.too_long</source>
+        <target>Property "shipName" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_state.not_blank">
+        <source>entity.customer.ship_state.not_blank</source>
+        <target>Property "shipState" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_state.too_long">
+        <source>entity.customer.ship_state.too_long</source>
+        <target>Property "shipState" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_state.too_short">
+        <source>entity.customer.ship_state.too_short</source>
+        <target>Property "shipState" is too short (min length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_zip_code.not_blank">
+        <source>entity.customer.ship_zip_code.not_blank</source>
+        <target>Property "shipZipCode" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_zip_code.requires_leading_digits_5">
+        <source>entity.customer.ship_zip_code.requires_leading_digits_5</source>
+        <target>Property "shipZipCode" must begin with 5 digits</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.ship_zip_code.too_long">
+        <source>entity.customer.ship_zip_code.too_long</source>
+        <target>Property "shipZipCode" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.customer.user_id.greater_than">
+        <source>entity.customer.user_id.greater_than</source>
+        <target>Property "userId" must be greater than { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.image.height.greater_than_or_equal">
+        <source>entity.image.height.greater_than_or_equal</source>
+        <target>Property "height" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.image.image.not_blank">
+        <source>entity.image.image.not_blank</source>
+        <target>Property "image" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.image.image.too_long">
+        <source>entity.image.image.too_long</source>
+        <target>Property "image" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.image.image_hash.not_blank">
+        <source>entity.image.image_hash.not_blank</source>
+        <target>Property "imageHash" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.image.image_hash.too_long">
+        <source>entity.image.image_hash.too_long</source>
+        <target>Property "imageHash" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.image.thumb_height.greater_than_or_equal">
+        <source>entity.image.thumb_height.greater_than_or_equal</source>
+        <target>Property "thumbHeight" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.image.thumb_width.greater_than_or_equal">
+        <source>entity.image.thumb_width.greater_than_or_equal</source>
+        <target>Property "thumbWidth" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.image.title.too_long">
+        <source>entity.image.title.too_long</source>
+        <target>Property "title" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.image.width.greater_than_or_equal">
+        <source>entity.image.width.greater_than_or_equal</source>
+        <target>Property "width" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.item.availability_id.greater_than_or_equal">
+        <source>entity.item.availability_id.greater_than_or_equal</source>
+        <target>Property "availabilityId" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.item.cost.greater_than_or_equal">
+        <source>entity.item.cost.greater_than_or_equal</source>
+        <target>Property "cost" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.item.description.not_blank">
+        <source>entity.item.description.not_blank</source>
+        <target>Property "description" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.item.description.too_long">
+        <source>entity.item.description.too_long</source>
+        <target>Property "description" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.item.height.greater_than_or_equal">
+        <source>entity.item.height.greater_than_or_equal</source>
+        <target>Property "height" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.item.length.greater_than_or_equal">
+        <source>entity.item.length.greater_than_or_equal</source>
+        <target>Property "length" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.item.manufacturer_id.greater_than_or_equal">
+        <source>entity.item.manufacturer_id.greater_than_or_equal</source>
+        <target>Property "manufacturerId" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.item.name.not_blank">
+        <source>entity.item.name.not_blank</source>
+        <target>Property "name" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.item.name.too_long">
+        <source>entity.item.name.too_long</source>
+        <target>Property "name" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.item.quantity.greater_than_or_equal">
+        <source>entity.item.quantity.greater_than_or_equal</source>
+        <target>Property "quantity" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.item.sku.not_blank">
+        <source>entity.item.sku.not_blank</source>
+        <target>Property "sku" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.item.sku.too_long">
+        <source>entity.item.sku.too_long</source>
+        <target>Property "sku" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.item.slug.not_blank">
+        <source>entity.item.slug.not_blank</source>
+        <target>Property "slug" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.item.slug.too_long">
+        <source>entity.item.slug.too_long</source>
+        <target>Property "slug" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.item.weight.greater_than_or_equal">
+        <source>entity.item.weight.greater_than_or_equal</source>
+        <target>Property "weight" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.item.width.greater_than_or_equal">
+        <source>entity.item.width.greater_than_or_equal</source>
+        <target>Property "width" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.item_category.category_id.greater_than">
+        <source>entity.item_category.category_id.greater_than</source>
+        <target>Property "categoryId" must be greater than { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.item_category.item_id.greater_than">
+        <source>entity.item_category.item_id.greater_than</source>
+        <target>Property "categoryId" must be greater than { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.item_image.image_id.greater_than">
+        <source>entity.item_image.image_id.greater_than</source>
+        <target>Property "imageId" must be greater than { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.item_image.item_id.greater_than">
+        <source>entity.item_image.item_id.greater_than</source>
+        <target>Property "itemId" must be greater than { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.item_image.position.greater_than_or_equal">
+        <source>entity.item_image.position.greater_than_or_equal</source>
+        <target>Property "position" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.manufacturer.name.not_blank">
+        <source>entity.manufacturer.name.not_blank</source>
+        <target>Property "manufacturer" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.manufacturer.name.too_long">
+        <source>entity.manufacturer.name.too_long</source>
+        <target>Property "manufacturer" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_address1.not_blank">
+        <source>entity.order.bill_address1.not_blank</source>
+        <target>Property "billAddress1" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_address1.requires_digits">
+        <source>entity.order.bill_address1.requires_digits</source>
+        <target>Property "billAddress1" must contain digits</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_address1.too_long">
+        <source>entity.order.bill_address1.too_long</source>
+        <target>Property "billAddress1" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_address2.too_long">
+        <source>entity.order.bill_address2.too_long</source>
+        <target>Property "billAddress2" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_city.not_blank">
+        <source>entity.order.bill_city.not_blank</source>
+        <target>Property "billCity" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_city.too_long">
+        <source>entity.order.bill_city.too_long</source>
+        <target>Property "billCity" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_company.too_long">
+        <source>entity.order.bill_company.too_long</source>
+        <target>Property "billCompany" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_country.not_us">
+        <source>entity.order.bill_country.not_us</source>
+        <target>Property "billCountry" must be "US"</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_name.not_blank">
+        <source>entity.order.bill_name.not_blank</source>
+        <target>Property "billName" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_name.too_long">
+        <source>entity.order.bill_name.too_long</source>
+        <target>Property "billName" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_state.not_blank">
+        <source>entity.order.bill_state.not_blank</source>
+        <target>Property "billState" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_state.too_long">
+        <source>entity.order.bill_state.too_long</source>
+        <target>Property "billState" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_state.too_short">
+        <source>entity.order.bill_state.too_short</source>
+        <target>Property "billState" is too short (min length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_zip_code.not_blank">
+        <source>entity.order.bill_zip_code.not_blank</source>
+        <target>Property "billZipCode" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_zip_code.requires_leading_digits_5">
+        <source>entity.order.bill_zip_code.requires_leading_digits_5</source>
+        <target>Property "billZipCode" must begin with 5 digits</target>
+      </trans-unit>
+      <trans-unit id="entity.order.bill_zip_code.too_long">
+        <source>entity.order.bill_zip_code.too_long</source>
+        <target>Property "billZipCode" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.comments.too_long">
+        <source>entity.order.comments.too_long</source>
+        <target>Property "comments" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.credit_card.too_long">
+        <source>entity.order.credit_card.too_long</source>
+        <target>Property "creditCard" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.email.invalid">
+        <source>entity.order.email.invalid</source>
+        <target>Property "email" does not contain a valid email address</target>
+      </trans-unit>
+      <trans-unit id="entity.order.email.not_blank">
+        <source>entity.order.email.not_blank</source>
+        <target>Property "email" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order.email.too_long">
+        <source>entity.order.email.too_long</source>
+        <target>Property "email" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.order_number.too_long">
+        <source>entity.order.order_number.too_long</source>
+        <target>Property "orderNumber" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.phone_number.not_blank">
+        <source>entity.order.phone_number.not_blank</source>
+        <target>Property "phoneNumber" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order.phone_number.requires_digits">
+        <source>entity.order.phone_number.requires_digits</source>
+        <target>Property "phoneNumber" must contain digits</target>
+      </trans-unit>
+      <trans-unit id="entity.order.phone_number.too_long">
+        <source>entity.order.phone_number.too_long</source>
+        <target>Property "phoneNumber" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.receipt_id.not_blank">
+        <source>entity.order.receipt_id.not_blank</source>
+        <target>Property "receiptId" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order.receipt_id.too_long">
+        <source>entity.order.receipt_id.too_long</source>
+        <target>Property "receiptId" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_address1.not_blank">
+        <source>entity.order.ship_address1.not_blank</source>
+        <target>Property "shipAddress1" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_address1.requires_digits">
+        <source>entity.order.ship_address1.requires_digits</source>
+        <target>Property "shipAddress1" must contain digits</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_address1.too_long">
+        <source>entity.order.ship_address1.too_long</source>
+        <target>Property "shipAddress1" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_address2.too_long">
+        <source>entity.order.ship_address2.too_long</source>
+        <target>Property "shipAddress2" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_city.not_blank">
+        <source>entity.order.ship_city.not_blank</source>
+        <target>Property "shipCity" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_city.too_long">
+        <source>entity.order.ship_city.too_long</source>
+        <target>Property "shipCity" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_company.too_long">
+        <source>entity.order.ship_company.too_long</source>
+        <target>Property "shipCompany" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_country.not_us">
+        <source>entity.order.ship_country.not_us</source>
+        <target>Property "shipCountry" must be "US"</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_name.not_blank">
+        <source>entity.order.ship_name.not_blank</source>
+        <target>Property "shipName" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_name.too_long">
+        <source>entity.order.ship_name.too_long</source>
+        <target>Property "shipName" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_state.not_blank">
+        <source>entity.order.ship_state.not_blank</source>
+        <target>Property "shipState" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_state.too_long">
+        <source>entity.order.ship_state.too_long</source>
+        <target>Property "shipState" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_state.too_short">
+        <source>entity.order.ship_state.too_short</source>
+        <target>Property "shipState" is too short (min length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_zip_code.not_blank">
+        <source>entity.order.ship_zip_code.not_blank</source>
+        <target>Property "shipZipCode" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_zip_code.requires_leading_digits_5">
+        <source>entity.order.ship_zip_code.requires_leading_digits_5</source>
+        <target>Property "shipZipCode" must begin with 5 digits</target>
+      </trans-unit>
+      <trans-unit id="entity.order.ship_zip_code.too_long">
+        <source>entity.order.ship_zip_code.too_long</source>
+        <target>Property "shipZipCode" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order.shipping.greater_than_or_equal">
+        <source>entity.order.shipping.greater_than_or_equal</source>
+        <target>Property "shipping" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.order.subtotal.greater_than_or_equal">
+        <source>entity.order.subtotal.greater_than_or_equal</source>
+        <target>Property "subtotal" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.order.tax.greater_than_or_equal">
+        <source>entity.order.tax.greater_than_or_equal</source>
+        <target>Property "tax" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.order.username.too_long">
+        <source>entity.order.username.too_long</source>
+        <target>Property "username" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order_item.cost.greater_than_or_equal">
+        <source>entity.order_item.cost.greater_than_or_equal</source>
+        <target>Property "cost" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.order_item.name.not_blank">
+        <source>entity.order_item.name.not_blank</source>
+        <target>Property "name" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order_item.name.too_long">
+        <source>entity.order_item.name.too_long</source>
+        <target>Property "name" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.order_item.order_id.greater_than">
+        <source>entity.order_item.order_id.greater_than</source>
+        <target>Property "orderId" must be greater than { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.order_item.quantity.greater_than">
+        <source>entity.order_item.quantity.greater_than</source>
+        <target>Property "quantity" must be greater than { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.order_item.sku.not_blank">
+        <source>entity.order_item.sku.not_blank</source>
+        <target>Property "sku" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.order_item.sku.too_long">
+        <source>entity.order_item.sku.too_long</source>
+        <target>Property "sku" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.page_content.page.not_blank">
+        <source>entity.page_content.page.not_blank</source>
+        <target>Property "page" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.page_content.page.too_long">
+        <source>entity.page_content.page.too_long</source>
+        <target>Property "page" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.page_content.text.not_blank">
+        <source>entity.page_content.text.not_blank</source>
+        <target>Property "text" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.page_content.text.too_long">
+        <source>entity.page_content.text.too_long</source>
+        <target>Property "text" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.page_content.title.too_long">
+        <source>entity.page_content.title.too_long</source>
+        <target>Property "title" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.tax_rate.rate.greater_than_or_equal">
+        <source>entity.tax_rate.rate.greater_than_or_equal</source>
+        <target>Property "rate" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.tax_rate.state.not_blank">
+        <source>entity.tax_rate.state.not_blank</source>
+        <target>Property "state" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.tax_rate.state.too_long">
+        <source>entity.tax_rate.state.too_long</source>
+        <target>Property "state" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.tax_rate.state.too_short">
+        <source>entity.tax_rate.state.too_short</source>
+        <target>Property "state" is too short (min length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.transaction_log.action.not_blank">
+        <source>entity.transaction_log.action.not_blank</source>
+        <target>Property "action" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.transaction_log.action.too_long">
+        <source>entity.transaction_log.action.too_long</source>
+        <target>Property "action" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.transaction_log.amount.greater_than_or_equal">
+        <source>entity.transaction_log.amount.greater_than_or_equal</source>
+        <target>Property "amount" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.transaction_log.order_id.greater_than">
+        <source>entity.transaction_log.order_id.greater_than</source>
+        <target>Property "orderId" must be greater than { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.transaction_log.referenced_id.too_long">
+        <source>entity.transaction_log.referenced_id.too_long</source>
+        <target>Property "referencedId" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.transaction_log.transaction_id.not_blank">
+        <source>entity.transaction_log.transaction_id.not_blank</source>
+        <target>Property "transactionId" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.transaction_log.transaction_id.too_long">
+        <source>entity.transaction_log.transaction_id.too_long</source>
+        <target>Property "transactionId" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.user.algorithm.not_blank">
+        <source>entity.user.algorithm.not_blank</source>
+        <target>Property "algorithm" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.user.algorithm.too_long">
+        <source>entity.user.algorithm.too_long</source>
+        <target>Property "algorithm" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.user.confirmation_token.too_long">
+        <source>entity.user.confirmation_token.too_long</source>
+        <target>Property "confirmationToken" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.user.email.not_blank">
+        <source>entity.user.email.not_blank</source>
+        <target>Property "email" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.user.email.too_long">
+        <source>entity.user.email.too_long</source>
+        <target>Property "email" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.user.email_canonical.not_blank">
+        <source>entity.user.email_canonical.not_blank</source>
+        <target>Property "emailCanonical" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.user.email_canonical.too_long">
+        <source>entity.user.email_canonical.too_long</source>
+        <target>Property "emailCanonical" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.user.failed_login_attempts.greater_than_or_equal">
+        <source>entity.user.failed_login_attempts.greater_than_or_equal</source>
+        <target>Property "failedLoginAttempts" must be greater than or equal to { compared_value }</target>
+      </trans-unit>
+      <trans-unit id="entity.user.password.not_blank">
+        <source>entity.user.password.not_blank</source>
+        <target>Property "password" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.user.password.too_long">
+        <source>entity.user.password.too_long</source>
+        <target>Property "password" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.user.salt.not_blank">
+        <source>entity.user.salt.not_blank</source>
+        <target>Property "salt" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.user.salt.too_long">
+        <source>entity.user.salt.too_long</source>
+        <target>Property "salt" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.user.username.not_blank">
+        <source>entity.user.username.not_blank</source>
+        <target>Property "username" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.user.username.too_long">
+        <source>entity.user.username.too_long</source>
+        <target>Property "username" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.user.username_canonical.not_blank">
+        <source>entity.user.username_canonical.not_blank</source>
+        <target>Property "usernameCanonical" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.user.username_canonical.too_long">
+        <source>entity.user.username_canonical.too_long</source>
+        <target>Property "usernameCanonical" is too long (max length: { limit })</target>
+      </trans-unit>
+      <trans-unit id="entity.user.work_factor.greater_than">
+        <source>entity.user.work_factor.greater_than</source>
+        <target>Property "workFactor" must be greater than { compared_value }</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

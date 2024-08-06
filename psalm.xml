@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="1"
+    resolveFromConfigFile="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="true"
+>
+    <projectFiles>
+        <directory name="src"/>
+        <ignoreFiles>
+            <directory name="vendor/"/>
+        </ignoreFiles>
+    </projectFiles>
+
+    <plugins>
+        <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
+        <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin">
+            <containerXml>var/cache/dev/App_KernelDevDebugContainer.xml</containerXml>
+        </pluginClass>
+    </plugins>
+
+    <issueHandlers>
+        <PossiblyUnusedMethod>
+            <errorLevel type="suppress">
+                <referencedMethod name="/^App\\Entity\\[\w]+::(get|is|set|add|remove).*/"/>
+                <referencedMethod name="/^App\\Repository\\[\w]+Repository::(__construct|remove|save)$/"/>
+                <referencedMethod name="/::__construct$/"/>
+            </errorLevel>
+        </PossiblyUnusedMethod>
+        <PossiblyUnusedParam>
+            <errorLevel type="suppress">
+                <directory name="src/Repository"/>
+            </errorLevel>
+        </PossiblyUnusedParam>
+        <UnusedClass>
+            <errorLevel type="suppress">
+                <directory name="src/Controller"/>
+                <directory name="src/Type/Doctrine"/>
+            </errorLevel>
+        </UnusedClass>
+    </issueHandlers>
+</psalm>
