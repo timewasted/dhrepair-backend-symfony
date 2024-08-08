@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -46,23 +48,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(max: 255, maxMessage: 'entity.user.email_canonical.too_long')]
     private ?string $emailCanonical = null;
 
-    /**
-     * @var ?resource
-     */
-    #[ORM\Column(type: Types::BINARY, length: 128)]
-    #[Assert\NotBlank(message: 'entity.user.salt.not_blank')]
-    #[Assert\Length(max: 128, maxMessage: 'entity.user.salt.too_long')]
-    private $salt;
-
-    #[ORM\Column(length: 16)]
-    #[Assert\NotBlank(message: 'entity.user.algorithm.not_blank')]
-    #[Assert\Length(max: 16, maxMessage: 'entity.user.algorithm.too_long')]
-    private ?string $algorithm = null;
-
-    #[ORM\Column]
-    #[Assert\GreaterThan(value: 0, message: 'entity.user.work_factor.greater_than')]
-    private ?int $workFactor = null;
-
     #[ORM\Column(length: 128)]
     #[Assert\NotBlank(message: 'entity.user.password.not_blank')]
     #[Assert\Length(max: 128, maxMessage: 'entity.user.password.too_long')]
@@ -72,7 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(max: 128, maxMessage: 'entity.user.confirmation_token.too_long')]
     private ?string $confirmationToken = null;
 
-    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP()'])]
+    #[ORM\Column(insertable: false, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true, options: ['default' => null])]
@@ -105,6 +90,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column(type: Types::JSON)]
     private array $roles = [];
+
+    /**
+     * @var Collection<int, UserAuthToken>
+     */
+    #[ORM\OneToMany(targetEntity: UserAuthToken::class, mappedBy: 'user', cascade: ['persist'], orphanRemoval: true)]
+    private Collection $authTokens;
+
+    public function __construct()
+    {
+        $this->authTokens = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -159,48 +155,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return ?resource
-     */
-    public function getSalt()
-    {
-        return $this->salt;
-    }
-
-    /**
-     * @param ?resource $salt
-     */
-    public function setSalt($salt): static
-    {
-        $this->salt = $salt;
-
-        return $this;
-    }
-
-    public function getAlgorithm(): ?string
-    {
-        return $this->algorithm;
-    }
-
-    public function setAlgorithm(string $algorithm): static
-    {
-        $this->algorithm = $algorithm;
-
-        return $this;
-    }
-
-    public function getWorkFactor(): ?int
-    {
-        return $this->workFactor;
-    }
-
-    public function setWorkFactor(int $workFactor): static
-    {
-        $this->workFactor = $workFactor;
-
-        return $this;
-    }
-
     public function getPassword(): ?string
     {
         return $this->password;
@@ -230,19 +184,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
     public function getLastLogin(): ?\DateTimeImmutable
     {
         return $this->lastLogin;
     }
 
-    public function setLastLogin(?\DateTimeImmutable $lastLogin): static
+    public function setLastLogin(\DateTimeImmutable $lastLogin): static
     {
         $this->lastLogin = $lastLogin;
 
@@ -360,5 +307,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->usernameCanonical;
+    }
+
+    /**
+     * @return Collection<int, UserAuthToken>
+     */
+    public function getAuthTokens(): Collection
+    {
+        return $this->authTokens;
+    }
+
+    public function addAuthToken(): UserAuthToken
+    {
+        $authToken = new UserAuthToken($this);
+        $this->authTokens->add($authToken);
+
+        return $authToken;
+    }
+
+    public function removeAllAuthTokens(): static
+    {
+        $this->authTokens->clear();
+
+        return $this;
+    }
+
+    public function removeAuthToken(UserAuthToken $authToken): static
+    {
+        $this->authTokens->removeElement($authToken);
+
+        return $this;
     }
 }

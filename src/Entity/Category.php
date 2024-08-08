@@ -41,23 +41,20 @@ class Category
     #[ORM\Column(options: ['default' => true])]
     private ?bool $isViewable = null;
 
-    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP()'])]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $modifiedAt = null;
 
     /**
-     * @var Collection<int, self>
+     * @var Collection<int, CategoryClosure>
      */
-    #[ORM\ManyToMany(targetEntity: self::class)]
-    #[ORM\JoinTable(name: 'category_closure')]
-    #[ORM\JoinColumn(name: 'parent', referencedColumnName: 'id')]
-    #[ORM\InverseJoinColumn(name: 'child', referencedColumnName: 'id')]
+    #[ORM\OneToMany(targetEntity: CategoryClosure::class, mappedBy: 'category')]
+    #[ORM\OrderBy(['depth' => 'ASC'])]
     private Collection $familyTree;
 
     /**
-     * @var Collection<int, Item>
+     * @var Collection<int, ItemCategory>
      */
-    #[ORM\ManyToMany(targetEntity: Item::class, inversedBy: 'categories')]
-    #[ORM\JoinTable(name: 'item_category')]
+    #[ORM\OneToMany(targetEntity: ItemCategory::class, mappedBy: 'category')]
     private Collection $items;
 
     public function __construct()
@@ -144,7 +141,7 @@ class Category
     }
 
     /**
-     * @return Collection<int, self>
+     * @return Collection<int, CategoryClosure>
      */
     public function getFamilyTree(): Collection
     {
@@ -152,25 +149,31 @@ class Category
     }
 
     /**
-     * @return Collection<int, Item>
+     * @return Collection<int, ItemCategory>
      */
     public function getItems(): Collection
     {
         return $this->items;
     }
 
-    public function addItem(Item $item): static
+    public function addItem(ItemCategory $item): static
     {
         if (!$this->items->contains($item)) {
             $this->items->add($item);
+            $item->setCategory($this);
         }
 
         return $this;
     }
 
-    public function removeItem(Item $item): static
+    public function removeItem(ItemCategory $item): static
     {
-        $this->items->removeElement($item);
+        if ($this->items->removeElement($item)) {
+            // set the owning side to null (unless already changed)
+            if ($item->getCategory() === $this) {
+                $item->setCategory(null);
+            }
+        }
 
         return $this;
     }

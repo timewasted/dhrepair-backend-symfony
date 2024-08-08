@@ -27,7 +27,7 @@ class PageContent
     #[Assert\Length(max: 16777215, maxMessage: 'entity.page_content.text.too_long')]
     private ?string $content = null;
 
-    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP()'])]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $modifiedAt = null;
 
     public function getPage(): ?string

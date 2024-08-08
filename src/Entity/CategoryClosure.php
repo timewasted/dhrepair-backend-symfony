@@ -28,6 +28,10 @@ class CategoryClosure
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.category_closure.depth.greater_than_or_equal')]
     private ?int $depth = null;
 
+    #[ORM\ManyToOne(inversedBy: 'familyTree')]
+    #[ORM\JoinColumn(name: 'parent')]
+    private ?Category $category = null;
+
     public function getParent(): ?int
     {
         return $this->parent;
@@ -60,6 +64,18 @@ class CategoryClosure
     public function setDepth(int $depth): static
     {
         $this->depth = $depth;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

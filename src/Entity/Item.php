@@ -106,7 +106,7 @@ class Item
     #[ORM\Column(options: ['default' => false])]
     private ?bool $freightQuoteRequired = null;
 
-    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP()'])]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $modifiedAt = null;
 
     #[ORM\OneToOne]
@@ -116,16 +116,16 @@ class Item
     private ?Availability $availability = null;
 
     /**
-     * @var Collection<int, Category>
+     * @var Collection<int, ItemCategory>
      */
-    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'items')]
+    #[ORM\OneToMany(targetEntity: ItemCategory::class, mappedBy: 'item')]
     private Collection $categories;
 
     /**
-     * @var Collection<int, Image>
+     * @var Collection<int, ItemImage>
      */
-    #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'items')]
-    #[ORM\JoinTable(name: 'item_image')]
+    #[ORM\OneToMany(targetEntity: ItemImage::class, mappedBy: 'item')]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $images;
 
     public function __construct()
@@ -428,52 +428,61 @@ class Item
     }
 
     /**
-     * @return Collection<int, Category>
+     * @return Collection<int, ItemCategory>
      */
     public function getCategories(): Collection
     {
         return $this->categories;
     }
 
-    public function addCategory(Category $category): static
+    public function addCategory(ItemCategory $category): static
     {
         if (!$this->categories->contains($category)) {
             $this->categories->add($category);
-            $category->addItem($this);
+            $category->setItem($this);
         }
 
         return $this;
     }
 
-    public function removeCategory(Category $category): static
+    public function removeCategory(ItemCategory $category): static
     {
         if ($this->categories->removeElement($category)) {
-            $category->removeItem($this);
+            // set the owning side to null (unless already changed)
+            if ($category->getItem() === $this) {
+                $category->setItem(null);
+            }
         }
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Image>
+     * @return Collection<int, ItemImage>
      */
     public function getImages(): Collection
     {
         return $this->images;
     }
 
-    public function addImage(Image $image): static
+    public function addImage(ItemImage $image): static
     {
         if (!$this->images->contains($image)) {
             $this->images->add($image);
+            $image->setItem($this);
         }
 
         return $this;
     }
 
-    public function removeImage(Image $image): static
+    public function removeImage(ItemImage $image): static
     {
-        $this->images->removeElement($image);
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getItem() === $this) {
+                $image->setItem(null);
+            }
+        }
 
         return $this;
     }

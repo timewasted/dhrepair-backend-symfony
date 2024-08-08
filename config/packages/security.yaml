@@ -16,16 +16,25 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
+
+        api_v1:
+            pattern: ^/api/v1/
             stateless: true
             lazy: true
             provider: app_user_provider
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
+            access_token:
+                token_extractors: header
+                token_handler: App\Security\API\V1\AccessToken\AccessTokenHandler
+                failure_handler: App\Security\API\V1\AccessToken\AuthenticationFailureHandler
+            json_login:
+                check_path: api_v1_security_auth_token
+                success_handler: App\Security\API\V1\JSON\AuthenticationSuccessHandler
+                failure_handler: App\Security\API\V1\JSON\AuthenticationFailureHandler
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+        main:
+            stateless: true
+            lazy: true
 
     role_hierarchy:
         ROLE_TEMPORARY: ROLE_USER

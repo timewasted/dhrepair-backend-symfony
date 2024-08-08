@@ -25,7 +25,7 @@ class AccessLog
     #[Assert\Length(max: 64, maxMessage: 'entity.access_log.username.too_long')]
     private ?string $username = null;
 
-    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP()'])]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $timestamp = null;
 
     #[ORM\Column(length: 255)]

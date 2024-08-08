@@ -23,6 +23,12 @@ class ItemCategory
     #[Assert\GreaterThan(value: 0, message: 'entity.item_category.category_id.greater_than')]
     private ?int $categoryId = null;
 
+    #[ORM\ManyToOne(inversedBy: 'categories')]
+    private ?Item $item = null;
+
+    #[ORM\ManyToOne(inversedBy: 'items')]
+    private ?Category $category = null;
+
     public function getItemId(): ?int
     {
         return $this->itemId;
@@ -43,6 +49,30 @@ class ItemCategory
     public function setCategoryId(int $categoryId): static
     {
         $this->categoryId = $categoryId;
+
+        return $this;
+    }
+
+    public function getItem(): ?Item
+    {
+        return $this->item;
+    }
+
+    public function setItem(?Item $item): static
+    {
+        $this->item = $item;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

@@ -678,14 +678,6 @@
         <source>entity.transaction_log.transaction_id.too_long</source>
         <target>Property "transactionId" is too long (max length: { limit })</target>
       </trans-unit>
-      <trans-unit id="entity.user.algorithm.not_blank">
-        <source>entity.user.algorithm.not_blank</source>
-        <target>Property "algorithm" can not be blank</target>
-      </trans-unit>
-      <trans-unit id="entity.user.algorithm.too_long">
-        <source>entity.user.algorithm.too_long</source>
-        <target>Property "algorithm" is too long (max length: { limit })</target>
-      </trans-unit>
       <trans-unit id="entity.user.confirmation_token.too_long">
         <source>entity.user.confirmation_token.too_long</source>
         <target>Property "confirmationToken" is too long (max length: { limit })</target>
@@ -718,14 +710,6 @@
         <source>entity.user.password.too_long</source>
         <target>Property "password" is too long (max length: { limit })</target>
       </trans-unit>
-      <trans-unit id="entity.user.salt.not_blank">
-        <source>entity.user.salt.not_blank</source>
-        <target>Property "salt" can not be blank</target>
-      </trans-unit>
-      <trans-unit id="entity.user.salt.too_long">
-        <source>entity.user.salt.too_long</source>
-        <target>Property "salt" is too long (max length: { limit })</target>
-      </trans-unit>
       <trans-unit id="entity.user.username.not_blank">
         <source>entity.user.username.not_blank</source>
         <target>Property "username" can not be blank</target>
@@ -741,10 +725,6 @@
       <trans-unit id="entity.user.username_canonical.too_long">
         <source>entity.user.username_canonical.too_long</source>
         <target>Property "usernameCanonical" is too long (max length: { limit })</target>
-      </trans-unit>
-      <trans-unit id="entity.user.work_factor.greater_than">
-        <source>entity.user.work_factor.greater_than</source>
-        <target>Property "workFactor" must be greater than { compared_value }</target>
       </trans-unit>
     </body>
   </file>

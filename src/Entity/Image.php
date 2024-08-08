@@ -50,13 +50,13 @@ class Image
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.image.thumb_height.greater_than_or_equal')]
     private ?int $thumbHeight = null;
 
-    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP()'])]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $addedAt = null;
 
     /**
-     * @var Collection<int, Item>
+     * @var Collection<int, ItemImage>
      */
-    #[ORM\ManyToMany(targetEntity: Item::class, mappedBy: 'images')]
+    #[ORM\OneToMany(targetEntity: ItemImage::class, mappedBy: 'image')]
     private Collection $items;
 
     public function __construct()
@@ -166,27 +166,30 @@ class Image
     }
 
     /**
-     * @return Collection<int, Item>
+     * @return Collection<int, ItemImage>
      */
     public function getItems(): Collection
     {
         return $this->items;
     }
 
-    public function addItem(Item $item): static
+    public function addItem(ItemImage $item): static
     {
         if (!$this->items->contains($item)) {
             $this->items->add($item);
-            $item->addImage($this);
+            $item->setImage($this);
         }
 
         return $this;
     }
 
-    public function removeItem(Item $item): static
+    public function removeItem(ItemImage $item): static
     {
         if ($this->items->removeElement($item)) {
-            $item->removeImage($this);
+            // set the owning side to null (unless already changed)
+            if ($item->getImage() === $this) {
+                $item->setImage(null);
+            }
         }
 
         return $this;

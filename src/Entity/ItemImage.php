@@ -27,6 +27,12 @@ class ItemImage
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item_image.position.greater_than_or_equal')]
     private ?int $position = null;
 
+    #[ORM\ManyToOne(inversedBy: 'images')]
+    private ?Item $item = null;
+
+    #[ORM\ManyToOne(inversedBy: 'items')]
+    private ?Image $image = null;
+
     public function getItemId(): ?int
     {
         return $this->itemId;
@@ -59,6 +65,30 @@ class ItemImage
     public function setPosition(int $position): static
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getItem(): ?Item
+    {
+        return $this->item;
+    }
+
+    public function setItem(?Item $item): static
+    {
+        $this->item = $item;
+
+        return $this;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Image $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }
