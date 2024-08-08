@@ -19,7 +19,7 @@ class UserAuthToken
     #[ORM\Column(length: 255, updatable: false)]
     private string $authToken;
 
-    #[ORM\Column(insertable: false, updatable: false, generated: 'INSERT')]
+    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
     private ?\DateTimeImmutable $createdAt = null;
 
     public function __construct(User $user)

@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Customer
 {
     #[ORM\Id]
-    #[ORM\Column(unique: true)]
+    #[ORM\Column]
     #[Assert\GreaterThan(value: 0, message: 'entity.customer.user_id.greater_than')]
     private ?int $userId = null;
 
@@ -106,6 +106,10 @@ class Customer
     #[Assert\Length(max: 255, maxMessage: 'entity.customer.email.too_long')]
     #[Assert\Email(message: 'entity.customer.email.invalid')]
     private ?string $email = null;
+
+    #[ORM\OneToOne]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private ?User $user = null;
 
     public function getUserId(): ?int
     {
@@ -331,6 +335,18 @@ class Customer
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

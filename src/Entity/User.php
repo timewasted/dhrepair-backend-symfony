@@ -81,9 +81,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true, options: ['default' => null])]
     private ?\DateTimeImmutable $passwordRequestedAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['default' => 0])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.user.failed_login_attempts.greater_than_or_equal')]
-    private ?int $failedLoginAttempts = null;
+    private int $failedLoginAttempts = 0;
 
     /**
      * @var list<string>
@@ -115,6 +115,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUsername(string $username): static
     {
         $this->username = $username;
+        $this->usernameCanonical = mb_strtolower($username);
 
         return $this;
     }
@@ -122,13 +123,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUsernameCanonical(): ?string
     {
         return $this->usernameCanonical;
-    }
-
-    public function setUsernameCanonical(string $usernameCanonical): static
-    {
-        $this->usernameCanonical = $usernameCanonical;
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -139,6 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
+        $this->emailCanonical = mb_strtolower($email);
 
         return $this;
     }
@@ -146,13 +141,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getEmailCanonical(): ?string
     {
         return $this->emailCanonical;
-    }
-
-    public function setEmailCanonical(string $emailCanonical): static
-    {
-        $this->emailCanonical = $emailCanonical;
-
-        return $this;
     }
 
     public function getPassword(): ?string
@@ -268,12 +256,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getFailedLoginAttempts(): ?int
+    public function getFailedLoginAttempts(): int
     {
         return $this->failedLoginAttempts;
     }
 
-    public function setFailedLoginAttempts(?int $failedLoginAttempts): static
+    public function setFailedLoginAttempts(int $failedLoginAttempts): static
     {
         $this->failedLoginAttempts = $failedLoginAttempts;
 

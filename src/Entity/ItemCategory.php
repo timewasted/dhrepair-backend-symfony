@@ -24,6 +24,7 @@ class ItemCategory
     private ?int $categoryId = null;
 
     #[ORM\ManyToOne(inversedBy: 'categories')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Item $item = null;
 
     #[ORM\ManyToOne(inversedBy: 'items')]

@@ -31,9 +31,11 @@ class CartItem
     private ?int $quantity = null;
 
     #[ORM\OneToOne]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?User $user = null;
 
     #[ORM\OneToOne]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Item $item = null;
 
     public function getId(): ?int

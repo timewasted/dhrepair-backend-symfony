@@ -28,6 +28,7 @@ class ItemImage
     private ?int $position = null;
 
     #[ORM\ManyToOne(inversedBy: 'images')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Item $item = null;
 
     #[ORM\ManyToOne(inversedBy: 'items')]

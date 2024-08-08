@@ -40,7 +40,7 @@ class OrderItem
     private ?int $cost = null;
 
     #[ORM\ManyToOne(inversedBy: 'items')]
-    #[ORM\JoinColumn(name: 'order_id')]
+    #[ORM\JoinColumn(name: 'order_id', onDelete: 'CASCADE')]
     private ?Order $orderInfo = null;
 
     public function getId(): ?int
