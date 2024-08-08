@@ -26,6 +26,7 @@ abstract class AbstractAuthenticationFailureHandler implements AuthenticationFai
         // FIXME: Define proper responses for these cases.
         return match (true) {
             $exception instanceof AccountExpiredException => ['error' => AccountExpiredException::class],
+            $exception instanceof BadCredentialsException => ['error' => BadCredentialsException::class],
             $exception instanceof CredentialsExpiredException => ['error' => CredentialsExpiredException::class],
             $exception instanceof DisabledException => ['error' => DisabledException::class],
             $exception instanceof LockedException => ['error' => LockedException::class],

@@ -32,6 +32,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    public function incrementFailedLoginCount(User $user): void
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->update(User::class, 'u')
+            ->set('u.failedLoginAttempts', 'u.failedLoginAttempts + 1')
+            ->where('u.id = :id')
+            ->setParameter('id', $user->getId())
+            ->getQuery()
+            ->execute()
+        ;
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

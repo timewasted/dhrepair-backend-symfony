@@ -11,7 +11,7 @@ SYMFONY  = $(PHP) bin/console
 
 # Misc
 .DEFAULT_GOAL = help
-.PHONY        : help build up start down logs sh bash composer vendor sf cc test check check-code fix-code
+.PHONY        : help build up start down logs sh bash composer vendor sf cc test test-functional test-unit check check-code fix-code pre-commit
 
 ## —— 🎵 🐳 The Symfony Docker Makefile 🐳 🎵 ——————————————————————————————————
 help: ## Outputs this help screen
@@ -44,6 +44,12 @@ test: ## Start tests with phpunit, pass the parameter "c=" to add options to php
 	@$(eval c ?=)
 	@$(DOCKER_COMP) exec -e APP_ENV=test php bin/phpunit $(c)
 
+test-functional: c=tests/functional ## Perform only functional tests
+test-functional: test
+
+test-unit: c=tests/unit ## Perform only unit tests
+test-unit: test
+
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
 	@$(eval c ?=)
@@ -69,3 +75,5 @@ check-code: ## Check the code with psalm
 
 fix-code: ## Run php-cs-fixer
 	@$(PHP_CONT) vendor/bin/php-cs-fixer fix
+
+pre-commit: check-code fix-code ## Perform checks required before committing code
