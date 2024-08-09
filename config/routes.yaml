@@ -1,5 +1,14 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+#controllers:
+#    resource:
+#        path: ../src/Controller/
+#        namespace: App\Controller
+#    type: attribute
+
+when@test:
+    controllers:
+        resource:
+            path: ../tests/helpers/Controller/
+            namespace: App\Tests\helpers\Controller
+        type: attribute
+        prefix: '/tests'
+        name_prefix: 'tests_'
