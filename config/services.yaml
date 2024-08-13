@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    json_schema_dir: '../json_schemas'
     locale: en
 
 services:
@@ -28,6 +29,22 @@ services:
         tags:
             - name: kernel.event_subscriber
               dispatcher: security.event_dispatcher.api_v1
+
+    App\EventSubscriber\ControllerArgumentsSubscriber:
+        arguments:
+            $schemaPrefix: 'file://'
+        tags:
+            - name: kernel.event_subscriber
+    
+    Opis\JsonSchema\Resolvers\SchemaResolver:
+        calls:
+            - registerPrefix:
+                  $prefix: 'file://'
+                  $dir: '%json_schema_dir%'
+
+    Opis\JsonSchema\SchemaLoader: ~
+
+    Opis\JsonSchema\Validator: ~
 
     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
         arguments:
