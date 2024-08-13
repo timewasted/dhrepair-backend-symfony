@@ -21,7 +21,7 @@ readonly class ControllerArgumentsSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        return [ControllerArgumentsEvent::class => 'onControllerArguments'];
+        return [ControllerArgumentsEvent::class => ['onControllerArguments', 5]];
     }
 
     public function onControllerArguments(ControllerArgumentsEvent $event): void
