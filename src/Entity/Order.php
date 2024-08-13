@@ -152,7 +152,7 @@ class Order
     #[Assert\Length(max: 768, maxMessage: 'entity.order.credit_card.too_long')]
     private $creditCard;
 
-    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
     private ?\DateTimeImmutable $createdAt = null;
 
     /**

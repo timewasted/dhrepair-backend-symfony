@@ -106,7 +106,7 @@ class Item
     #[ORM\Column(options: ['default' => false])]
     private ?bool $freightQuoteRequired = null;
 
-    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
     private ?\DateTimeImmutable $modifiedAt = null;
 
     #[ORM\OneToOne]

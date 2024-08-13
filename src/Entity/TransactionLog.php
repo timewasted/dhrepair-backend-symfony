@@ -49,7 +49,7 @@ class TransactionLog
     #[ORM\Column(nullable: true, options: ['default' => null])]
     private ?bool $isCvv2Success = null;
 
-    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'transactionLog')]

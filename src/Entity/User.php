@@ -57,7 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(max: 128, maxMessage: 'entity.user.confirmation_token.too_long')]
     private ?string $confirmationToken = null;
 
-    #[ORM\Column(insertable: false, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true, options: ['default' => null])]

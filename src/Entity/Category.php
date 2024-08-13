@@ -41,7 +41,7 @@ class Category
     #[ORM\Column(options: ['default' => true])]
     private ?bool $isViewable = null;
 
-    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
     private ?\DateTimeImmutable $modifiedAt = null;
 
     /**
