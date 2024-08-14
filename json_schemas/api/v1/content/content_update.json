@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.doghouserepair.com/api/v1/content/content_update.json",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 0,
+      "maxLength": 255
+    },
+    "content": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 16777215
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "content"
+  ],
+  "additionalProperties": false
+}
