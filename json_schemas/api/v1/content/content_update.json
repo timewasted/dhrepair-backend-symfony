@@ -5,6 +5,7 @@
   "properties": {
     "id": {
       "type": "string",
+      "pattern": "^[\\w\\-]+$",
       "minLength": 1,
       "maxLength": 255
     },

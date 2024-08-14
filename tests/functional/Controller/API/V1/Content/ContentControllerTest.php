@@ -12,7 +12,7 @@ use App\Repository\UserRepository;
 use App\Tests\traits\ApiRequestTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ContentControllerTest extends WebTestCase
@@ -86,9 +86,8 @@ class ContentControllerTest extends WebTestCase
 
     public function testContentReadPageDoesNotExist(): void
     {
-        $this->expectException(NotFoundHttpException::class);
-
-        $this->client->request('GET', self::CONTENT_URL.'invalid-page');
+        $this->client->request('GET', self::CONTENT_URL.'invalid-page-123');
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
     public function testContentUpdatePageExistsUnauthenticated(): void
@@ -140,7 +139,7 @@ class ContentControllerTest extends WebTestCase
     {
         $this->expectException(AccessDeniedException::class);
 
-        $page = 'invalid-page';
+        $page = 'invalid-page-123';
         $title = 'foo';
         $content = 'bar';
         $updateDto = new UpdatePageContentRequest($page, $title, $content);
@@ -155,14 +154,20 @@ class ContentControllerTest extends WebTestCase
     {
         $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
         $this->assertNotNull($user);
-        $this->expectException($expectAccessGranted ? NotFoundHttpException::class : AccessDeniedException::class);
+        if (!$expectAccessGranted) {
+            $this->expectException(AccessDeniedException::class);
+        }
 
-        $page = 'invalid-page';
+        $page = 'invalid-page-123';
         $title = 'foo';
         $content = 'bar';
         $updateDto = new UpdatePageContentRequest($page, $title, $content);
 
         $this->makeApiRequest('PUT', self::CONTENT_URL, null, $updateDto, $user);
+
+        if ($expectAccessGranted) {
+            $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        }
     }
 
     private function doPageExistsAssertions(bool $isTitleNull): void

@@ -7,23 +7,29 @@ namespace App\Controller\API\V1\Content;
 use App\Attribute\JsonValidation;
 use App\DTO\ReadPageContentResponse;
 use App\DTO\UpdatePageContentRequest;
-use App\Entity\PageContent;
 use App\Entity\User;
 use App\Repository\PageContentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/content', name: 'content_')]
 class ContentController extends AbstractController
 {
-    #[Route(path: '/{page}', name: 'read', requirements: ['id' => '\w+'], methods: ['GET'])]
-    public function read(PageContent $page): Response
-    {
-        return $this->json(new ReadPageContentResponse($page));
+    #[Route(path: '/{id}', name: 'read', requirements: ['id' => '[\w\-]+'], methods: ['GET'])]
+    public function read(
+        string $id,
+        PageContentRepository $repository
+    ): Response {
+        if (null === ($entity = $repository->find($id))) {
+            return $this->json([
+                'id' => $id,
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json(new ReadPageContentResponse($entity));
     }
 
     #[IsGranted(User::ROLE_ADMIN)]
@@ -34,7 +40,9 @@ class ContentController extends AbstractController
         PageContentRepository $repository,
     ): Response {
         if (null === ($entity = $repository->update($updateDto))) {
-            throw new NotFoundHttpException();
+            return $this->json([
+                'id' => $updateDto->getId(),
+            ], Response::HTTP_NOT_FOUND);
         }
 
         return $this->json(new ReadPageContentResponse($entity));

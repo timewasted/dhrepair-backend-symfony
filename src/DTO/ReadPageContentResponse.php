@@ -6,28 +6,22 @@ namespace App\DTO;
 
 use App\Entity\PageContent;
 
-class ReadPageContentResponse implements \JsonSerializable
+readonly class ReadPageContentResponse implements \JsonSerializable
 {
-    private ?string $page;
-    private ?string $title;
-    private ?string $content;
-    private ?\DateTimeInterface $modifiedAt;
+    private array $jsonData;
 
     public function __construct(PageContent $pageContent)
     {
-        $this->page = $pageContent->getPage();
-        $this->title = $pageContent->getTitle();
-        $this->content = $pageContent->getContent();
-        $this->modifiedAt = $pageContent->getModifiedAt();
+        $this->jsonData = [
+            'id' => $pageContent->getPage(),
+            'title' => $pageContent->getTitle(),
+            'content' => $pageContent->getContent(),
+            'modifiedAt' => $pageContent->getModifiedAt()?->format(\DateTimeInterface::ATOM),
+        ];
     }
 
     public function jsonSerialize(): array
     {
-        return [
-            'id' => $this->page,
-            'title' => $this->title,
-            'content' => $this->content,
-            'modifiedAt' => $this->modifiedAt?->format(\DateTimeInterface::ATOM),
-        ];
+        return $this->jsonData;
     }
 }

@@ -15,11 +15,12 @@ readonly class UpdatePageContentRequest implements \JsonSerializable
     ) {
     }
 
+    /** @psalm-suppress PossiblyUnusedMethod */
     public function updateEntity(PageContent $entity): PageContent
     {
         return $entity
-            ->setTitle($this->title)
-            ->setContent($this->content)
+            ->setTitle($this->getTitle())
+            ->setContent($this->getContent())
         ;
     }
 
@@ -41,9 +42,9 @@ readonly class UpdatePageContentRequest implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'content' => $this->content,
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
+            'content' => $this->getContent(),
         ];
     }
 }
