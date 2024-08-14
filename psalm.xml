@@ -25,7 +25,7 @@
     <issueHandlers>
         <PossiblyUnusedMethod>
             <errorLevel type="suppress">
-                <referencedMethod name="/^App\\Entity\\[\w]+::(get|is|set|add|remove).*/"/>
+                <referencedMethod name="/^App\\Entity\\[\w]+::(get|is|set|add|remove|onChanged|onInsert).*/"/>
                 <referencedMethod name="/^App\\Repository\\[\w]+Repository::(__construct|remove|save)$/"/>
                 <referencedMethod name="/::__construct$/"/>
             </errorLevel>
