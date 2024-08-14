@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AccessLogRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class AccessLog
 {
     #[ORM\Id]
@@ -25,7 +26,7 @@ class AccessLog
     #[Assert\Length(max: 64, maxMessage: 'entity.access_log.username.too_long')]
     private ?string $username = null;
 
-    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
+    #[ORM\Column(updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
     private ?\DateTimeImmutable $timestamp = null;
 
     #[ORM\Column(length: 255)]
@@ -149,5 +150,11 @@ class AccessLog
         $this->browser = $browser;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function onInsert(): void
+    {
+        $this->timestamp = new \DateTimeImmutable();
     }
 }

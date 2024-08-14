@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\UniqueConstraint(name: 'username_canonical', fields: ['usernameCanonical'])]
 #[ORM\UniqueConstraint(name: 'email_canonical', fields: ['emailCanonical'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -57,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(max: 128, maxMessage: 'entity.user.confirmation_token.too_long')]
     private ?string $confirmationToken = null;
 
-    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
+    #[ORM\Column(updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true, options: ['default' => null])]
@@ -325,5 +326,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->authTokens->removeElement($authToken);
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function onInsert(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
     }
 }

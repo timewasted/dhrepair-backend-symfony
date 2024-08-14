@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TransactionLogRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Index(name: 'transaction_id', fields: ['transactionId'])]
 #[ORM\Index(name: 'order_id', fields: ['orderId'])]
 class TransactionLog
@@ -49,7 +50,7 @@ class TransactionLog
     #[ORM\Column(nullable: true, options: ['default' => null])]
     private ?bool $isCvv2Success = null;
 
-    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
+    #[ORM\Column(updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'transactionLog')]
@@ -179,5 +180,11 @@ class TransactionLog
         $this->orderInfo = $orderInfo;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function onInsert(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
     }
 }

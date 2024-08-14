@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: '`order_info`')]
 #[ORM\Index(name: 'username', fields: ['username'])]
 #[ORM\Index(name: 'order_number', fields: ['orderNumber'])]
@@ -152,7 +153,7 @@ class Order
     #[Assert\Length(max: 768, maxMessage: 'entity.order.credit_card.too_long')]
     private $creditCard;
 
-    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
+    #[ORM\Column(updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
     private ?\DateTimeImmutable $createdAt = null;
 
     /**
@@ -578,5 +579,11 @@ class Order
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function onInsert(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
     }
 }

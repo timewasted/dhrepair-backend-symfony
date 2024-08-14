@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Index(name: 'image', fields: ['image'])]
 #[ORM\UniqueConstraint(name: 'image_hash', fields: ['imageHash'])]
 class Image
@@ -50,7 +51,7 @@ class Image
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.image.thumb_height.greater_than_or_equal')]
     private ?int $thumbHeight = null;
 
-    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
+    #[ORM\Column(updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
     private ?\DateTimeImmutable $addedAt = null;
 
     /**
@@ -193,5 +194,11 @@ class Image
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function onInsert(): void
+    {
+        $this->addedAt = new \DateTimeImmutable();
     }
 }

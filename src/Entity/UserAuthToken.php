@@ -8,6 +8,7 @@ use App\Repository\UserAuthTokenRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserAuthTokenRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Index(name: 'user_id', columns: ['user_id'])]
 #[ORM\UniqueConstraint(name: 'auth_token', fields: ['authToken'])]
 class UserAuthToken
@@ -19,7 +20,7 @@ class UserAuthToken
     #[ORM\Column(length: 255, updatable: false)]
     private string $authToken;
 
-    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
+    #[ORM\Column(updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
     private ?\DateTimeImmutable $createdAt = null;
 
     public function __construct(User $user)
@@ -41,5 +42,11 @@ class UserAuthToken
     public function getUser(): ?User
     {
         return $this->user;
+    }
+
+    #[ORM\PrePersist]
+    public function onInsert(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
     }
 }

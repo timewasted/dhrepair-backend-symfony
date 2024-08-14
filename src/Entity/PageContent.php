@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PageContentRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class PageContent
 {
     #[ORM\Id]
@@ -27,7 +28,7 @@ class PageContent
     #[Assert\Length(max: 16777215, maxMessage: 'entity.page_content.text.too_long')]
     private ?string $content = null;
 
-    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
     private ?\DateTimeImmutable $modifiedAt = null;
 
     public function getPage(): ?string
@@ -76,5 +77,12 @@ class PageContent
         $this->modifiedAt = $modifiedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function onChanged(): void
+    {
+        $this->modifiedAt = new \DateTimeImmutable();
     }
 }

@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Index(name: 'parent', fields: ['parent'])]
 class Category
 {
@@ -41,7 +42,7 @@ class Category
     #[ORM\Column(options: ['default' => true])]
     private ?bool $isViewable = null;
 
-    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
     private ?\DateTimeImmutable $modifiedAt = null;
 
     /**
@@ -176,5 +177,12 @@ class Category
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function onChanged(): void
+    {
+        $this->modifiedAt = new \DateTimeImmutable();
     }
 }

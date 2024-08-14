@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Index(name: 'manufacturer_id', fields: ['manufacturerId'])]
 #[ORM\Index(name: 'is_product', fields: ['isProduct'])]
 #[ORM\Index(name: 'is_viewable', fields: ['isViewable'])]
@@ -106,7 +107,7 @@ class Item
     #[ORM\Column(options: ['default' => false])]
     private ?bool $freightQuoteRequired = null;
 
-    #[ORM\Column(insertable: false, updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
     private ?\DateTimeImmutable $modifiedAt = null;
 
     #[ORM\OneToOne]
@@ -485,5 +486,12 @@ class Item
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function onChanged(): void
+    {
+        $this->modifiedAt = new \DateTimeImmutable();
     }
 }
