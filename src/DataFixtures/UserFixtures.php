@@ -20,6 +20,30 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $user = $this->getBaseUser()
+            ->setUsername('super_admin_user')
+            ->setEmail('super_admin_user@example.com')
+            ->setRoles([User::ROLE_SUPER_ADMIN]);
+
+        $user->addAuthToken();
+        $manager->persist($user);
+
+        $user = $this->getBaseUser()
+            ->setUsername('admin_user')
+            ->setEmail('admin_user@example.com')
+            ->setRoles([User::ROLE_ADMIN]);
+
+        $user->addAuthToken();
+        $manager->persist($user);
+
+        $user = $this->getBaseUser()
+            ->setUsername('temporary_user')
+            ->setEmail('temporary_user@example.com')
+            ->setRoles([User::ROLE_TEMPORARY]);
+
+        $user->addAuthToken();
+        $manager->persist($user);
+
+        $user = $this->getBaseUser()
             ->setUsername('valid_user')
             ->setEmail('valid_user@example.com')
         ;
@@ -76,7 +100,7 @@ class UserFixtures extends Fixture
         $user = (new User())
             ->setAccountEnabled(true)
             ->setAccountLocked(false)
-            ->setRoles(['ROLE_USER'])
+            ->setRoles([User::ROLE_USER])
         ;
 
         return $user->setPassword($this->passwordHasher->hashPassword($user, self::DEFAULT_PASSWORD));

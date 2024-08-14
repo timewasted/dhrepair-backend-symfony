@@ -6,12 +6,12 @@ namespace App\DTO;
 
 use App\Entity\PageContent;
 
-class UpdatePageContentRequest
+readonly class UpdatePageContentRequest implements \JsonSerializable
 {
     public function __construct(
-        private readonly string $id,
-        private readonly ?string $title,
-        private readonly string $content,
+        private string $id,
+        private ?string $title,
+        private string $content,
     ) {
     }
 
@@ -36,5 +36,14 @@ class UpdatePageContentRequest
     public function getContent(): string
     {
         return $this->content;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'content' => $this->content,
+        ];
     }
 }
