@@ -53,9 +53,10 @@ class Category
     private Collection $familyTree;
 
     /**
-     * @var Collection<int, ItemCategory>
+     * @var Collection<int, Item>
      */
-    #[ORM\OneToMany(targetEntity: ItemCategory::class, mappedBy: 'category')]
+    #[ORM\ManyToMany(targetEntity: Item::class, mappedBy: 'categories')]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $items;
 
     public function __construct()
@@ -150,30 +151,27 @@ class Category
     }
 
     /**
-     * @return Collection<int, ItemCategory>
+     * @return Collection<int, Item>
      */
     public function getItems(): Collection
     {
         return $this->items;
     }
 
-    public function addItem(ItemCategory $item): static
+    public function addItem(Item $item): static
     {
         if (!$this->items->contains($item)) {
             $this->items->add($item);
-            $item->setCategory($this);
+            $item->addCategory($this);
         }
 
         return $this;
     }
 
-    public function removeItem(ItemCategory $item): static
+    public function removeItem(Item $item): static
     {
         if ($this->items->removeElement($item)) {
-            // set the owning side to null (unless already changed)
-            if ($item->getCategory() === $this) {
-                $item->setCategory(null);
-            }
+            $item->removeCategory($this);
         }
 
         return $this;

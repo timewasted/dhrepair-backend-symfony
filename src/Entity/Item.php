@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(name: 'manufacturer_id', fields: ['manufacturerId'])]
+#[ORM\Index(name: 'availability_id', fields: ['availabilityId'])]
 #[ORM\Index(name: 'is_product', fields: ['isProduct'])]
 #[ORM\Index(name: 'is_viewable', fields: ['isViewable'])]
 #[ORM\Index(name: 'is_purchasable', fields: ['isPurchasable'])]
@@ -110,16 +111,17 @@ class Item
     #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
     private ?\DateTimeImmutable $modifiedAt = null;
 
-    #[ORM\OneToOne]
+    #[ORM\ManyToOne]
     private ?Manufacturer $manufacturer = null;
 
-    #[ORM\OneToOne]
+    #[ORM\ManyToOne]
     private ?Availability $availability = null;
 
     /**
-     * @var Collection<int, ItemCategory>
+     * @var Collection<int, Category>
      */
-    #[ORM\OneToMany(targetEntity: ItemCategory::class, mappedBy: 'item')]
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'items')]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $categories;
 
     /**
@@ -429,31 +431,25 @@ class Item
     }
 
     /**
-     * @return Collection<int, ItemCategory>
+     * @return Collection<int, Category>
      */
     public function getCategories(): Collection
     {
         return $this->categories;
     }
 
-    public function addCategory(ItemCategory $category): static
+    public function addCategory(Category $category): static
     {
         if (!$this->categories->contains($category)) {
             $this->categories->add($category);
-            $category->setItem($this);
         }
 
         return $this;
     }
 
-    public function removeCategory(ItemCategory $category): static
+    public function removeCategory(Category $category): static
     {
-        if ($this->categories->removeElement($category)) {
-            // set the owning side to null (unless already changed)
-            if ($category->getItem() === $this) {
-                $category->setItem(null);
-            }
-        }
+        $this->categories->removeElement($category);
 
         return $this;
     }
