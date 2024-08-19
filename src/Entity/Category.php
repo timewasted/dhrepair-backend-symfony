@@ -23,7 +23,7 @@ class Category
 
     #[ORM\Column(options: ['default' => 0])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.category.parent.greater_than_or_equal')]
-    private ?int $parent = null;
+    private ?int $parent = 0;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'entity.category.name.not_blank')]
@@ -40,7 +40,7 @@ class Category
     private ?string $description = null;
 
     #[ORM\Column(options: ['default' => true])]
-    private ?bool $isViewable = null;
+    private ?bool $isViewable = true;
 
     #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
     private ?\DateTimeImmutable $modifiedAt = null;

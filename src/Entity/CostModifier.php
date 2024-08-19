@@ -18,7 +18,7 @@ class CostModifier
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, options: ['default' => '1.0'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.cost_modifier.modifier.greater_than_or_equal')]
-    private ?string $modifier = null;
+    private ?string $modifier = '1.0';
 
     #[ORM\OneToOne(inversedBy: 'costModifier')]
     private ?Manufacturer $manufacturer = null;

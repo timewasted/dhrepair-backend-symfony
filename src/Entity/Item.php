@@ -50,15 +50,15 @@ class Item
 
     #[ORM\Column(options: ['default' => 0])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.manufacturer_id.greater_than_or_equal')]
-    private ?int $manufacturerId = null;
+    private ?int $manufacturerId = 0;
 
     #[ORM\Column(options: ['default' => 0])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.cost.greater_than_or_equal')]
-    private ?int $cost = null;
+    private ?int $cost = 0;
 
     #[ORM\Column(options: ['default' => -1])]
     #[Assert\GreaterThanOrEqual(value: -1, message: 'entity.item.quantity.greater_than_or_equal')]
-    private ?int $quantity = null;
+    private ?int $quantity = -1;
 
     #[ORM\Column]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.availability_id.greater_than_or_equal')]
@@ -66,46 +66,46 @@ class Item
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, options: ['default' => '0.00'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.weight.greater_than_or_equal')]
-    private ?string $weight = null;
+    private ?string $weight = '0.00';
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, options: ['default' => '0.00'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.length.greater_than_or_equal')]
-    private ?string $length = null;
+    private ?string $length = '0.00';
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, options: ['default' => '0.00'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.width.greater_than_or_equal')]
-    private ?string $width = null;
+    private ?string $width = '0.00';
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, options: ['default' => '0.00'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.height.greater_than_or_equal')]
-    private ?string $height = null;
+    private ?string $height = '0.00';
 
     #[ORM\Column(options: ['default' => true])]
-    private ?bool $isProduct = null;
+    private ?bool $isProduct = true;
 
     #[ORM\Column(options: ['default' => true])]
-    private ?bool $isViewable = null;
+    private ?bool $isViewable = true;
 
     #[ORM\Column(options: ['default' => true])]
-    private ?bool $isPurchasable = null;
+    private ?bool $isPurchasable = true;
 
     #[ORM\Column(options: ['default' => false])]
-    private ?bool $isSpecial = null;
+    private ?bool $isSpecial = false;
 
     #[ORM\Column(options: ['default' => true])]
-    private ?bool $isNew = null;
+    private ?bool $isNew = true;
 
     #[ORM\Column(options: ['default' => true])]
-    private ?bool $chargeTax = null;
+    private ?bool $chargeTax = true;
 
     #[ORM\Column(options: ['default' => true])]
-    private ?bool $chargeShipping = null;
+    private ?bool $chargeShipping = true;
 
     #[ORM\Column(options: ['default' => false])]
-    private ?bool $isFreeShipping = null;
+    private ?bool $isFreeShipping = false;
 
     #[ORM\Column(options: ['default' => false])]
-    private ?bool $freightQuoteRequired = null;
+    private ?bool $freightQuoteRequired = false;
 
     #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
     private ?\DateTimeImmutable $modifiedAt = null;

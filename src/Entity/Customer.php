@@ -54,7 +54,7 @@ class Customer
 
     #[ORM\Column(length: 2, options: ['default' => 'US'])]
     #[Assert\Regex(pattern: '/^US$/', message: 'entity.customer.bill_country.not_us')]
-    private ?string $billCountry = null;
+    private ?string $billCountry = 'US';
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank(message: 'entity.customer.ship_name.not_blank')]
@@ -93,7 +93,7 @@ class Customer
 
     #[ORM\Column(length: 2, options: ['default' => 'US'])]
     #[Assert\Regex(pattern: '/^US$/', message: 'entity.customer.ship_country.not_us')]
-    private ?string $shipCountry = null;
+    private ?string $shipCountry = 'US';
 
     #[ORM\Column(length: 32)]
     #[Assert\NotBlank(message: 'entity.customer.phone_number.not_blank')]
