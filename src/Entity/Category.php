@@ -8,6 +8,9 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Event\PostPersistEventArgs;
+use Doctrine\ORM\Event\PostUpdateEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -58,6 +61,8 @@ class Category
     #[ORM\ManyToMany(targetEntity: Item::class, mappedBy: 'categories')]
     #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $items;
+
+    private ?int $previousParent = null;
 
     public function __construct()
     {
@@ -179,8 +184,33 @@ class Category
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function onChanged(): void
+    public function updateModifiedAt(): void
     {
         $this->modifiedAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function onUpdate(PreUpdateEventArgs $eventArgs): void
+    {
+        if ($eventArgs->hasChangedField('parent')) {
+            $this->previousParent = (int) $eventArgs->getOldValue('parent');
+        }
+    }
+
+    #[ORM\PostPersist]
+    public function onInserted(PostPersistEventArgs $eventArgs): void
+    {
+        $eventArgs->getObjectManager()->getRepository(CategoryClosure::class)
+            ->onCategoryParentChanged((int) $this->id, (int) $this->parent, true);
+    }
+
+    #[ORM\PostUpdate]
+    public function onUpdated(PostUpdateEventArgs $eventArgs): void
+    {
+        if (null !== $this->previousParent) {
+            $eventArgs->getObjectManager()->getRepository(CategoryClosure::class)
+                ->onCategoryParentChanged((int) $this->id, (int) $this->parent, false);
+            $this->previousParent = null;
+        }
     }
 }

@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\CategoryClosure;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,28 +19,41 @@ class CategoryClosureRepository extends ServiceEntityRepository
         parent::__construct($registry, CategoryClosure::class);
     }
 
-    //    /**
-    //     * @return CategoryClosure[] Returns an array of CategoryClosure objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function onCategoryParentChanged(int $categoryId, int $parentId, bool $isNewCategory): void
+    {
+        // See: https://www.percona.com/blog/moving-subtrees-in-closure-table/
+        $connection = $this->getEntityManager()->getConnection();
+        try {
+            $connection->beginTransaction();
 
-    //    public function findOneBySomeField($value): ?CategoryClosure
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+            if ($isNewCategory) {
+                $connection->executeStatement('
+                    INSERT INTO category_closure (parent, child, depth)
+                    VALUES (:categoryId, :categoryId, 0)
+                ', ['categoryId' => $categoryId]);
+            } else {
+                $connection->executeStatement('
+                    DELETE ancestor
+                    FROM category_closure ancestor
+                    JOIN category_closure descendant ON descendant.child = ancestor.child
+                    LEFT JOIN category_closure x ON x.parent = descendant.parent AND x.child = ancestor.parent
+                    WHERE descendant.parent = :categoryId AND x.parent IS NULL
+                ', ['categoryId' => $categoryId]);
+            }
+            $connection->executeStatement('
+                INSERT INTO category_closure (parent, child, depth)
+                SELECT parent.parent, child.child, parent.depth + child.depth + 1
+                FROM category_closure parent, category_closure child
+                WHERE parent.child = :parentId AND child.parent = :categoryId
+            ', [
+                'categoryId' => $categoryId,
+                'parentId' => $parentId,
+            ]);
+
+            $connection->commit();
+        } catch (DBALException $e) {
+            $connection->rollBack();
+            throw $e;
+        }
+    }
 }
