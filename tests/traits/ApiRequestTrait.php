@@ -9,7 +9,7 @@ use App\Entity\UserAuthToken;
 
 trait ApiRequestTrait
 {
-    protected function makeApiRequest(string $method, string $url, ?array $queryParams, ?\JsonSerializable $content = null, ?User $user = null): void
+    protected function makeApiRequest(string $method, string $url, ?array $queryParams = null, ?\JsonSerializable $content = null, ?User $user = null): void
     {
         $parameters = (array) $content?->jsonSerialize();
 
