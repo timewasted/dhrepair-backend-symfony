@@ -49,9 +49,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(max: 255, maxMessage: 'entity.user.email_canonical.too_long')]
     private ?string $emailCanonical = null;
 
-    #[ORM\Column(length: 128)]
+    #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'entity.user.password.not_blank')]
-    #[Assert\Length(max: 128, maxMessage: 'entity.user.password.too_long')]
+    #[Assert\Length(max: 255, maxMessage: 'entity.user.password.too_long')]
     private ?string $password = null;
 
     #[ORM\Column(length: 128, nullable: true, options: ['default' => null])]

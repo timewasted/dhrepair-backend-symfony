@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryClosureRepository::class)]
-#[ORM\UniqueConstraint(name: 'pdc', fields: ['parent', 'child', 'depth'])]
+#[ORM\UniqueConstraint(name: 'pdc', fields: ['parent', 'depth', 'child'])]
 #[ORM\UniqueConstraint(name: 'cpd', fields: ['child', 'parent', 'depth'])]
 class CategoryClosure
 {

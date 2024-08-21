@@ -41,7 +41,7 @@ class Customer
     #[Assert\Length(max: 64, maxMessage: 'entity.customer.bill_city.too_long')]
     private ?string $billCity = null;
 
-    #[ORM\Column(length: 2)]
+    #[ORM\Column(length: 2, options: ['fixed' => true])]
     #[Assert\NotBlank(message: 'entity.customer.bill_state.not_blank')]
     #[Assert\Length(min: 2, max: 2, minMessage: 'entity.customer.bill_state.too_short', maxMessage: 'entity.customer.bill_state.too_long')]
     private ?string $billState = null;
@@ -52,7 +52,7 @@ class Customer
     #[Assert\Regex(pattern: '/^[\d]{5,}/', message: 'entity.customer.bill_zip_code.requires_leading_digits_5')]
     private ?string $billZipCode = null;
 
-    #[ORM\Column(length: 2, options: ['default' => 'US'])]
+    #[ORM\Column(length: 2, options: ['default' => 'US', 'fixed' => true])]
     #[Assert\Regex(pattern: '/^US$/', message: 'entity.customer.bill_country.not_us')]
     private ?string $billCountry = 'US';
 
@@ -80,7 +80,7 @@ class Customer
     #[Assert\Length(max: 64, maxMessage: 'entity.customer.ship_city.too_long')]
     private ?string $shipCity = null;
 
-    #[ORM\Column(length: 2)]
+    #[ORM\Column(length: 2, options: ['fixed' => true])]
     #[Assert\NotBlank(message: 'entity.customer.ship_state.not_blank')]
     #[Assert\Length(min: 2, max: 2, minMessage: 'entity.customer.ship_state.too_short', maxMessage: 'entity.customer.ship_state.too_long')]
     private ?string $shipState = null;
@@ -91,7 +91,7 @@ class Customer
     #[Assert\Regex(pattern: '/^[\d]{5,}/', message: 'entity.customer.ship_zip_code.requires_leading_digits_5')]
     private ?string $shipZipCode = null;
 
-    #[ORM\Column(length: 2, options: ['default' => 'US'])]
+    #[ORM\Column(length: 2, options: ['default' => 'US', 'fixed' => true])]
     #[Assert\Regex(pattern: '/^US$/', message: 'entity.customer.ship_country.not_us')]
     private ?string $shipCountry = 'US';
 

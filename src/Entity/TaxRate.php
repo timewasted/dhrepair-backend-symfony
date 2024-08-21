@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class TaxRate
 {
     #[ORM\Id]
-    #[ORM\Column(length: 2, unique: true)]
+    #[ORM\Column(length: 2, unique: true, options: ['fixed' => true])]
     #[Assert\NotBlank(message: 'entity.tax_rate.state.not_blank')]
     #[Assert\Length(min: 2, max: 2, minMessage: 'entity.tax_rate.state.too_short', maxMessage: 'entity.tax_rate.state.too_long')]
     private ?string $state = null;
