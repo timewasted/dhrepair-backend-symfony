@@ -30,11 +30,11 @@ class CartItem
     #[Assert\GreaterThan(value: 0, message: 'entity.cart_item.quantity.greater_than')]
     private ?int $quantity = null;
 
-    #[ORM\OneToOne]
+    #[ORM\ManyToOne(inversedBy: 'cartItems')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?User $user = null;
 
-    #[ORM\OneToOne]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Item $item = null;
 
@@ -84,7 +84,7 @@ class CartItem
         return $this->user;
     }
 
-    public function setUser(User $user): static
+    public function setUser(?User $user): static
     {
         $this->user = $user;
 
@@ -96,7 +96,7 @@ class CartItem
         return $this->item;
     }
 
-    public function setItem(Item $item): static
+    public function setItem(?Item $item): static
     {
         $this->item = $item;
 

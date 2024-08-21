@@ -16,7 +16,7 @@ class CostModifier
     #[ORM\Column(options: ['unsigned' => true])]
     private ?int $manufacturerId = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, options: ['default' => '1.0'])]
+    #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, options: ['default' => '1.00'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.cost_modifier.modifier.greater_than_or_equal')]
     private ?string $modifier = '1.0';
 

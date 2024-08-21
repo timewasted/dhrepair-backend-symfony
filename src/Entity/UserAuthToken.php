@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class UserAuthToken
 {
     #[ORM\ManyToOne(fetch: 'EAGER', inversedBy: 'authTokens')]
-    #[ORM\JoinColumn(nullable: false, options: ['unsigned' => true])]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE', options: ['unsigned' => true])]
     private ?User $user;
 
     #[ORM\Id]

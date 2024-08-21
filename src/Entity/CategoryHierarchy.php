@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryHierarchyRepository::class)]
+#[ORM\Index(name: 'sets', fields: ['sets'])]
 #[ORM\UniqueConstraint(name: 'lft', fields: ['lft'])]
 class CategoryHierarchy
 {

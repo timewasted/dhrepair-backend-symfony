@@ -98,9 +98,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserAuthToken::class, mappedBy: 'user', cascade: ['persist'], orphanRemoval: true)]
     private Collection $authTokens;
 
+    /**
+     * @var Collection<int, CartItem>
+     */
+    #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'user')]
+    private Collection $cartItems;
+
     public function __construct()
     {
         $this->authTokens = new ArrayCollection();
+        $this->cartItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -324,6 +331,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeAuthToken(UserAuthToken $authToken): static
     {
         $this->authTokens->removeElement($authToken);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CartItem>
+     */
+    public function getCartItems(): Collection
+    {
+        return $this->cartItems;
+    }
+
+    public function addCartItem(CartItem $cartItem): static
+    {
+        if (!$this->cartItems->contains($cartItem)) {
+            $this->cartItems->add($cartItem);
+            $cartItem->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCartItem(CartItem $cartItem): static
+    {
+        if ($this->cartItems->removeElement($cartItem)) {
+            // set the owning side to null (unless already changed)
+            if ($cartItem->getUser() === $this) {
+                $cartItem->setUser(null);
+            }
+        }
 
         return $this;
     }
