@@ -19,6 +19,22 @@ class ReadCategoryResponseTest extends TestCase
 
         $this->assertSame([
             'category' => null,
+            'parent' => null,
+            'children' => [
+                'categories' => [],
+                'items' => [],
+            ],
+        ], $dto->jsonSerialize());
+    }
+
+    public function testJsonSerializeNoParentNoChildrenNoItems(): void
+    {
+        $category = $this->createCategory();
+        $dto = new ReadCategoryResponse($category, [], []);
+
+        $this->assertSame([
+            'category' => $this->relevantCategoryFields($category),
+            'parent' => null,
             'children' => [
                 'categories' => [],
                 'items' => [],
@@ -28,11 +44,13 @@ class ReadCategoryResponseTest extends TestCase
 
     public function testJsonSerializeNoChildrenNoItems(): void
     {
-        $category = $this->createCategory();
+        $parent = $this->createCategory();
+        $category = $this->createCategory($parent);
         $dto = new ReadCategoryResponse($category, [], []);
 
         $this->assertSame([
             'category' => $this->relevantCategoryFields($category),
+            'parent' => $this->relevantCategoryFields($parent),
             'children' => [
                 'categories' => [],
                 'items' => [],
@@ -52,6 +70,7 @@ class ReadCategoryResponseTest extends TestCase
 
         $this->assertSame([
             'category' => $this->relevantCategoryFields($category),
+            'parent' => null,
             'children' => [
                 'categories' => [
                     $this->relevantCategoryFields($children[0]),
@@ -80,6 +99,7 @@ class ReadCategoryResponseTest extends TestCase
 
         $this->assertSame([
             'category' => $this->relevantCategoryFields($category),
+            'parent' => null,
             'children' => [
                 'categories' => [
                     $this->relevantCategoryFields($children[0]),
@@ -95,10 +115,10 @@ class ReadCategoryResponseTest extends TestCase
         ], $dto->jsonSerialize());
     }
 
-    private function createCategory(): Category
+    private function createCategory(?Category $parent = null): Category
     {
         return (new Category())
-            ->setParent(random_int(1, PHP_INT_MAX))
+            ->setParent($parent)
             ->setName(bin2hex(random_bytes(16)))
             ->setSlug(bin2hex(random_bytes(16)))
             ->setDescription(bin2hex(random_bytes(16)))

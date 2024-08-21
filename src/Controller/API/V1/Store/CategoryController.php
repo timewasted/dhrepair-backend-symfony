@@ -16,7 +16,7 @@ class CategoryController extends AbstractController
     #[Route('/categories', name: 'list', methods: ['GET'])]
     public function list(CategoryRepository $repository): Response
     {
-        $categories = $repository->findByParent(0);
+        $categories = $repository->findByParent(null);
 
         return $this->json(new ReadCategoryResponse(null, $categories, []));
     }
@@ -32,9 +32,9 @@ class CategoryController extends AbstractController
                 'id' => $id,
             ], Response::HTTP_NOT_FOUND);
         }
-        $categories = $repository->findByParent((int) $category->getId());
+        $children = $repository->findByParent((int) $category->getId());
         $items = $repository->getItemsInCategory($category);
 
-        return $this->json(new ReadCategoryResponse($category, $categories, $items));
+        return $this->json(new ReadCategoryResponse($category, $children, $items));
     }
 }

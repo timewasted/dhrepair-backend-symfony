@@ -17,8 +17,10 @@ class ReadCategoryResponse implements \JsonSerializable
      */
     public function __construct(?Category $category, array $children, array $items)
     {
+        $parent = $category?->getParent();
         $this->jsonData = [
             'category' => null !== $category ? $this->getRelevantData($category) : null,
+            'parent' => null !== $parent ? $this->getRelevantData($parent) : null,
             'children' => [
                 'categories' => [],
                 'items' => [],

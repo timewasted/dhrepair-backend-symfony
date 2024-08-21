@@ -24,10 +24,6 @@ class Category
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(options: ['default' => 0])]
-    #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.category.parent.greater_than_or_equal')]
-    private ?int $parent = 0;
-
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'entity.category.name.not_blank')]
     #[Assert\Length(max: 255, maxMessage: 'entity.category.name.too_long')]
@@ -48,6 +44,10 @@ class Category
     #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
     private ?\DateTimeImmutable $modifiedAt = null;
 
+    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EAGER')]
+    #[ORM\JoinColumn(name: 'parent')]
+    private ?self $parent = null;
+
     /**
      * @var Collection<int, CategoryClosure>
      */
@@ -62,7 +62,7 @@ class Category
     #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $items;
 
-    private ?int $previousParent = null;
+    private ?self $previousParent = null;
 
     public function __construct()
     {
@@ -73,18 +73,6 @@ class Category
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getParent(): ?int
-    {
-        return $this->parent;
-    }
-
-    public function setParent(int $parent): static
-    {
-        $this->parent = $parent;
-
-        return $this;
     }
 
     public function getName(): ?string
@@ -147,6 +135,18 @@ class Category
         return $this;
     }
 
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): static
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, CategoryClosure>
      */
@@ -193,7 +193,9 @@ class Category
     public function onUpdate(PreUpdateEventArgs $eventArgs): void
     {
         if ($eventArgs->hasChangedField('parent')) {
-            $this->previousParent = (int) $eventArgs->getOldValue('parent');
+            /** @var ?self $prevParent */
+            $prevParent = $eventArgs->getOldValue('parent');
+            $this->previousParent = $prevParent;
         }
     }
 
@@ -201,7 +203,7 @@ class Category
     public function onInserted(PostPersistEventArgs $eventArgs): void
     {
         $eventArgs->getObjectManager()->getRepository(CategoryClosure::class)
-            ->onCategoryParentChanged((int) $this->id, (int) $this->parent, true);
+            ->onCategoryParentChanged((int) $this->id, (int) $this->parent?->getId(), true);
     }
 
     #[ORM\PostUpdate]
@@ -209,7 +211,7 @@ class Category
     {
         if (null !== $this->previousParent) {
             $eventArgs->getObjectManager()->getRepository(CategoryClosure::class)
-                ->onCategoryParentChanged((int) $this->id, (int) $this->parent, false);
+                ->onCategoryParentChanged((int) $this->id, (int) $this->parent?->getId(), false);
             $this->previousParent = null;
         }
     }

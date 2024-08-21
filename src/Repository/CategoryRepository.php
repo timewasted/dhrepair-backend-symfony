@@ -50,16 +50,23 @@ class CategoryRepository extends ServiceEntityRepository
     /**
      * @return Category[]
      */
-    public function findByParent(int $parentId): array
+    public function findByParent(?int $parentId): array
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->select('category')
             ->from(CategoryClosure::class, 'closure')
             ->join(Category::class, 'category', 'WITH', 'category.id = closure.child')
-            ->where('category.parent = :parentId', 'closure.depth = 0')
+            ->where('closure.depth = 0')
             ->orderBy('category.name', 'ASC')
-            ->setParameter('parentId', $parentId)
         ;
+        if (null === $parentId) {
+            $queryBuilder->andWhere('category.parent IS NULL');
+        } else {
+            $queryBuilder
+                ->andWhere('category.parent = :parentId')
+                ->setParameter('parentId', $parentId)
+            ;
+        }
         if (!$this->security->isGranted(User::ROLE_ADMIN)) {
             $queryBuilder->andWhere('category.isViewable != 0');
         }

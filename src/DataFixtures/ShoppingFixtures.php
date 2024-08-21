@@ -51,7 +51,7 @@ class ShoppingFixtures extends Fixture
     private function createBaseCategory(?Category $parent, string $labelPrefix, int $idSuffix, bool $isViewable): Category
     {
         return (new Category())
-            ->setParent((int) $parent?->getId())
+            ->setParent($parent)
             ->setName(sprintf('%s category %d', $labelPrefix, $idSuffix))
             ->setSlug(sprintf('%s-category-%d', str_replace(' ', '-', strtolower($labelPrefix)), $idSuffix))
             ->setDescription(sprintf('Description for %s category %d', strtolower($labelPrefix), $idSuffix))

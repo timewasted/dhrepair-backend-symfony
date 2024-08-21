@@ -74,10 +74,6 @@
         <source>entity.category.name.too_long</source>
         <target>Property "name" is too long (max length: { limit })</target>
       </trans-unit>
-      <trans-unit id="entity.category.parent.greater_than_or_equal">
-        <source>entity.category.parent.greater_than_or_equal</source>
-        <target>Property "parent" must be greater than or equal to { compared_value }</target>
-      </trans-unit>
       <trans-unit id="entity.category.slug.not_blank">
         <source>entity.category.slug.not_blank</source>
         <target>Property "slug" can not be blank</target>
