@@ -11,7 +11,7 @@ SYMFONY  = $(PHP) bin/console
 
 # Misc
 .DEFAULT_GOAL = help
-.PHONY        : help build up start down logs sh bash composer vendor sf cc test test-functional test-unit check check-code fix-code pre-commit
+.PHONY        : help build up start down logs sh bash composer vendor sf cc test test-coverage test-functional test-unit check check-code fix-code pre-commit
 
 ## —— 🎵 🐳 The Symfony Docker Makefile 🐳 🎵 ——————————————————————————————————
 help: ## Outputs this help screen
@@ -43,6 +43,10 @@ bash: ## Connect to the FrankenPHP container via bash so up and down arrows go t
 test: ## Start tests with phpunit, pass the parameter "c=" to add options to phpunit, example: make test c="--group e2e --stop-on-failure"
 	@$(eval c ?=)
 	@$(DOCKER_COMP) exec -e APP_ENV=test php bin/phpunit $(c)
+
+test-coverage: ## Start tests with phpunit and generate a coverage report, pass the parameter "c=" to add options to phpunit
+	@$(eval c ?=)
+	@$(DOCKER_COMP) exec -e APP_ENV=test -e XDEBUG_MODE=coverage php bin/phpunit --coverage-html .phpunit.coverage $(c)
 
 test-functional: c=tests/functional ## Perform only functional tests
 test-functional: test
@@ -76,4 +80,4 @@ check-code: ## Check the code with psalm
 fix-code: ## Run php-cs-fixer
 	@$(PHP_CONT) vendor/bin/php-cs-fixer fix
 
-pre-commit: check-code fix-code ## Perform checks required before committing code
+pre-commit: check-code fix-code test ## Perform checks required before committing code
