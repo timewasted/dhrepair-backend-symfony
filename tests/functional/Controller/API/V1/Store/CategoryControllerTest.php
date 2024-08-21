@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Tests\functional\Controller\API\V1\Store;
 
+use App\DTO\ReadCategoryResponse;
 use App\Entity\Category;
+use App\Entity\Item;
 use App\Entity\User;
 use App\Repository\CategoryRepository;
+use App\Repository\ItemRepository;
 use App\Repository\UserRepository;
 use App\Tests\traits\ApiRequestTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
-/** @psalm-type categoryResponse array{id: int, isViewable: bool} */
 class CategoryControllerTest extends WebTestCase
 {
     use ApiRequestTrait;
@@ -23,6 +26,7 @@ class CategoryControllerTest extends WebTestCase
 
     private KernelBrowser $client;
     private CategoryRepository $categoryRepository;
+    private ItemRepository $itemRepository;
     private UserRepository $userRepository;
 
     protected function setUp(): void
@@ -34,6 +38,7 @@ class CategoryControllerTest extends WebTestCase
         $entityManager = $container->get('doctrine')->getManager();
 
         $this->categoryRepository = $entityManager->getRepository(Category::class);
+        $this->itemRepository = $entityManager->getRepository(Item::class);
         $this->userRepository = $entityManager->getRepository(User::class);
     }
 
@@ -51,85 +56,225 @@ class CategoryControllerTest extends WebTestCase
     }
 
     /**
-     * @return list<array{string, list<categoryResponse>}>
+     * @return list<array{string, bool}>
      */
-    public static function providerUsernameCategoryList(): array
+    public static function providerUsernameAndCanSeeHidden(): array
     {
-        $viewableCategories = [
-            [
-                'id' => 1,
-                'isViewable' => true,
-            ],
-            [
-                'id' => 14,
-                'isViewable' => true,
-            ],
-            [
-                'id' => 27,
-                'isViewable' => true,
-            ],
-        ];
-        $hiddenCategories = [
-            [
-                'id' => 40,
-                'isViewable' => false,
-            ],
-            [
-                'id' => 53,
-                'isViewable' => false,
-            ],
-            [
-                'id' => 66,
-                'isViewable' => false,
-            ],
-        ];
-        $allCategories = array_merge($viewableCategories, $hiddenCategories);
-
         return [
-            ['temporary_user', $viewableCategories],
-            ['valid_user', $viewableCategories],
-            ['admin_user', $allCategories],
-            ['super_admin_user', $allCategories],
+            ['temporary_user', false],
+            ['valid_user', false],
+            ['admin_user', true],
+            ['super_admin_user', true],
         ];
     }
 
-    /**
-     * @dataProvider providerUsernameCategoryList
-     *
-     * @param list<categoryResponse> $categoryData
-     */
-    public function testListUnauthenticated(string $username, array $categoryData): void
+    public function testListUnauthenticated(): void
     {
-        $this->doCategoryListTest(null, $categoryData);
+        /** @var Category[] $childCategories */
+        $childCategories = [
+            $this->categoryRepository->find(1),
+            $this->categoryRepository->find(14),
+            $this->categoryRepository->find(27),
+        ];
+        $dto = new ReadCategoryResponse(null, $childCategories, []);
+
+        $this->doCategoryListTest(null, $dto);
     }
 
     /**
-     * @dataProvider providerUsernameCategoryList
-     *
-     * @param list<categoryResponse> $categoryData
+     * @dataProvider providerUsernameAndCanSeeHidden
      */
-    public function testListAuthenticated(string $username, array $categoryData): void
+    public function testListAuthenticated(string $username, bool $canSeeHidden): void
     {
         $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
-        $this->assertNotNull($user);
+        $childCategories = [
+            $this->categoryRepository->find(1),
+            $this->categoryRepository->find(14),
+            $this->categoryRepository->find(27),
+        ];
+        if ($canSeeHidden) {
+            $childCategories = array_merge($childCategories, [
+                $this->categoryRepository->find(40),
+                $this->categoryRepository->find(53),
+                $this->categoryRepository->find(66),
+            ]);
+        }
+        /** @var Category[] $childCategories */
+        $dto = new ReadCategoryResponse(null, $childCategories, []);
 
-        $this->doCategoryListTest($user, $categoryData);
+        $this->doCategoryListTest($user, $dto);
     }
 
-    private function assertIsCategoryData(array $data): void
+    public function testReadUnauthenticatedCategoryExistsNoItems(): void
     {
-        $this->assertArrayHasKey('id', $data);
-        $this->assertArrayHasKey('name', $data);
-        $this->assertArrayHasKey('slug', $data);
-        $this->assertArrayHasKey('description', $data);
-        $this->assertArrayHasKey('isViewable', $data);
-        $this->assertArrayHasKey('modifiedAt', $data);
+        $categoryId = 1;
+        $category = $this->categoryRepository->find($categoryId);
+        /** @var Category[] $childCategories */
+        $childCategories = [
+            $this->categoryRepository->find(2),
+            $this->categoryRepository->find(6),
+        ];
+        $dto = new ReadCategoryResponse($category, $childCategories, []);
+
+        $this->doCategoryReadTest($categoryId, null, $dto);
+    }
+
+    public function testReadUnauthenticatedCategoryExistsWithItems(): void
+    {
+        $categoryId = 2;
+        $category = $this->categoryRepository->find($categoryId);
+        /** @var Category[] $childCategories */
+        $childCategories = [
+            $this->categoryRepository->find(3),
+            $this->categoryRepository->find(4),
+        ];
+        /** @var Item[] $items */
+        $items = [
+            $this->itemRepository->find(1),
+            $this->itemRepository->find(2),
+        ];
+        $dto = new ReadCategoryResponse($category, $childCategories, $items);
+
+        $this->doCategoryReadTest($categoryId, null, $dto);
+    }
+
+    public function testReadUnauthenticatedCategoryDoesNotExist(): void
+    {
+        $categoryId = 9999;
+        $this->makeApiRequest('GET', self::READ_URL.$categoryId);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+    }
+
+    public function testReadUnauthenticatedCategoryIsNotViewable(): void
+    {
+        $categoryId = 5;
+        $this->makeApiRequest('GET', self::READ_URL.$categoryId);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+    }
+
+    public function testReadUnauthenticatedCategoryIsViewableButAncestorIsNot(): void
+    {
+        $categoryId = 11;
+        $this->makeApiRequest('GET', self::READ_URL.$categoryId);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
     /**
-     * @param list<categoryResponse> $expectedCategoryData
+     * @dataProvider providerUsernameAndCanSeeHidden
      */
-    private function doCategoryListTest(?User $user, array $expectedCategoryData): void
+    public function testReadAuthenticatedCategoryExistsNoItems(string $username, bool $canSeeHidden): void
+    {
+        $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
+        $categoryId = 1;
+        $category = $this->categoryRepository->find($categoryId);
+        $childCategories = [
+            $this->categoryRepository->find(2),
+            $this->categoryRepository->find(6),
+        ];
+        if ($canSeeHidden) {
+            $childCategories = array_merge([$this->categoryRepository->find(10)], $childCategories);
+        }
+        /** @var Category[] $childCategories */
+        $dto = new ReadCategoryResponse($category, $childCategories, []);
+
+        $this->doCategoryReadTest($categoryId, $user, $dto);
+    }
+
+    /**
+     * @dataProvider providerUsernameAndCanSeeHidden
+     */
+    public function testReadAuthenticatedCategoryExistsWithItems(string $username, bool $canSeeHidden): void
+    {
+        $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
+        $categoryId = 2;
+        $category = $this->categoryRepository->find($categoryId);
+        $childCategories = [
+            $this->categoryRepository->find(3),
+            $this->categoryRepository->find(4),
+        ];
+        $items = [
+            $this->itemRepository->find(1),
+            $this->itemRepository->find(2),
+        ];
+        if ($canSeeHidden) {
+            $childCategories[] = $this->categoryRepository->find(5);
+            $items[] = $this->itemRepository->find(3);
+        }
+        /**
+         * @var Category[] $childCategories
+         * @var Item[]     $items
+         */
+        $dto = new ReadCategoryResponse($category, $childCategories, $items);
+
+        $this->doCategoryReadTest($categoryId, $user, $dto);
+    }
+
+    /**
+     * @dataProvider providerUsername
+     */
+    public function testReadAuthenticatedCategoryDoesNotExist(string $username): void
+    {
+        $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
+        $categoryId = 9999;
+        $this->makeApiRequest('GET', self::READ_URL.$categoryId, null, null, $user);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @dataProvider providerUsernameAndCanSeeHidden
+     */
+    public function testReadAuthenticatedCategoryIsNotViewable(string $username, bool $canSeeHidden): void
+    {
+        $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
+        $categoryId = 5;
+        if ($canSeeHidden) {
+            $category = $this->categoryRepository->find($categoryId);
+            /** @var Item[] $items */
+            $items = [
+                $this->itemRepository->find(10),
+                $this->itemRepository->find(11),
+                $this->itemRepository->find(12),
+            ];
+            $dto = new ReadCategoryResponse($category, [], $items);
+
+            $this->doCategoryReadTest($categoryId, $user, $dto);
+        } else {
+            $this->makeApiRequest('GET', self::READ_URL.$categoryId, null, null, $user);
+
+            $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    /**
+     * @dataProvider providerUsernameAndCanSeeHidden
+     */
+    public function testReadAuthenticatedCategoryIsViewableButAncestorIsNot(string $username, bool $canSeeHidden): void
+    {
+        $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
+        $categoryId = 11;
+        if ($canSeeHidden) {
+            $category = $this->categoryRepository->find($categoryId);
+            /** @var Item[] $items */
+            $items = [
+                $this->itemRepository->find(28),
+                $this->itemRepository->find(29),
+                $this->itemRepository->find(30),
+            ];
+            $dto = new ReadCategoryResponse($category, [], $items);
+
+            $this->doCategoryReadTest($categoryId, $user, $dto);
+        } else {
+            $this->makeApiRequest('GET', self::READ_URL.$categoryId, null, null, $user);
+
+            $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    private function doCategoryListTest(?User $user, ReadCategoryResponse $dto): void
     {
         $this->makeApiRequest('GET', self::LIST_URL, null, null, $user);
 
@@ -138,27 +283,18 @@ class CategoryControllerTest extends WebTestCase
         $this->assertJson((string) $response->getContent());
         $jsonData = (array) json_decode((string) $response->getContent(), true);
 
-        $this->assertArrayHasKey('category', $jsonData);
-        $this->assertArrayHasKey('children', $jsonData);
+        $this->assertSame($dto->jsonSerialize(), $jsonData);
+    }
 
-        $this->assertNull($jsonData['category']);
+    private function doCategoryReadTest(int $categoryId, ?User $user, ReadCategoryResponse $dto): void
+    {
+        $this->makeApiRequest('GET', self::READ_URL.$categoryId, null, null, $user);
 
-        $this->assertIsArray($jsonData['children']);
-        $this->assertArrayHasKey('categories', $jsonData['children']);
-        $this->assertArrayHasKey('items', $jsonData['children']);
+        $this->assertResponseIsSuccessful();
+        $response = $this->client->getResponse();
+        $this->assertJson((string) $response->getContent());
+        $jsonData = (array) json_decode((string) $response->getContent(), true);
 
-        $this->assertIsArray($jsonData['children']['categories']);
-        /**
-         * @var int              $index
-         * @var categoryResponse $category
-         */
-        foreach ($jsonData['children']['categories'] as $index => $category) {
-            $this->assertIsCategoryData($category);
-            $this->assertSame($expectedCategoryData[$index]['id'], $category['id']);
-            $this->assertSame($expectedCategoryData[$index]['isViewable'], $category['isViewable']);
-        }
-
-        $this->assertIsArray($jsonData['children']['items']);
-        $this->assertEmpty($jsonData['children']['items']);
+        $this->assertSame($dto->jsonSerialize(), $jsonData);
     }
 }
