@@ -35,7 +35,14 @@ services:
             $schemaPrefix: 'file://'
         tags:
             - name: kernel.event_subscriber
-    
+
+    App\Purger\MySQLORMPurgerFactory:
+        arguments:
+            $disableForeignKeyChecks: true
+        tags:
+            - name: doctrine.fixtures.purger_factory
+              alias: mysql_purger
+
     Opis\JsonSchema\Resolvers\SchemaResolver:
         calls:
             - registerPrefix:

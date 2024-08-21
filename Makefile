@@ -11,7 +11,7 @@ SYMFONY  = $(PHP) bin/console
 
 # Misc
 .DEFAULT_GOAL = help
-.PHONY        : help build up start down logs sh bash composer vendor sf cc test test-coverage test-functional test-unit check check-code fix-code pre-commit
+.PHONY        : help build up start down logs sh bash composer vendor sf cc init-test-db test test-coverage test-functional test-unit check check-code fix-code pre-commit
 
 ## —— 🎵 🐳 The Symfony Docker Makefile 🐳 🎵 ——————————————————————————————————
 help: ## Outputs this help screen
@@ -39,6 +39,11 @@ sh: ## Connect to the FrankenPHP container
 
 bash: ## Connect to the FrankenPHP container via bash so up and down arrows go to previous commands
 	@$(PHP_CONT) bash
+
+init-test-db: ## Initialize the test database by importing the schema and creating fixtures
+	@$(SYMFONY) doctrine:query:sql --env=test -- 'DROP DATABASE app_test; CREATE DATABASE app_test;'
+	@$(SYMFONY) doctrine:schema:create --env=test
+	@$(SYMFONY) doctrine:fixtures:load --env=test --no-interaction --no-debug --purge-with-truncate --purger mysql_purger
 
 test: ## Start tests with phpunit, pass the parameter "c=" to add options to phpunit, example: make test c="--group e2e --stop-on-failure"
 	@$(eval c ?=)
