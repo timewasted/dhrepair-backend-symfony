@@ -18,7 +18,7 @@ class Image
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -35,19 +35,19 @@ class Image
     #[Assert\Length(max: 255, maxMessage: 'entity.image.title.too_long')]
     private ?string $title = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.image.width.greater_than_or_equal')]
     private ?int $width = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.image.height.greater_than_or_equal')]
     private ?int $height = null;
 
-    #[ORM\Column(nullable: true, options: ['default' => null])]
+    #[ORM\Column(nullable: true, options: ['default' => null, 'unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.image.thumb_width.greater_than_or_equal')]
     private ?int $thumbWidth = null;
 
-    #[ORM\Column(nullable: true, options: ['default' => null])]
+    #[ORM\Column(nullable: true, options: ['default' => null, 'unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.image.thumb_height.greater_than_or_equal')]
     private ?int $thumbHeight = null;
 

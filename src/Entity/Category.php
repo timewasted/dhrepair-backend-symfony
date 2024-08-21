@@ -21,7 +21,7 @@ class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -45,7 +45,7 @@ class Category
     private ?\DateTimeImmutable $modifiedAt = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EAGER')]
-    #[ORM\JoinColumn(name: 'parent')]
+    #[ORM\JoinColumn(name: 'parent', options: ['unsigned' => true])]
     private ?self $parent = null;
 
     /**

@@ -21,7 +21,7 @@ class Order
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -131,15 +131,15 @@ class Order
     #[Assert\Length(max: 512, maxMessage: 'entity.order.comments.too_long')]
     private ?string $comments = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.order.subtotal.greater_than_or_equal')]
     private ?int $subtotal = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.order.tax.greater_than_or_equal')]
     private ?int $tax = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.order.shipping.greater_than_or_equal')]
     private ?int $shipping = null;
 

@@ -26,7 +26,7 @@ class Item
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -49,11 +49,11 @@ class Item
     #[Assert\Length(max: 65535, maxMessage: 'entity.item.description.too_long')]
     private ?string $description = null;
 
-    #[ORM\Column(options: ['default' => 0])]
+    #[ORM\Column(options: ['default' => 0, 'unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.manufacturer_id.greater_than_or_equal')]
     private ?int $manufacturerId = 0;
 
-    #[ORM\Column(options: ['default' => 0])]
+    #[ORM\Column(options: ['default' => 0, 'unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.cost.greater_than_or_equal')]
     private ?int $cost = 0;
 
@@ -61,7 +61,7 @@ class Item
     #[Assert\GreaterThanOrEqual(value: -1, message: 'entity.item.quantity.greater_than_or_equal')]
     private ?int $quantity = -1;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.availability_id.greater_than_or_equal')]
     private ?int $availabilityId = null;
 

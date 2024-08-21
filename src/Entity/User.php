@@ -26,7 +26,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     private ?int $id = null;
 
     #[ORM\Column(length: 64)]
@@ -82,7 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true, options: ['default' => null])]
     private ?\DateTimeImmutable $passwordRequestedAt = null;
 
-    #[ORM\Column(options: ['default' => 0])]
+    #[ORM\Column(options: ['default' => 0, 'unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.user.failed_login_attempts.greater_than_or_equal')]
     private int $failedLoginAttempts = 0;
 

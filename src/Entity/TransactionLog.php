@@ -16,10 +16,10 @@ class TransactionLog
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThan(value: 0, message: 'entity.transaction_log.order_id.greater_than')]
     private ?int $orderId = null;
 
@@ -37,7 +37,7 @@ class TransactionLog
     #[Assert\Length(max: 32, maxMessage: 'entity.transaction_log.action.too_long')]
     private ?string $action = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.transaction_log.amount.greater_than_or_equal')]
     private ?int $amount = null;
 

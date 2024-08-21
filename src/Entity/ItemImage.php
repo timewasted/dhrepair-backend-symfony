@@ -14,16 +14,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ItemImage
 {
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThan(value: 0, message: 'entity.item_image.item_id.greater_than')]
     private ?int $itemId = null;
 
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThan(value: 0, message: 'entity.item_image.image_id.greater_than')]
     private ?int $imageId = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item_image.position.greater_than_or_equal')]
     private ?int $position = null;
 

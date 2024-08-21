@@ -15,18 +15,18 @@ class CartItem
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThan(value: 0, message: 'entity.cart_item.user_id.greater_than')]
     private ?int $userId = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThan(value: 0, message: 'entity.cart_item.item_id.greater_than')]
     private ?int $itemId = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThan(value: 0, message: 'entity.cart_item.quantity.greater_than')]
     private ?int $quantity = null;
 

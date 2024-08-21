@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Customer
 {
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThan(value: 0, message: 'entity.customer.user_id.greater_than')]
     private ?int $userId = null;
 

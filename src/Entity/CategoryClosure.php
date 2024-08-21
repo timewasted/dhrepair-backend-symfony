@@ -14,17 +14,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CategoryClosure
 {
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.category_closure.parent.greater_than_or_equal')]
     private ?int $parent = null;
 
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.category_closure.child.greater_than_or_equal')]
     private ?int $child = null;
 
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.category_closure.depth.greater_than_or_equal')]
     private ?int $depth = null;
 

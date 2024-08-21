@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CostModifier
 {
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     private ?int $manufacturerId = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, options: ['default' => '1.0'])]

@@ -14,14 +14,14 @@ class OrderItem
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThan(value: 0, message: 'entity.order_item.order_id.greater_than')]
     private ?int $orderId = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThan(value: 0, message: 'entity.order_item.quantity.greater_than')]
     private ?int $quantity = null;
 
@@ -35,7 +35,7 @@ class OrderItem
     #[Assert\Length(max: 64, maxMessage: 'entity.order_item.sku.too_long')]
     private ?string $sku = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.order_item.cost.greater_than_or_equal')]
     private ?int $cost = null;
 
