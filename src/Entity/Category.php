@@ -63,7 +63,7 @@ class Category
     #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $items;
 
-    private ?self $previousParent = null;
+    private bool $hasParentChanged = false;
 
     public function __construct()
     {
@@ -203,11 +203,7 @@ class Category
     #[ORM\PreUpdate]
     public function onUpdate(PreUpdateEventArgs $eventArgs): void
     {
-        if ($eventArgs->hasChangedField('parent')) {
-            /** @var ?self $prevParent */
-            $prevParent = $eventArgs->getOldValue('parent');
-            $this->previousParent = $prevParent;
-        }
+        $this->hasParentChanged = $eventArgs->hasChangedField('parent');
     }
 
     #[ORM\PostPersist]
@@ -220,10 +216,10 @@ class Category
     #[ORM\PostUpdate]
     public function onUpdated(PostUpdateEventArgs $eventArgs): void
     {
-        if (null !== $this->previousParent) {
+        if ($this->hasParentChanged) {
             $eventArgs->getObjectManager()->getRepository(CategoryClosure::class)
                 ->onCategoryParentChanged((int) $this->id, (int) $this->parent?->getId(), false);
-            $this->previousParent = null;
+            $this->hasParentChanged = false;
         }
     }
 }
