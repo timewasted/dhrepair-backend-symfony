@@ -17,6 +17,7 @@ readonly class UpdateCategoryRequest implements \JsonSerializable
     ) {
     }
 
+    /** @psalm-suppress PossiblyUnusedMethod */
     public function updateEntity(Category $entity, ?Category $parent): Category
     {
         return $entity
