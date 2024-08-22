@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\DTO\UpdateCategoryRequest;
 use App\Entity\Category;
 use App\Entity\CategoryClosure;
 use App\Entity\Item;
@@ -96,5 +97,25 @@ class CategoryRepository extends ServiceEntityRepository
         }
 
         return false;
+    }
+
+    public function update(UpdateCategoryRequest $dto): ?Category
+    {
+        $parent = null;
+        if (null !== $dto->getParentId()) {
+            if (null === ($parent = $this->find($dto->getParentId()))) {
+                return null;
+            }
+        }
+
+        $entity = $this->find($dto->getId());
+        if (null !== $entity) {
+            $entity = $dto->updateEntity($entity, $parent);
+            $entityManager = $this->getEntityManager();
+            $entityManager->persist($entity);
+            $entityManager->flush();
+        }
+
+        return $entity;
     }
 }
