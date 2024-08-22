@@ -35,14 +35,10 @@ class AuthenticationFailureHandler extends AbstractAuthenticationFailureHandler
 
     private function increaseFailedLoginCount(Request $request): void
     {
+        /** @psalm-suppress MixedAssignment */
         $requestData = json_decode($request->getContent(), true);
-        if (!is_array($requestData) || !isset($requestData['username'])) {
-            return;
+        if (is_array($requestData) && isset($requestData['username']) && is_string($requestData['username'])) {
+            $this->userRepository->incrementFailedLoginCount($requestData['username']);
         }
-        $user = $this->userRepository->findOneBy(['usernameCanonical' => $requestData['username']]);
-        if (null === $user) {
-            return;
-        }
-        $this->userRepository->incrementFailedLoginCount($user);
     }
 }
