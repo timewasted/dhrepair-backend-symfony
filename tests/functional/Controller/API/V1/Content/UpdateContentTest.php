@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\functional\Controller\API\V1\Content;
 
 use App\DTO\UpdatePageContentRequest;
-use App\Entity\PageContent;
 use App\Entity\User;
-use App\Repository\PageContentRepository;
 use App\Repository\UserRepository;
 use App\Tests\traits\ApiRequestTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -15,14 +13,13 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class ContentControllerTest extends WebTestCase
+class UpdateContentTest extends WebTestCase
 {
     use ApiRequestTrait;
 
     private const string CONTENT_URL = '/api/v1/content/';
 
     private KernelBrowser $client;
-    private PageContentRepository $contentRepository;
     private UserRepository $userRepository;
 
     protected function setUp(): void
@@ -33,21 +30,7 @@ class ContentControllerTest extends WebTestCase
         $container = self::getContainer();
         $entityManager = $container->get('doctrine')->getManager();
 
-        $this->contentRepository = $entityManager->getRepository(PageContent::class);
         $this->userRepository = $entityManager->getRepository(User::class);
-    }
-
-    /**
-     * @return list<array{string}>
-     */
-    public static function providerUsername(): array
-    {
-        return [
-            ['temporary_user'],
-            ['valid_user'],
-            ['admin_user'],
-            ['super_admin_user'],
-        ];
     }
 
     /**
@@ -63,34 +46,7 @@ class ContentControllerTest extends WebTestCase
         ];
     }
 
-    public function testContentReadPageExistsUnauthenticated(): void
-    {
-        $this->doReadPageExistsTest('index');
-    }
-
-    public function testContentReadPageExistsNullTitleUnauthenticated(): void
-    {
-        $this->doReadPageExistsTest('null_title', true);
-    }
-
-    /**
-     * @dataProvider providerUsername
-     */
-    public function testContentReadPageExistsAuthenticated(string $username): void
-    {
-        $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
-        $this->assertNotNull($user);
-
-        $this->doReadPageExistsTest('index', false, $user);
-    }
-
-    public function testContentReadPageDoesNotExist(): void
-    {
-        $this->client->request('GET', self::CONTENT_URL.'invalid-page-123');
-        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
-    }
-
-    public function testContentUpdatePageExistsUnauthenticated(): void
+    public function testUpdateUnauthenticatedPageExists(): void
     {
         $this->expectException(AccessDeniedException::class);
 
@@ -105,7 +61,7 @@ class ContentControllerTest extends WebTestCase
     /**
      * @dataProvider providerUsernameUpdateStatus
      */
-    public function testContentUpdatePageExistsAuthenticated(string $username, bool $expectAccessGranted): void
+    public function testUpdateAuthenticatedPageExists(string $username, bool $expectAccessGranted): void
     {
         $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
         $this->assertNotNull($user);
@@ -135,7 +91,7 @@ class ContentControllerTest extends WebTestCase
         $this->assertEqualsWithDelta((new \DateTimeImmutable())->getTimestamp(), $modifiedAt->getTimestamp(), 2);
     }
 
-    public function testContentUpdatePageDoesNotExistUnauthenticated(): void
+    public function testUpdateUnauthenticatedPageDoesNotExist(): void
     {
         $this->expectException(AccessDeniedException::class);
 
@@ -150,7 +106,7 @@ class ContentControllerTest extends WebTestCase
     /**
      * @dataProvider providerUsernameUpdateStatus
      */
-    public function testContentUpdatePageDoesNotExistAuthenticated(string $username, bool $expectAccessGranted): void
+    public function testUpdateAuthenticatedPageDoesNotExist(string $username, bool $expectAccessGranted): void
     {
         $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
         $this->assertNotNull($user);
@@ -197,12 +153,5 @@ class ContentControllerTest extends WebTestCase
 
         $this->assertIsString($jsonData['modifiedAt']);
         $this->assertNotEmpty($jsonData['modifiedAt']);
-    }
-
-    private function doReadPageExistsTest(string $page, bool $isTitleNull = false, ?User $user = null): void
-    {
-        $this->makeApiRequest('GET', self::CONTENT_URL.$page, null, null, $user);
-
-        $this->doPageExistsAssertions($isTitleNull);
     }
 }

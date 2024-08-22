@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\functional\Controller\API\V1\Store;
+namespace App\Tests\functional\Controller\API\V1\Store\Category;
 
 use App\DTO\ReadCategoryResponse;
 use App\Entity\Category;
@@ -16,13 +16,11 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class CategoryControllerTest extends WebTestCase
+class ReadCategoryTest extends WebTestCase
 {
     use ApiRequestTrait;
 
-    private const string STORE_URL = '/api/v1/store/';
-    private const string LIST_URL = self::STORE_URL.'categories';
-    private const string READ_URL = self::STORE_URL.'category/';
+    private const string READ_URL = '/api/v1/store/category/';
 
     private KernelBrowser $client;
     private CategoryRepository $categoryRepository;
@@ -66,43 +64,6 @@ class CategoryControllerTest extends WebTestCase
             ['admin_user', true],
             ['super_admin_user', true],
         ];
-    }
-
-    public function testListUnauthenticated(): void
-    {
-        /** @var Category[] $childCategories */
-        $childCategories = [
-            $this->categoryRepository->find(1),
-            $this->categoryRepository->find(14),
-            $this->categoryRepository->find(27),
-        ];
-        $dto = new ReadCategoryResponse(null, $childCategories, []);
-
-        $this->doCategoryListTest(null, $dto);
-    }
-
-    /**
-     * @dataProvider providerUsernameAndCanSeeHidden
-     */
-    public function testListAuthenticated(string $username, bool $canSeeHidden): void
-    {
-        $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
-        $childCategories = [
-            $this->categoryRepository->find(1),
-            $this->categoryRepository->find(14),
-            $this->categoryRepository->find(27),
-        ];
-        if ($canSeeHidden) {
-            $childCategories = array_merge($childCategories, [
-                $this->categoryRepository->find(40),
-                $this->categoryRepository->find(53),
-                $this->categoryRepository->find(66),
-            ]);
-        }
-        /** @var Category[] $childCategories */
-        $dto = new ReadCategoryResponse(null, $childCategories, []);
-
-        $this->doCategoryListTest($user, $dto);
     }
 
     public function testReadUnauthenticatedCategoryExistsNoItems(): void
@@ -272,18 +233,6 @@ class CategoryControllerTest extends WebTestCase
 
             $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         }
-    }
-
-    private function doCategoryListTest(?User $user, ReadCategoryResponse $dto): void
-    {
-        $this->makeApiRequest('GET', self::LIST_URL, null, null, $user);
-
-        $this->assertResponseIsSuccessful();
-        $response = $this->client->getResponse();
-        $this->assertJson((string) $response->getContent());
-        $jsonData = (array) json_decode((string) $response->getContent(), true);
-
-        $this->assertSame($dto->jsonSerialize(), $jsonData);
     }
 
     private function doCategoryReadTest(int $categoryId, ?User $user, ReadCategoryResponse $dto): void
