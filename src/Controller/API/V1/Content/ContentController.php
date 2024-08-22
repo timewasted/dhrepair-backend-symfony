@@ -9,6 +9,7 @@ use App\DTO\ReadPageContentResponse;
 use App\DTO\UpdatePageContentRequest;
 use App\Entity\User;
 use App\Repository\PageContentRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -38,13 +39,18 @@ class ContentController extends AbstractController
     public function update(
         #[MapRequestPayload] UpdatePageContentRequest $updateDto,
         PageContentRepository $repository,
+        EntityManagerInterface $entityManager,
     ): Response {
-        if (null === ($entity = $repository->update($updateDto))) {
+        if (null === ($pageContent = $repository->find($updateDto->getId()))) {
             return $this->json([
                 'id' => $updateDto->getId(),
             ], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json(new ReadPageContentResponse($entity));
+        $pageContent->applyUpdate($updateDto);
+        $entityManager->persist($pageContent);
+        $entityManager->flush();
+
+        return $this->json(new ReadPageContentResponse($pageContent));
     }
 }

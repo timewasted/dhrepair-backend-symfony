@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\DTO\UpdateCategoryRequest;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -180,6 +181,16 @@ class Category
         }
 
         return $this;
+    }
+
+    public function applyUpdate(UpdateCategoryRequest $dto, ?Category $parent): void
+    {
+        $this
+            ->setParent($parent)
+            ->setName($dto->getName())
+            ->setDescription($dto->getDescription())
+            ->setIsViewable($dto->isViewable())
+        ;
     }
 
     #[ORM\PrePersist]

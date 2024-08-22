@@ -9,6 +9,7 @@ use App\DTO\ReadCategoryResponse;
 use App\DTO\UpdateCategoryRequest;
 use App\Entity\User;
 use App\Repository\CategoryRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -49,12 +50,26 @@ class CategoryController extends AbstractController
     public function update(
         #[MapRequestPayload] UpdateCategoryRequest $updateDto,
         CategoryRepository $repository,
+        EntityManagerInterface $entityManager,
     ): Response {
-        if (null === ($category = $repository->update($updateDto))) {
+        if (null === ($category = $repository->find($updateDto->getId()))) {
             return $this->json([
                 'id' => $updateDto->getId(),
             ], Response::HTTP_NOT_FOUND);
         }
+        $parent = null;
+        if (null !== $updateDto->getParentId()) {
+            if (null === ($parent = $repository->find($updateDto->getParentId()))) {
+                return $this->json([
+                    'id' => $updateDto->getParentId(),
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        }
+
+        $category->applyUpdate($updateDto, $parent);
+        $entityManager->persist($category);
+        $entityManager->flush();
+
         $children = $repository->findByParent((int) $category->getId());
         $items = $repository->getItemsInCategory($category);
 

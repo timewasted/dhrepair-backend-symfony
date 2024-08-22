@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\DTO;
 
-use App\Entity\Category;
-
 readonly class UpdateCategoryRequest implements \JsonSerializable
 {
     public function __construct(
@@ -15,17 +13,6 @@ readonly class UpdateCategoryRequest implements \JsonSerializable
         private string $description,
         private bool $isViewable,
     ) {
-    }
-
-    /** @psalm-suppress PossiblyUnusedMethod */
-    public function updateEntity(Category $entity, ?Category $parent): Category
-    {
-        return $entity
-            ->setParent($parent)
-            ->setName($this->getName())
-            ->setDescription($this->getDescription())
-            ->setIsViewable($this->isViewable())
-        ;
     }
 
     public function getId(): int

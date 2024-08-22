@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\DTO;
 
-use App\Entity\PageContent;
-
 readonly class UpdatePageContentRequest implements \JsonSerializable
 {
     public function __construct(
@@ -13,15 +11,6 @@ readonly class UpdatePageContentRequest implements \JsonSerializable
         private ?string $title,
         private string $content,
     ) {
-    }
-
-    /** @psalm-suppress PossiblyUnusedMethod */
-    public function updateEntity(PageContent $entity): PageContent
-    {
-        return $entity
-            ->setTitle($this->getTitle())
-            ->setContent($this->getContent())
-        ;
     }
 
     public function getId(): string

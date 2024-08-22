@@ -140,6 +140,7 @@ class UpdateCategoryTest extends WebTestCase
         $this->assertSame($category->getName(), $updateDto->getName());
         $this->assertSame($category->getDescription(), $updateDto->getDescription());
         $this->assertSame($category->isViewable(), $updateDto->isViewable());
+        $this->assertEqualsWithDelta((new \DateTimeImmutable())->getTimestamp(), (int) $category->getModifiedAt()?->getTimestamp(), 2);
     }
 
     /**
@@ -193,7 +194,7 @@ class UpdateCategoryTest extends WebTestCase
             return;
         }
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $this->assertNull($category->getParent());
         $this->assertNotSame($category->getName(), $updateDto->getName());
