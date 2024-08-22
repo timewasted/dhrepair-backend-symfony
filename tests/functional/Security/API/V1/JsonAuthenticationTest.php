@@ -8,6 +8,7 @@ use App\DataFixtures\UserFixtures;
 use App\Entity\User;
 use App\Entity\UserAuthToken;
 use App\Exception\Authorization\NotConfirmedException;
+use App\Security\API\V1\JSON\AuthenticationFailureHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -67,7 +68,7 @@ class JsonAuthenticationTest extends WebTestCase
         $responseData = $this->doAuthRequest($username, UserFixtures::DEFAULT_PASSWORD, Response::HTTP_UNAUTHORIZED);
 
         $this->assertSame([
-            'path' => 'api-v1',
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
             'error' => UserNotFoundException::class,
         ], $responseData);
     }
@@ -81,7 +82,7 @@ class JsonAuthenticationTest extends WebTestCase
         $responseData = $this->doAuthRequest($username, 'invalid', Response::HTTP_UNAUTHORIZED);
 
         $this->assertSame([
-            'path' => 'api-v1',
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
             'error' => BadCredentialsException::class,
         ], $responseData);
 
@@ -110,7 +111,7 @@ class JsonAuthenticationTest extends WebTestCase
         $responseData = $this->doAuthRequest($username, UserFixtures::DEFAULT_PASSWORD, Response::HTTP_UNAUTHORIZED);
 
         $this->assertSame([
-            'path' => 'api-v1',
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
             'error' => NotConfirmedException::class,
         ], $responseData);
     }
@@ -121,7 +122,7 @@ class JsonAuthenticationTest extends WebTestCase
         $responseData = $this->doAuthRequest($username, UserFixtures::DEFAULT_PASSWORD, Response::HTTP_UNAUTHORIZED);
 
         $this->assertSame([
-            'path' => 'api-v1',
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
             'error' => LockedException::class,
         ], $responseData);
     }
@@ -132,7 +133,7 @@ class JsonAuthenticationTest extends WebTestCase
         $responseData = $this->doAuthRequest($username, UserFixtures::DEFAULT_PASSWORD, Response::HTTP_UNAUTHORIZED);
 
         $this->assertSame([
-            'path' => 'api-v1',
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
             'error' => DisabledException::class,
         ], $responseData);
     }
@@ -143,7 +144,7 @@ class JsonAuthenticationTest extends WebTestCase
         $responseData = $this->doAuthRequest($username, UserFixtures::DEFAULT_PASSWORD, Response::HTTP_UNAUTHORIZED);
 
         $this->assertSame([
-            'path' => 'api-v1',
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
             'error' => AccountExpiredException::class,
         ], $responseData);
     }
@@ -154,7 +155,7 @@ class JsonAuthenticationTest extends WebTestCase
         $responseData = $this->doAuthRequest($username, UserFixtures::DEFAULT_PASSWORD, Response::HTTP_UNAUTHORIZED);
 
         $this->assertSame([
-            'path' => 'api-v1',
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
             'error' => CredentialsExpiredException::class,
         ], $responseData);
     }

@@ -23,7 +23,6 @@ abstract class AbstractAuthenticationFailureHandler implements AuthenticationFai
             $exception = $exception->getPrevious();
         }
 
-        // FIXME: Define proper responses for these cases.
         return match (true) {
             $exception instanceof AccountExpiredException => ['error' => AccountExpiredException::class],
             $exception instanceof BadCredentialsException => ['error' => BadCredentialsException::class],

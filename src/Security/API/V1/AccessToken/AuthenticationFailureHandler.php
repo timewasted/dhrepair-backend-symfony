@@ -13,11 +13,12 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 /** @psalm-suppress UnusedClass */
 class AuthenticationFailureHandler extends AbstractAuthenticationFailureHandler
 {
+    public const string MSG_FAILURE = 'Invalid authorization token';
+
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
-        // FIXME: Define a proper response.
         $response = array_merge([
-            'path' => 'access-token',
+            'msg' => self::MSG_FAILURE,
         ], $this->getResponseBasedOnException($exception));
 
         return new JsonResponse($response, Response::HTTP_UNAUTHORIZED);

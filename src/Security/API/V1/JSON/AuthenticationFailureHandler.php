@@ -15,6 +15,8 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 /** @psalm-suppress UnusedClass */
 class AuthenticationFailureHandler extends AbstractAuthenticationFailureHandler
 {
+    public const string MSG_FAILURE = 'Failed to authenticate with the given credentials';
+
     public function __construct(readonly private UserRepository $userRepository)
     {
     }
@@ -25,9 +27,8 @@ class AuthenticationFailureHandler extends AbstractAuthenticationFailureHandler
             $this->increaseFailedLoginCount($request);
         }
 
-        // FIXME: Define a proper response.
         $response = array_merge([
-            'path' => 'api-v1',
+            'msg' => self::MSG_FAILURE,
         ], $this->getResponseBasedOnException($exception));
 
         return new JsonResponse($response, Response::HTTP_UNAUTHORIZED);

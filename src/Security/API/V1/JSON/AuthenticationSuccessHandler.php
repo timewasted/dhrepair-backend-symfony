@@ -35,7 +35,6 @@ readonly class AuthenticationSuccessHandler implements AuthenticationSuccessHand
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        // FIXME: Define a proper response.
         return new JsonResponse([
             'user' => $user->getUserIdentifier(),
             'token' => $userAuthToken->getAuthToken(),

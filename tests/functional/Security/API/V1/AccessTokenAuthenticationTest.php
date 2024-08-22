@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Entity\UserAuthToken;
 use App\Exception\Authorization\NotConfirmedException;
 use App\Repository\UserRepository;
+use App\Security\API\V1\AccessToken\AuthenticationFailureHandler;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,7 +65,7 @@ class AccessTokenAuthenticationTest extends WebTestCase
         $this->assertJson((string) $response->getContent());
 
         $this->assertSame([
-            'path' => 'access-token',
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
             'error' => BadCredentialsException::class,
         ], json_decode((string) $response->getContent(), true));
     }
@@ -75,7 +76,7 @@ class AccessTokenAuthenticationTest extends WebTestCase
         $responseData = $this->doAuthRequest($username, Response::HTTP_UNAUTHORIZED);
 
         $this->assertSame([
-            'path' => 'access-token',
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
             'error' => NotConfirmedException::class,
         ], $responseData);
     }
@@ -86,7 +87,7 @@ class AccessTokenAuthenticationTest extends WebTestCase
         $responseData = $this->doAuthRequest($username, Response::HTTP_UNAUTHORIZED);
 
         $this->assertSame([
-            'path' => 'access-token',
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
             'error' => LockedException::class,
         ], $responseData);
     }
@@ -97,7 +98,7 @@ class AccessTokenAuthenticationTest extends WebTestCase
         $responseData = $this->doAuthRequest($username, Response::HTTP_UNAUTHORIZED);
 
         $this->assertSame([
-            'path' => 'access-token',
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
             'error' => DisabledException::class,
         ], $responseData);
     }
@@ -108,7 +109,7 @@ class AccessTokenAuthenticationTest extends WebTestCase
         $responseData = $this->doAuthRequest($username, Response::HTTP_UNAUTHORIZED);
 
         $this->assertSame([
-            'path' => 'access-token',
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
             'error' => AccountExpiredException::class,
         ], $responseData);
     }
@@ -119,7 +120,7 @@ class AccessTokenAuthenticationTest extends WebTestCase
         $responseData = $this->doAuthRequest($username, Response::HTTP_UNAUTHORIZED);
 
         $this->assertSame([
-            'path' => 'access-token',
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
             'error' => CredentialsExpiredException::class,
         ], $responseData);
     }
