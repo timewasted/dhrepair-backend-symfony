@@ -1,5 +1,6 @@
 /compose.override.yaml
 /docker/db/data/
+/frankenphp/certs/
 
 ###> symfony/framework-bundle ###
 /.env.local
