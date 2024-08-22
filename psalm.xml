@@ -39,7 +39,6 @@
             <errorLevel type="suppress">
                 <directory name="src/Controller"/>
                 <directory name="src/DataFixtures"/>
-                <directory name="src/Type/Doctrine"/>
             </errorLevel>
         </UnusedClass>
     </issueHandlers>

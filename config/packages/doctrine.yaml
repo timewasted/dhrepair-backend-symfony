@@ -8,11 +8,6 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
-
-        types:
-            linestring: App\Type\Doctrine\LineStringType
-        mapping_types:
-            LINESTRING: linestring
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
