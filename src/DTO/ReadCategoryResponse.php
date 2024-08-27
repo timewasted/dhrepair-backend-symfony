@@ -9,6 +9,9 @@ use App\Entity\Item;
 
 class ReadCategoryResponse implements \JsonSerializable
 {
+    use CategoryResponseTrait;
+    use ItemResponseTrait;
+
     private array $jsonData;
 
     /**
@@ -19,8 +22,8 @@ class ReadCategoryResponse implements \JsonSerializable
     {
         $parent = $category?->getParent();
         $this->jsonData = [
-            'category' => null !== $category ? $this->getRelevantData($category) : null,
-            'parent' => null !== $parent ? $this->getRelevantData($parent) : null,
+            'category' => null !== $category ? $this->getCategoryData($category) : null,
+            'parent' => null !== $parent ? $this->getCategoryData($parent) : null,
             'children' => [
                 'categories' => [],
                 'items' => [],
@@ -28,28 +31,16 @@ class ReadCategoryResponse implements \JsonSerializable
         ];
 
         foreach ($children as $child) {
-            $this->jsonData['children']['categories'][] = $this->getRelevantData($child);
+            $this->jsonData['children']['categories'][] = $this->getCategoryData($child);
         }
 
         foreach ($items as $item) {
-            $this->jsonData['children']['items'][] = (new ReadItemResponse($item))->jsonSerialize()['item'];
+            $this->jsonData['children']['items'][] = $this->getItemData($item);
         }
     }
 
     public function jsonSerialize(): array
     {
         return $this->jsonData;
-    }
-
-    private function getRelevantData(Category $category): array
-    {
-        return [
-            'id' => $category->getId(),
-            'name' => $category->getName(),
-            'slug' => $category->getSlug(),
-            'description' => $category->getDescription(),
-            'isViewable' => $category->isViewable(),
-            'modifiedAt' => $category->getModifiedAt()?->format(\DateTimeInterface::ATOM),
-        ];
     }
 }

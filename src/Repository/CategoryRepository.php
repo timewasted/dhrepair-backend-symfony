@@ -50,6 +50,23 @@ class CategoryRepository extends ServiceEntityRepository
     /**
      * @return Category[]
      */
+    public function getPathToCategoryRoot(Category $category): array
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->select('category')
+            ->from(Category::class, 'category')
+            ->join(CategoryClosure::class, 'category_closure', 'WITH', 'category_closure.parent = category.id')
+            ->where('category_closure.child = :categoryId')
+            ->orderBy('category_closure.depth', 'ASC')
+            ->setParameter('categoryId', $category->getId())
+        ;
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @return Category[]
+     */
     public function findByParent(?int $parentId): array
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()
