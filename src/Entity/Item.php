@@ -13,8 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\Index(name: 'manufacturer_id', fields: ['manufacturerId'])]
-#[ORM\Index(name: 'availability_id', fields: ['availabilityId'])]
+#[ORM\Index(name: 'manufacturer_id', columns: ['manufacturer_id'])]
+#[ORM\Index(name: 'availability_id', columns: ['availability_id'])]
 #[ORM\Index(name: 'is_product', fields: ['isProduct'])]
 #[ORM\Index(name: 'is_viewable', fields: ['isViewable'])]
 #[ORM\Index(name: 'is_purchasable', fields: ['isPurchasable'])]
@@ -49,9 +49,9 @@ class Item
     #[Assert\Length(max: 65535, maxMessage: 'entity.item.description.too_long')]
     private ?string $description = null;
 
-    #[ORM\Column(options: ['default' => 0, 'unsigned' => true])]
-    #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.manufacturer_id.greater_than_or_equal')]
-    private ?int $manufacturerId = 0;
+    #[ORM\ManyToOne(fetch: 'EAGER')]
+    #[ORM\JoinColumn(nullable: false, options: ['default' => 0])]
+    private ?Manufacturer $manufacturer = null;
 
     #[ORM\Column(options: ['default' => 0, 'unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.cost.greater_than_or_equal')]
@@ -61,9 +61,9 @@ class Item
     #[Assert\GreaterThanOrEqual(value: -1, message: 'entity.item.quantity.greater_than_or_equal')]
     private ?int $quantity = -1;
 
-    #[ORM\Column(options: ['unsigned' => true])]
-    #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.availability_id.greater_than_or_equal')]
-    private ?int $availabilityId = null;
+    #[ORM\ManyToOne(fetch: 'EAGER')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Availability $availability = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, options: ['default' => '0.00'])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item.weight.greater_than_or_equal')]
@@ -110,12 +110,6 @@ class Item
 
     #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
     private ?\DateTimeImmutable $modifiedAt = null;
-
-    #[ORM\ManyToOne(fetch: 'EAGER')]
-    private ?Manufacturer $manufacturer = null;
-
-    #[ORM\ManyToOne(fetch: 'EAGER')]
-    private ?Availability $availability = null;
 
     /**
      * @var Collection<int, Category>
@@ -195,14 +189,14 @@ class Item
         return $this;
     }
 
-    public function getManufacturerId(): ?int
+    public function getManufacturer(): ?Manufacturer
     {
-        return $this->manufacturerId;
+        return $this->manufacturer;
     }
 
-    public function setManufacturerId(int $manufacturerId): static
+    public function setManufacturer(?Manufacturer $manufacturer): static
     {
-        $this->manufacturerId = $manufacturerId;
+        $this->manufacturer = $manufacturer;
 
         return $this;
     }
@@ -231,14 +225,14 @@ class Item
         return $this;
     }
 
-    public function getAvailabilityId(): ?int
+    public function getAvailability(): ?Availability
     {
-        return $this->availabilityId;
+        return $this->availability;
     }
 
-    public function setAvailabilityId(int $availabilityId): static
+    public function setAvailability(?Availability $availability): static
     {
-        $this->availabilityId = $availabilityId;
+        $this->availability = $availability;
 
         return $this;
     }
@@ -402,30 +396,6 @@ class Item
     public function getModifiedAt(): ?\DateTimeImmutable
     {
         return $this->modifiedAt;
-    }
-
-    public function getManufacturer(): ?Manufacturer
-    {
-        return $this->manufacturer;
-    }
-
-    public function setManufacturer(?Manufacturer $manufacturer): static
-    {
-        $this->manufacturer = $manufacturer;
-
-        return $this;
-    }
-
-    public function getAvailability(): ?Availability
-    {
-        return $this->availability;
-    }
-
-    public function setAvailability(?Availability $availability): static
-    {
-        $this->availability = $availability;
-
-        return $this;
     }
 
     /**

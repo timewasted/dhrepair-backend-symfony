@@ -302,10 +302,6 @@
         <source>entity.image.width.greater_than_or_equal</source>
         <target>Property "width" must be greater than or equal to { compared_value }</target>
       </trans-unit>
-      <trans-unit id="entity.item.availability_id.greater_than_or_equal">
-        <source>entity.item.availability_id.greater_than_or_equal</source>
-        <target>Property "availabilityId" must be greater than or equal to { compared_value }</target>
-      </trans-unit>
       <trans-unit id="entity.item.cost.greater_than_or_equal">
         <source>entity.item.cost.greater_than_or_equal</source>
         <target>Property "cost" must be greater than or equal to { compared_value }</target>
@@ -325,10 +321,6 @@
       <trans-unit id="entity.item.length.greater_than_or_equal">
         <source>entity.item.length.greater_than_or_equal</source>
         <target>Property "length" must be greater than or equal to { compared_value }</target>
-      </trans-unit>
-      <trans-unit id="entity.item.manufacturer_id.greater_than_or_equal">
-        <source>entity.item.manufacturer_id.greater_than_or_equal</source>
-        <target>Property "manufacturerId" must be greater than or equal to { compared_value }</target>
       </trans-unit>
       <trans-unit id="entity.item.name.not_blank">
         <source>entity.item.name.not_blank</source>
