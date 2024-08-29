@@ -366,14 +366,6 @@
         <source>entity.item.width.greater_than_or_equal</source>
         <target>Property "width" must be greater than or equal to { compared_value }</target>
       </trans-unit>
-      <trans-unit id="entity.item_image.image_id.greater_than">
-        <source>entity.item_image.image_id.greater_than</source>
-        <target>Property "imageId" must be greater than { compared_value }</target>
-      </trans-unit>
-      <trans-unit id="entity.item_image.item_id.greater_than">
-        <source>entity.item_image.item_id.greater_than</source>
-        <target>Property "itemId" must be greater than { compared_value }</target>
-      </trans-unit>
       <trans-unit id="entity.item_image.position.greater_than_or_equal">
         <source>entity.item_image.position.greater_than_or_equal</source>
         <target>Property "position" must be greater than or equal to { compared_value }</target>

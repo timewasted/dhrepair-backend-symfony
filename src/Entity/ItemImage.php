@@ -9,51 +9,43 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ItemImageRepository::class)]
-#[ORM\Index(name: 'image_id', fields: ['imageId'])]
-#[ORM\UniqueConstraint(name: 'item_image', fields: ['itemId', 'imageId'])]
+#[ORM\Index(name: 'image_id', columns: ['image_id'])]
+#[ORM\UniqueConstraint(name: 'item_image', columns: ['item_id', 'image_id'])]
 class ItemImage
 {
     #[ORM\Id]
-    #[ORM\Column(options: ['unsigned' => true])]
-    #[Assert\GreaterThan(value: 0, message: 'entity.item_image.item_id.greater_than')]
-    private ?int $itemId = null;
+    #[ORM\ManyToOne(inversedBy: 'images')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private ?Item $item = null;
 
     #[ORM\Id]
-    #[ORM\Column(options: ['unsigned' => true])]
-    #[Assert\GreaterThan(value: 0, message: 'entity.item_image.image_id.greater_than')]
-    private ?int $imageId = null;
+    #[ORM\ManyToOne(fetch: 'EAGER', inversedBy: 'items')]
+    private ?Image $image = null;
 
     #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.item_image.position.greater_than_or_equal')]
     private ?int $position = null;
 
-    #[ORM\ManyToOne(inversedBy: 'images')]
-    #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    private ?Item $item = null;
-
-    #[ORM\ManyToOne(inversedBy: 'items')]
-    private ?Image $image = null;
-
-    public function getItemId(): ?int
+    public function getItem(): ?Item
     {
-        return $this->itemId;
+        return $this->item;
     }
 
-    public function setItemId(int $itemId): static
+    public function setItem(Item $item): static
     {
-        $this->itemId = $itemId;
+        $this->item = $item;
 
         return $this;
     }
 
-    public function getImageId(): ?int
+    public function getImage(): ?Image
     {
-        return $this->imageId;
+        return $this->image;
     }
 
-    public function setImageId(int $imageId): static
+    public function setImage(Image $image): static
     {
-        $this->imageId = $imageId;
+        $this->image = $image;
 
         return $this;
     }
@@ -66,30 +58,6 @@ class ItemImage
     public function setPosition(int $position): static
     {
         $this->position = $position;
-
-        return $this;
-    }
-
-    public function getItem(): ?Item
-    {
-        return $this->item;
-    }
-
-    public function setItem(?Item $item): static
-    {
-        $this->item = $item;
-
-        return $this;
-    }
-
-    public function getImage(): ?Image
-    {
-        return $this->image;
-    }
-
-    public function setImage(?Image $image): static
-    {
-        $this->image = $image;
 
         return $this;
     }
