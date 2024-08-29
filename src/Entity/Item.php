@@ -460,6 +460,14 @@ class Item
     }
 
     /**
+     * @return Collection<int, ItemImage>
+     */
+    public function getItemImages(): Collection
+    {
+        return $this->itemImages;
+    }
+
+    /**
      * @return array<int, Image>
      */
     public function getImages(): array
@@ -471,10 +479,11 @@ class Item
     {
         $arrayPosition = array_search($image, $this->images, true);
         if (null === $position) {
-            if (false === $arrayPosition) {
-                $this->images[] = $image;
-                $this->rebuildItemImages();
+            if (false !== $arrayPosition) {
+                unset($this->images[$arrayPosition]);
             }
+            $this->images[] = $image;
+            $this->rebuildItemImages();
         } else {
             if (false !== $arrayPosition) {
                 unset($this->images[$arrayPosition]);
@@ -493,6 +502,7 @@ class Item
             foreach ($this->itemImages as $key => $itemImage) {
                 if ($image === $itemImage->getImage()) {
                     $this->itemImages->remove($key);
+                    $this->rebuildItemImages();
                     break;
                 }
             }
