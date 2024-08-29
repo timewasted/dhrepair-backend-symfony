@@ -8,8 +8,15 @@ use App\Entity\Item;
 
 trait ItemResponseTrait
 {
+    use ImageResponseTrait;
+
     protected function getItemData(Item $item): array
     {
+        $images = [];
+        foreach ($item->getImages() as $image) {
+            $images[] = $this->getImageData($image);
+        }
+
         return [
             'id' => $item->getId(),
             'name' => $item->getName(),
@@ -34,7 +41,7 @@ trait ItemResponseTrait
             'isFreeShipping' => $item->isFreeShipping(),
             'freightQuoteRequired' => $item->isFreightQuoteRequired(),
             'modifiedAt' => $item->getModifiedAt()?->format(\DateTimeInterface::ATOM),
-            'images' => [],
+            'images' => $images,
         ];
     }
 }
