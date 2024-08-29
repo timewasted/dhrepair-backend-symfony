@@ -58,11 +58,11 @@ class Image
      * @var Collection<int, ItemImage>
      */
     #[ORM\OneToMany(targetEntity: ItemImage::class, mappedBy: 'image')]
-    private Collection $items;
+    private Collection $itemImages;
 
     public function __construct()
     {
-        $this->items = new ArrayCollection();
+        $this->itemImages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -167,33 +167,19 @@ class Image
     }
 
     /**
-     * @return Collection<int, ItemImage>
+     * @return Collection<int, Item>
      */
     public function getItems(): Collection
     {
-        return $this->items;
-    }
-
-    public function addItem(ItemImage $item): static
-    {
-        if (!$this->items->contains($item)) {
-            $this->items->add($item);
-            $item->setImage($this);
-        }
-
-        return $this;
-    }
-
-    public function removeItem(ItemImage $item): static
-    {
-        if ($this->items->removeElement($item)) {
-            // set the owning side to null (unless already changed)
-            if ($item->getImage() === $this) {
-                $item->setImage(null);
+        /** @var Collection<int, Item> $items */
+        $items = new ArrayCollection();
+        foreach ($this->itemImages as $itemImage) {
+            if (null !== ($item = $itemImage->getItem())) {
+                $items->add($item);
             }
         }
 
-        return $this;
+        return $items;
     }
 
     #[ORM\PrePersist]

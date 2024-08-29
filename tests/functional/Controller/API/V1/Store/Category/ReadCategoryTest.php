@@ -163,6 +163,7 @@ class ReadCategoryTest extends WebTestCase
         if ($canSeeHidden) {
             $childCategories[] = $this->categoryRepository->find(5);
             $items[] = $this->itemRepository->find(3);
+            $items[] = $this->itemRepository->find(4);
         }
         /**
          * @var Category[] $childCategories
@@ -196,9 +197,10 @@ class ReadCategoryTest extends WebTestCase
             $category = $this->categoryRepository->find($categoryId);
             /** @var Item[] $items */
             $items = [
-                $this->itemRepository->find(10),
-                $this->itemRepository->find(11),
-                $this->itemRepository->find(12),
+                $this->itemRepository->find(13),
+                $this->itemRepository->find(14),
+                $this->itemRepository->find(15),
+                $this->itemRepository->find(16),
             ];
             $dto = new ReadCategoryResponse($category, [], $items);
 
@@ -221,9 +223,10 @@ class ReadCategoryTest extends WebTestCase
             $category = $this->categoryRepository->find($categoryId);
             /** @var Item[] $items */
             $items = [
-                $this->itemRepository->find(28),
-                $this->itemRepository->find(29),
-                $this->itemRepository->find(30),
+                $this->itemRepository->find(37),
+                $this->itemRepository->find(38),
+                $this->itemRepository->find(39),
+                $this->itemRepository->find(40),
             ];
             $dto = new ReadCategoryResponse($category, [], $items);
 

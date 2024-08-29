@@ -111,10 +111,10 @@ class Item
     #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'ALWAYS')]
     private ?\DateTimeImmutable $modifiedAt = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(fetch: 'EAGER')]
     private ?Manufacturer $manufacturer = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(fetch: 'EAGER')]
     private ?Availability $availability = null;
 
     /**
@@ -127,14 +127,19 @@ class Item
     /**
      * @var Collection<int, ItemImage>
      */
-    #[ORM\OneToMany(targetEntity: ItemImage::class, mappedBy: 'item')]
+    #[ORM\OneToMany(targetEntity: ItemImage::class, mappedBy: 'item', cascade: ['persist'], fetch: 'EAGER')]
     #[ORM\OrderBy(['position' => 'ASC'])]
-    private Collection $images;
+    private Collection $itemImages;
+
+    /**
+     * @var array<int, Image>
+     */
+    private array $images = [];
 
     public function __construct()
     {
         $this->categories = new ArrayCollection();
-        $this->images = new ArrayCollection();
+        $this->itemImages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -455,33 +460,55 @@ class Item
     }
 
     /**
-     * @return Collection<int, ItemImage>
+     * @return array<int, Image>
      */
-    public function getImages(): Collection
+    public function getImages(): array
     {
         return $this->images;
     }
 
-    public function addImage(ItemImage $image): static
+    public function addImage(Image $image, ?int $position): static
     {
-        if (!$this->images->contains($image)) {
-            $this->images->add($image);
-            $image->setItem($this);
+        $arrayPosition = array_search($image, $this->images, true);
+        if (null === $position) {
+            if (false === $arrayPosition) {
+                $this->images[] = $image;
+                $this->rebuildItemImages();
+            }
+        } else {
+            if (false !== $arrayPosition) {
+                unset($this->images[$arrayPosition]);
+            }
+            array_splice($this->images, max($position, 0), 0, [$image]);
+            $this->rebuildItemImages();
         }
 
         return $this;
     }
 
-    public function removeImage(ItemImage $image): static
+    public function removeImage(Image $image): static
     {
-        if ($this->images->removeElement($image)) {
-            // set the owning side to null (unless already changed)
-            if ($image->getItem() === $this) {
-                $image->setItem(null);
+        if (false !== ($arrayPosition = array_search($image, $this->images, true))) {
+            unset($this->images[$arrayPosition]);
+            foreach ($this->itemImages as $key => $itemImage) {
+                if ($image === $itemImage->getImage()) {
+                    $this->itemImages->remove($key);
+                    break;
+                }
             }
         }
 
         return $this;
+    }
+
+    #[ORM\PostLoad]
+    public function onLoaded(): void
+    {
+        foreach ($this->itemImages as $itemImage) {
+            if (null !== ($image = $itemImage->getImage())) {
+                $this->images[] = $image;
+            }
+        }
     }
 
     #[ORM\PrePersist]
@@ -489,5 +516,28 @@ class Item
     public function onChanged(): void
     {
         $this->modifiedAt = new \DateTimeImmutable();
+    }
+
+    private function rebuildItemImages(): void
+    {
+        $this->images = array_values($this->images);
+        $itemImageKeys = $this->itemImages->getKeys();
+        foreach ($this->images as $position => $image) {
+            foreach ($itemImageKeys as $index => $itemImageKey) {
+                /** @var ItemImage $itemImage */
+                $itemImage = $this->itemImages->get($itemImageKey);
+                if ($image === $itemImage->getImage()) {
+                    $this->itemImages->set($itemImageKey, $itemImage->setPosition($position));
+                    unset($itemImageKeys[$index]);
+                    continue 2;
+                }
+            }
+
+            $this->itemImages->add((new ItemImage())
+                ->setItem($this)
+                ->setImage($image)
+                ->setPosition($position)
+            );
+        }
     }
 }

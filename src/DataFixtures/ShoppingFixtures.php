@@ -6,6 +6,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Availability;
 use App\Entity\Category;
+use App\Entity\Image;
 use App\Entity\Item;
 use App\Entity\Manufacturer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -14,6 +15,7 @@ use Doctrine\Persistence\ObjectManager;
 class ShoppingFixtures extends Fixture
 {
     private int $categoryIdSuffix = 0;
+    private int $imageIdSuffix = 0;
     private int $itemIdSuffix = 0;
     private ?Availability $itemAvailability = null;
     private ?Manufacturer $itemManufacturer = null;
@@ -32,9 +34,11 @@ class ShoppingFixtures extends Fixture
          * - Each child category has 3 grandchild categories
          *   - First 2 are viewable
          *   - Last 1 is not viewable
-         * - Each non-root category has 3 items
+         * - Each non-root category has 4 items
          *   - First 2 are viewable
-         *   - Last 1 is not viewable
+         *   - Last 2 is not viewable
+         *   - First and third have 2 images
+         *   - Second and fourth have no images
          */
 
         $this->createItemAvailabilities($manager);
@@ -42,6 +46,7 @@ class ShoppingFixtures extends Fixture
         $manager->flush();
 
         $this->categoryIdSuffix = 0;
+        $this->imageIdSuffix = 0;
         $this->itemIdSuffix = 0;
         for ($i = 0; $i < 6; ++$i) {
             $this->createCategoryLevel($manager, 0, 3, null, $i < 3);
@@ -56,6 +61,19 @@ class ShoppingFixtures extends Fixture
             ->setSlug(sprintf('%s-category-%d', str_replace(' ', '-', strtolower($labelPrefix)), $idSuffix))
             ->setDescription(sprintf('Description for %s category %d', strtolower($labelPrefix), $idSuffix))
             ->setIsViewable($isViewable)
+        ;
+    }
+
+    private function createBaseImage(int $idSuffix): Image
+    {
+        return (new Image())
+            ->setImage(sprintf('image-%d.jpg', $idSuffix))
+            ->setImageHash(hash('sha256', sprintf('image-%d.jpg', $idSuffix)))
+            ->setTitle(sprintf('Image %d', $idSuffix))
+            ->setWidth(random_int(1000, 2000))
+            ->setHeight(random_int(1000, 2000))
+            ->setThumbWidth(random_int(500, 1000))
+            ->setThumbHeight(random_int(500, 1000))
         ;
     }
 
@@ -99,8 +117,12 @@ class ShoppingFixtures extends Fixture
         $manager->flush();
 
         if (0 !== $currentLevel) {
-            for ($i = 0; $i < 3; ++$i) {
-                $item = $this->createBaseItem($category, ++$this->itemIdSuffix, 2 !== $i);
+            for ($i = 0; $i < 4; ++$i) {
+                $item = $this->createBaseItem($category, ++$this->itemIdSuffix, $i < 2);
+                if (0 === $i || 2 === $i) {
+                    $item->addImage($this->createBaseImage(++$this->imageIdSuffix), 1);
+                    $item->addImage($this->createBaseImage(++$this->imageIdSuffix), 2);
+                }
                 $manager->persist($item);
             }
             $manager->flush();

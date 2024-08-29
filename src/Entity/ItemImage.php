@@ -14,12 +14,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ItemImage
 {
     #[ORM\Id]
-    #[ORM\ManyToOne(inversedBy: 'images')]
+    #[ORM\ManyToOne(inversedBy: 'itemImages')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Item $item = null;
 
     #[ORM\Id]
-    #[ORM\ManyToOne(fetch: 'EAGER', inversedBy: 'items')]
+    #[ORM\ManyToOne(cascade: ['persist'], fetch: 'EAGER', inversedBy: 'itemImages')]
     private ?Image $image = null;
 
     #[ORM\Column(options: ['unsigned' => true])]
