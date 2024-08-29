@@ -8,22 +8,26 @@ use App\Repository\CategoryClosureRepository;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\Service\Attribute\SubscribedService;
+use Symfony\Contracts\Service\ServiceMethodsSubscriberTrait;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 #[AsCommand(
     name: 'app:rebuild-closure-table',
     description: 'Rebuild the category_closure table',
 )]
-class RebuildClosureTableCommand extends Command
+class RebuildClosureTableCommand extends Command implements ServiceSubscriberInterface
 {
-    public function __construct(
-        private CategoryClosureRepository $repository,
-        private EntityManagerInterface $entityManager,
-    ) {
+    use ServiceMethodsSubscriberTrait;
+
+    public function __construct(protected ContainerInterface $container)
+    {
         parent::__construct();
     }
 
@@ -45,11 +49,31 @@ class RebuildClosureTableCommand extends Command
     }
 
     /**
+     * @psalm-suppress MixedInferredReturnType
+     * @psalm-suppress MixedReturnStatement
+     */
+    #[SubscribedService]
+    private function entityManager(): EntityManagerInterface
+    {
+        return $this->container->get(__METHOD__);
+    }
+
+    /**
+     * @psalm-suppress MixedInferredReturnType
+     * @psalm-suppress MixedReturnStatement
+     */
+    #[SubscribedService]
+    private function repository(): CategoryClosureRepository
+    {
+        return $this->container->get(__METHOD__);
+    }
+
+    /**
      * @throws DBALException
      */
     private function startRebuild(): void
     {
-        $this->entityManager->getConnection()->executeStatement('TRUNCATE TABLE category_closure');
+        $this->entityManager()->getConnection()->executeStatement('TRUNCATE TABLE category_closure');
         $this->processCategory(null);
     }
 
@@ -59,7 +83,7 @@ class RebuildClosureTableCommand extends Command
     private function processCategory(?int $parentId): void
     {
         foreach ($this->getChildren($parentId) as $category) {
-            $this->repository->onCategoryParentChanged($category['id'], (int) $parentId, true);
+            $this->repository()->onCategoryParentChanged($category['id'], (int) $parentId, true);
             $this->processCategory($category['id']);
         }
     }
@@ -76,13 +100,13 @@ class RebuildClosureTableCommand extends Command
 
         if (null === $parentId) {
             /** @var list<array{id: int, parent: ?int}> $categories */
-            $categories = $this->entityManager
+            $categories = $this->entityManager()
                 ->createNativeQuery('SELECT id, parent FROM category WHERE parent IS NULL ORDER BY id ASC', $rsm)
                 ->execute()
             ;
         } else {
             /** @var list<array{id: int, parent: ?int}> $categories */
-            $categories = $this->entityManager
+            $categories = $this->entityManager()
                 ->createNativeQuery('SELECT id, parent FROM category WHERE parent = :parentId ORDER BY id ASC', $rsm)
                 ->setParameter('parentId', $parentId)
                 ->execute()
