@@ -404,13 +404,6 @@ class Item
         return $this->modifiedAt;
     }
 
-    public function setModifiedAt(\DateTimeImmutable $modifiedAt): static
-    {
-        $this->modifiedAt = $modifiedAt;
-
-        return $this;
-    }
-
     public function getManufacturer(): ?Manufacturer
     {
         return $this->manufacturer;

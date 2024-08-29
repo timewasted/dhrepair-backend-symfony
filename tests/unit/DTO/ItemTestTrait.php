@@ -36,7 +36,6 @@ trait ItemTestTrait
             ->setChargeShipping((bool) random_int(0, 1))
             ->setIsFreeShipping((bool) random_int(0, 1))
             ->setFreightQuoteRequired((bool) random_int(0, 1))
-            ->setModifiedAt(new \DateTimeImmutable())
         ;
     }
 
