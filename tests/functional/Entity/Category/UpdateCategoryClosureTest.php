@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\functional\Entity;
+namespace App\Tests\functional\Entity\Category;
 
 use App\Entity\Category;
 use App\Entity\CategoryClosure;
@@ -11,7 +11,7 @@ use App\Repository\CategoryRepository;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class CategoryTest extends KernelTestCase
+class UpdateCategoryClosureTest extends KernelTestCase
 {
     private ObjectManager $entityManager;
     private CategoryRepository $categoryRepository;
