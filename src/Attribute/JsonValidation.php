@@ -8,8 +8,6 @@ use App\Exception\JsonValidation\DataPathNotFoundException;
 use App\Exception\JsonValidation\InvalidJsonException;
 use App\Exception\JsonValidation\JsonValidationException;
 use App\Exception\JsonValidation\SchemaNotFoundException;
-use Opis\JsonSchema\Errors\ErrorFormatter;
-use Opis\JsonSchema\Errors\ValidationError;
 use Opis\JsonSchema\Validator;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -99,10 +97,11 @@ class JsonValidation
             throw new JsonValidationException($e->getMessage(), (int) $e->getCode(), $e);
         }
         if (!$result->isValid()) {
-            $errorFormatter = new ErrorFormatter();
-            /** @var ValidationError $error */
-            $error = $result->error();
-            throw new JsonValidationException($errorFormatter->formatErrorMessage($error));
+            $exception = new JsonValidationException();
+            if (null !== ($error = $result->error())) {
+                $exception->setError($error);
+            }
+            throw $exception;
         }
     }
 

@@ -7,6 +7,9 @@ namespace App\Tests\unit\Attribute;
 use App\Attribute\JsonValidation;
 use App\Exception\JsonValidation\DataPathNotFoundException;
 use App\Exception\JsonValidation\InvalidJsonException;
+use App\Exception\JsonValidation\JsonValidationException;
+use App\Exception\JsonValidation\SchemaNotFoundException;
+use Opis\JsonSchema\Errors\ValidationError;
 use Opis\JsonSchema\ValidationResult;
 use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
@@ -57,6 +60,21 @@ class JsonValidationTest extends TestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Request must be supplied before attempting validation');
         (new JsonValidation('schema', 'body'))->validate();
+    }
+
+    public function testValidateValidatorIsOptional(): void
+    {
+        $this->expectException(SchemaNotFoundException::class);
+
+        $schema = '/schema-file.json';
+        $requestData = json_encode([
+            'object' => true,
+        ]);
+        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+
+        (new JsonValidation($schema, 'body'))
+            ->setRequest($request)
+            ->validate();
     }
 
     public function testValidateSuccessBodyObject(): void
@@ -448,6 +466,120 @@ class JsonValidationTest extends TestCase
             ->setRequest($request)
             ->setValidator($validator)
             ->validate();
+    }
+
+    public function testValidateFailureExceptionDuringValidationSchemaNotFound(): void
+    {
+        $schema = '/schema-file.json';
+        $schemaNotFoundMsg = 'Schema not found: '.$schema;
+
+        $this->expectException(SchemaNotFoundException::class);
+        $this->expectExceptionMessage($schemaNotFoundMsg);
+
+        $requestData = json_encode([
+            'object' => true,
+        ]);
+        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+
+        $validator = $this->createMock(Validator::class);
+        $validator->expects($this->once())->method('validate')
+            ->willThrowException(new \RuntimeException($schemaNotFoundMsg));
+
+        (new JsonValidation($schema, 'body'))
+            ->setRequest($request)
+            ->setValidator($validator)
+            ->validate();
+    }
+
+    public function testValidateFailureExceptionDuringValidation(): void
+    {
+        $exceptionMsg = bin2hex(random_bytes(16));
+
+        $this->expectException(JsonValidationException::class);
+        $this->expectExceptionMessage($exceptionMsg);
+
+        $schema = '/schema-file.json';
+        $requestData = json_encode([
+            'object' => true,
+        ]);
+        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+
+        $validator = $this->createMock(Validator::class);
+        $validator->expects($this->once())->method('validate')
+            ->willThrowException(new \RuntimeException($exceptionMsg));
+
+        (new JsonValidation($schema, 'body'))
+            ->setRequest($request)
+            ->setValidator($validator)
+            ->validate();
+    }
+
+    public function testValidateFailureNoErrorInException(): void
+    {
+        $this->expectException(JsonValidationException::class);
+
+        $schema = '/schema-file.json';
+        $requestData = json_encode([
+            'object' => true,
+        ]);
+        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+
+        $validationResult = $this->createMock(ValidationResult::class);
+        $validationResult->expects($this->once())
+            ->method('isValid')
+            ->willReturn(false);
+        $validationResult->expects($this->once())
+            ->method('error')
+            ->willReturn(null);
+
+        $validator = $this->createMock(Validator::class);
+        $validator->expects($this->once())->method('validate')
+            ->willReturn($validationResult);
+
+        try {
+            (new JsonValidation($schema, 'body'))
+                ->setRequest($request)
+                ->setValidator($validator)
+                ->validate();
+        } catch (JsonValidationException $exception) {
+            $this->assertNull($exception->getError());
+            throw $exception;
+        }
+    }
+
+    public function testValidateFailureErrorInException(): void
+    {
+        $this->expectException(JsonValidationException::class);
+
+        $schema = '/schema-file.json';
+        $requestData = json_encode([
+            'object' => true,
+        ]);
+        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+
+        $validationError = $this->createMock(ValidationError::class);
+
+        $validationResult = $this->createMock(ValidationResult::class);
+        $validationResult->expects($this->once())
+            ->method('isValid')
+            ->willReturn(false);
+        $validationResult->expects($this->once())
+            ->method('error')
+            ->willReturn($validationError);
+
+        $validator = $this->createMock(Validator::class);
+        $validator->expects($this->once())->method('validate')
+            ->willReturn($validationResult);
+
+        try {
+            (new JsonValidation($schema, 'body'))
+                ->setRequest($request)
+                ->setValidator($validator)
+                ->validate();
+        } catch (JsonValidationException $exception) {
+            $this->assertSame($validationError, $exception->getError());
+            throw $exception;
+        }
     }
 
     private function getSuccessfulValidationResult(): ValidationResult

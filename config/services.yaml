@@ -30,7 +30,7 @@ services:
             - name: kernel.event_subscriber
               dispatcher: security.event_dispatcher.api_v1
 
-    App\EventSubscriber\ControllerArgumentsSubscriber:
+    App\EventSubscriber\JsonValidationControllerArgumentsSubscriber:
         arguments:
             $schemaPrefix: 'file://'
         tags:

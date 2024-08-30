@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use App\Attribute\JsonValidation;
-use App\Exception\JsonValidation\JsonValidationException;
 use Opis\JsonSchema\Validator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 
-readonly class ControllerArgumentsSubscriber implements EventSubscriberInterface
+readonly class JsonValidationControllerArgumentsSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private Validator $validator,
@@ -33,16 +31,12 @@ readonly class ControllerArgumentsSubscriber implements EventSubscriberInterface
         /** @var JsonValidation[] $jsonValidations */
         $jsonValidations = $attributes[JsonValidation::class];
         foreach ($jsonValidations as $validation) {
-            try {
-                $validation
-                    ->setRequest($event->getRequest())
-                    ->setSchemaPrefix($this->schemaPrefix ?? '')
-                    ->setValidator($this->validator)
-                    ->validate()
-                ;
-            } catch (JsonValidationException $e) {
-                throw new BadRequestException('Request does not match the specified JSON schema', 0, $e);
-            }
+            $validation
+                ->setRequest($event->getRequest())
+                ->setSchemaPrefix($this->schemaPrefix ?? '')
+                ->setValidator($this->validator)
+                ->validate()
+            ;
         }
     }
 }
