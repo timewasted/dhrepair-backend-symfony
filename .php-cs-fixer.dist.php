@@ -11,6 +11,7 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
         'declare_strict_types' => true,
+        'phpdoc_to_comment' => ['ignored_tags' => ['psalm-suppress']],
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder)
