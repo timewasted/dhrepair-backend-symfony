@@ -4,14 +4,25 @@ declare(strict_types=1);
 
 namespace App\DTO;
 
-readonly class UpdateCategoryRequest implements \JsonSerializable
+use App\Attribute\DenormalizeEntity;
+use App\Entity\Category;
+use Symfony\Component\Serializer\Attribute\Context;
+
+class UpdateCategoryRequest implements \JsonSerializable
 {
+    #[Context(denormalizationContext: [Category::class => ['denormalized' => true]])]
+    #[DenormalizeEntity(class: Category::class, dataSource: 'id')]
+    private ?Category $category = null;
+    #[Context(denormalizationContext: [Category::class => ['denormalized' => true]])]
+    #[DenormalizeEntity(class: Category::class, dataSource: 'parentId', nullable: true)]
+    private ?Category $parent = null;
+
     public function __construct(
-        private int $id,
-        private ?int $parentId,
-        private string $name,
-        private string $description,
-        private bool $isViewable,
+        private readonly int $id,
+        private readonly ?int $parentId,
+        private readonly string $name,
+        private readonly string $description,
+        private readonly bool $isViewable,
     ) {
     }
 
@@ -38,6 +49,30 @@ readonly class UpdateCategoryRequest implements \JsonSerializable
     public function isViewable(): bool
     {
         return $this->isViewable;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getParent(): ?Category
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?Category $parent): static
+    {
+        $this->parent = $parent;
+
+        return $this;
     }
 
     public function jsonSerialize(): array

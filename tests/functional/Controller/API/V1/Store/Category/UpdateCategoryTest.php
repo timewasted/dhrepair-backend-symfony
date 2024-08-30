@@ -100,7 +100,7 @@ class UpdateCategoryTest extends WebTestCase
     /**
      * @dataProvider providerUsernameUpdateStatus
      */
-    public function testUpdateAuthenticated(string $username, bool $expectAccessGranted): void
+    public function testUpdateAuthenticatedNullParent(string $username, bool $expectAccessGranted): void
     {
         $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
         if (!$expectAccessGranted) {
@@ -137,6 +137,54 @@ class UpdateCategoryTest extends WebTestCase
         $this->assertSame($readDto->jsonSerialize(), $jsonData);
 
         $this->assertNull($category->getParent());
+        $this->assertSame($category->getName(), $updateDto->getName());
+        $this->assertSame($category->getDescription(), $updateDto->getDescription());
+        $this->assertSame($category->isViewable(), $updateDto->isViewable());
+        $this->assertEqualsWithDelta((new \DateTimeImmutable())->getTimestamp(), (int) $category->getModifiedAt()?->getTimestamp(), 2);
+    }
+
+    /**
+     * @dataProvider providerUsernameUpdateStatus
+     */
+    public function testUpdateAuthenticatedNotNullParent(string $username, bool $expectAccessGranted): void
+    {
+        $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
+        if (!$expectAccessGranted) {
+            $this->expectException(AccessDeniedException::class);
+        }
+
+        $id = 1;
+        $parentId = 2;
+        $name = bin2hex(random_bytes(16));
+        $description = bin2hex(random_bytes(16));
+        $isViewable = false;
+        $category = $this->categoryRepository->find($id);
+        $updateDto = (new UpdateCategoryRequest($id, $parentId, $name, $description, $isViewable))
+            ->setCategory($category)
+            ->setParent($this->categoryRepository->find($parentId));
+        $this->assertNotNull($category);
+
+        $this->makeApiRequest('PUT', self::UPDATE_URL, null, $updateDto, $user);
+
+        if (!$expectAccessGranted) {
+            return;
+        }
+
+        $this->assertResponseIsSuccessful();
+        $response = $this->client->getResponse();
+        $this->assertJson((string) $response->getContent());
+        $jsonData = (array) json_decode((string) $response->getContent(), true);
+
+        /** @var Category[] $children */
+        $children = [
+            $this->categoryRepository->find(10),
+            $this->categoryRepository->find(2),
+            $this->categoryRepository->find(6),
+        ];
+        $readDto = new ReadCategoryResponse($category, $children, []);
+        $this->assertSame($readDto->jsonSerialize(), $jsonData);
+
+        $this->assertSame($category->getParent(), $updateDto->getParent());
         $this->assertSame($category->getName(), $updateDto->getName());
         $this->assertSame($category->getDescription(), $updateDto->getDescription());
         $this->assertSame($category->isViewable(), $updateDto->isViewable());

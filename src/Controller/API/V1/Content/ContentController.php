@@ -37,11 +37,10 @@ class ContentController extends AbstractController
     #[Route(path: '/', name: 'update', methods: ['PUT'])]
     #[JsonValidation(schema: '/api/v1/content/content_update.json')]
     public function update(
-        #[MapRequestPayload] UpdatePageContentRequest $updateDto,
-        PageContentRepository $repository,
+        #[MapRequestPayload(serializationContext: ['isApiRequest' => true])] UpdatePageContentRequest $updateDto,
         EntityManagerInterface $entityManager,
     ): Response {
-        if (null === ($pageContent = $repository->find($updateDto->getId()))) {
+        if (null === ($pageContent = $updateDto->getPageContent())) {
             return $this->json([
                 'id' => $updateDto->getId(),
             ], Response::HTTP_NOT_FOUND);

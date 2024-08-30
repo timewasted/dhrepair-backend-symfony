@@ -48,22 +48,19 @@ class CategoryController extends AbstractController
     #[Route('/category', name: 'update', methods: ['PUT'])]
     #[JsonValidation(schema: '/api/v1/store/category_update.json')]
     public function update(
-        #[MapRequestPayload] UpdateCategoryRequest $updateDto,
+        #[MapRequestPayload(serializationContext: ['isApiRequest' => true])] UpdateCategoryRequest $updateDto,
         CategoryRepository $repository,
         EntityManagerInterface $entityManager,
     ): Response {
-        if (null === ($category = $repository->find($updateDto->getId()))) {
+        if (null === ($category = $updateDto->getCategory())) {
             return $this->json([
                 'id' => $updateDto->getId(),
             ], Response::HTTP_NOT_FOUND);
         }
-        $parent = null;
-        if (null !== $updateDto->getParentId()) {
-            if (null === ($parent = $repository->find($updateDto->getParentId()))) {
-                return $this->json([
-                    'id' => $updateDto->getParentId(),
-                ], Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
+        if (null === ($parent = $updateDto->getParent()) && null !== $updateDto->getParentId()) {
+            return $this->json([
+                'id' => $updateDto->getParentId(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $category->applyUpdate($updateDto, $parent);
