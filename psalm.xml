@@ -25,7 +25,8 @@
     <issueHandlers>
         <PossiblyUnusedMethod>
             <errorLevel type="suppress">
-                <referencedMethod name="/^App\\Entity\\[\w]+::(get|is|set|add|remove|update|on).*/"/>
+                <referencedMethod name="/^App\\DTO\\[\w]+::set.*$/"/>
+                <referencedMethod name="/^App\\Entity\\[\w]+::(get|is|set|add|remove|update|on).*$/"/>
                 <referencedMethod name="/^App\\Repository\\[\w]+Repository::(__construct|remove|save)$/"/>
                 <referencedMethod name="/::__construct$/"/>
             </errorLevel>
@@ -35,6 +36,11 @@
                 <directory name="src/Repository"/>
             </errorLevel>
         </PossiblyUnusedParam>
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <directory name="src/DTO"/>
+            </errorLevel>
+        </PropertyNotSetInConstructor>
         <UnusedClass>
             <errorLevel type="suppress">
                 <directory name="src/Controller"/>
