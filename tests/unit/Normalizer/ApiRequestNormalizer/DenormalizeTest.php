@@ -9,6 +9,7 @@ use App\Exception\DenormalizeEntity\DataSourceNotFoundException;
 use App\Exception\DenormalizeEntity\DenormalizeEntityException;
 use App\Exception\DenormalizeEntity\EntityNotFoundException;
 use App\Exception\DenormalizeEntity\NotACollectionException;
+use App\Exception\DenormalizeEntity\NullDataException;
 use App\Normalizer\PropertyAttribute;
 use App\Tests\helpers\Normalizer\TestApiRequestNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -112,6 +113,63 @@ class DenormalizeTest extends TestCase
             ]);
 
         $this->normalizer->denormalize(['valid' => true], \stdClass::class);
+    }
+
+    public function testDenormalizeNullDataNotAllowedByAttribute(): void
+    {
+        $this->expectException(NullDataException::class);
+        $this->expectExceptionMessage('Null data is not allowed for key "foo"');
+        $this->denormalizer->expects($this->never())->method('denormalize');
+        $this->entityManager->expects($this->never())->method('getRepository');
+        $this->normalizer->expects($this->once())->method('getPropertyAttributes')
+            ->willReturn([
+                new PropertyAttribute(
+                    'foo',
+                    true,
+                    new DenormalizeEntity(class: \stdClass::class)
+                ),
+            ]);
+
+        $this->normalizer->denormalize(['foo' => null], \stdClass::class);
+    }
+
+    public function testDenormalizeNullDataNotAllowedByProperty(): void
+    {
+        $this->expectException(NullDataException::class);
+        $this->expectExceptionMessage('Null data is not allowed for key "foo"');
+        $this->denormalizer->expects($this->never())->method('denormalize');
+        $this->entityManager->expects($this->never())->method('getRepository');
+        $this->normalizer->expects($this->once())->method('getPropertyAttributes')
+            ->willReturn([
+                new PropertyAttribute(
+                    'foo',
+                    false,
+                    new DenormalizeEntity(class: \stdClass::class, nullable: true)
+                ),
+            ]);
+
+        $this->normalizer->denormalize(['foo' => null], \stdClass::class);
+    }
+
+    public function testDenormalizeNullDataIsAllowed(): void
+    {
+        $this->denormalizer->expects($this->once())->method('denormalize')->willReturnArgument(0);
+        $this->entityManager->expects($this->never())->method('getRepository');
+        $this->normalizer->expects($this->once())->method('getPropertyAttributes')
+            ->willReturn([
+                new PropertyAttribute(
+                    'foo',
+                    true,
+                    new DenormalizeEntity(class: \stdClass::class, nullable: true)
+                ),
+            ]);
+        $this->repository->expects($this->never())->method('findOneBy');
+
+        $denormalized = $this->normalizer->denormalize(['foo' => null], \stdClass::class);
+
+        $this->assertSame([
+            'foo' => null,
+        ], $denormalized);
     }
 
     public function testDenormalizeNonCollectionEntityIterableData(): void

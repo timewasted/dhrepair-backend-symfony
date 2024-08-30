@@ -13,6 +13,7 @@ readonly class DenormalizeEntity
         private string $entityId = 'id',
         private ?string $dataSource = null,
         private bool $isCollection = false,
+        private bool $nullable = false,
     ) {
     }
 
@@ -37,5 +38,10 @@ readonly class DenormalizeEntity
     public function isCollection(): bool
     {
         return $this->isCollection;
+    }
+
+    public function isNullable(): bool
+    {
+        return $this->nullable;
     }
 }

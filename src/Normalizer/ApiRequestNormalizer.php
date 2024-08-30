@@ -9,6 +9,7 @@ use App\Exception\DenormalizeEntity\DataSourceNotFoundException;
 use App\Exception\DenormalizeEntity\DenormalizeEntityException;
 use App\Exception\DenormalizeEntity\EntityNotFoundException;
 use App\Exception\DenormalizeEntity\NotACollectionException;
+use App\Exception\DenormalizeEntity\NullDataException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
@@ -56,6 +57,13 @@ class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareIn
             if (!array_key_exists($dataSource, $data)) {
                 throw new DataSourceNotFoundException(sprintf('Key "%s" does not exist in $data', $dataSource));
             }
+            if (null === $data[$dataSource]) {
+                if (!$attribute->isNullable() || !$propertyAttribute->isNullable()) {
+                    throw new NullDataException(sprintf('Null data is not allowed for key "%s"', $dataSource));
+                }
+                $data[$propertyName] = null;
+                continue;
+            }
             $entityClass = $attribute->getClass();
             if (!isset($this->entityRepositories[$entityClass])) {
                 $this->entityRepositories[$entityClass] = $this->entityManager->getRepository($entityClass);
@@ -82,10 +90,7 @@ class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareIn
             } else {
                 $entity = $this->entityRepositories[$entityClass]->findOneBy([$entityId => $data[$dataSource]]);
                 if (null === $entity && !$propertyAttribute->isNullable()) {
-                    /**
-                     * @psalm-suppress MixedArgument
-                     * @psalm-suppress PossiblyNullArgument
-                     */
+                    /** @psalm-suppress MixedArgument */
                     throw new EntityNotFoundException(sprintf('Unable to find an instance of %s where "%s" = "%s"', $entityClass, $entityId, $data[$dataSource]));
                 }
                 $data[$propertyName] = $entity;
