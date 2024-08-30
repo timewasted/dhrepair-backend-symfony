@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\helpers\DTO;
 
 use App\Attribute\DenormalizeEntity;
+use App\Entity\Availability;
 use App\Entity\Image;
 use App\Entity\Item;
 use App\Entity\Manufacturer;
@@ -28,6 +29,8 @@ readonly class TestApiRequestValid
         private array $images,
         #[DenormalizeEntity(class: Manufacturer::class)]
         private Manufacturer $manufacturer,
+        #[DenormalizeEntity(class: Availability::class)]
+        private ?Availability $availability,
     ) {
     }
 
@@ -54,5 +57,10 @@ readonly class TestApiRequestValid
     public function getManufacturer(): Manufacturer
     {
         return $this->manufacturer;
+    }
+
+    public function getAvailability(): ?Availability
+    {
+        return $this->availability;
     }
 }

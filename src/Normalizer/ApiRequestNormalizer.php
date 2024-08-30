@@ -49,17 +49,19 @@ class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareIn
             throw new DenormalizeEntityException(sprintf('%s only supports denormalizing arrays, but %s was received', static::class, $dataType));
         }
 
-        $propertyAttributes = $this->getPropertyAttributes($type);
-        foreach ($propertyAttributes as $property => $attribute) {
-            $dataSource = $attribute->getDataSource() ?? $property;
+        foreach ($this->getPropertyAttributes($type) as $propertyAttribute) {
+            $propertyName = $propertyAttribute->getName();
+            $attribute = $propertyAttribute->getAttribute();
+            $dataSource = $attribute->getDataSource() ?? $propertyName;
             if (!array_key_exists($dataSource, $data)) {
                 throw new DataSourceNotFoundException(sprintf('Key "%s" does not exist in $data', $dataSource));
             }
             $entityClass = $attribute->getClass();
             if (!isset($this->entityRepositories[$entityClass])) {
-                $this->entityRepositories[$entityClass] = $this->entityManager->getRepository($attribute->getClass());
+                $this->entityRepositories[$entityClass] = $this->entityManager->getRepository($entityClass);
             }
 
+            $entityId = $attribute->getEntityId();
             if (is_iterable($data[$dataSource])) {
                 if (!$attribute->isCollection()) {
                     $dataType = is_object($data[$dataSource]) ? get_class($data[$dataSource]) : gettype($data[$dataSource]);
@@ -69,21 +71,24 @@ class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareIn
                 $entityData = [];
                 /** @psalm-suppress MixedAssignment */
                 foreach ($data[$dataSource] as $value) {
-                    $entity = $this->entityRepositories[$entityClass]->findOneBy([$attribute->getEntityId() => $value]);
-                    if (null === $entity) {
+                    $entity = $this->entityRepositories[$entityClass]->findOneBy([$entityId => $value]);
+                    if (null === $entity && !$propertyAttribute->isNullable()) {
                         /** @psalm-suppress MixedArgument */
-                        throw new EntityNotFoundException(sprintf('Unable to find an instance of %s where "%s" = "%s"', $entityClass, $attribute->getEntityId(), $value));
+                        throw new EntityNotFoundException(sprintf('Unable to find an instance of %s where "%s" = "%s"', $entityClass, $entityId, $value));
                     }
                     $entityData[] = $entity;
                 }
-                $data[$property] = $entityData;
+                $data[$propertyName] = $entityData;
             } else {
-                $entity = $this->entityRepositories[$entityClass]->findOneBy([$attribute->getEntityId() => $data[$dataSource]]);
-                if (null === $entity) {
-                    /** @psalm-suppress MixedArgument */
-                    throw new EntityNotFoundException(sprintf('Unable to find an instance of %s where "%s" = "%s"', $entityClass, $attribute->getEntityId(), $data[$dataSource]));
+                $entity = $this->entityRepositories[$entityClass]->findOneBy([$entityId => $data[$dataSource]]);
+                if (null === $entity && !$propertyAttribute->isNullable()) {
+                    /**
+                     * @psalm-suppress MixedArgument
+                     * @psalm-suppress PossiblyNullArgument
+                     */
+                    throw new EntityNotFoundException(sprintf('Unable to find an instance of %s where "%s" = "%s"', $entityClass, $entityId, $data[$dataSource]));
                 }
-                $data[$property] = $entity;
+                $data[$propertyName] = $entity;
             }
         }
 
@@ -115,16 +120,16 @@ class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareIn
     }
 
     /**
-     * @param class-string $type
+     * @param class-string|\ReflectionClass $type
      *
-     * @return array<string, DenormalizeEntity>
+     * @return list<PropertyAttribute>
      *
      * @throws \ReflectionException
      */
-    protected function getPropertyAttributes(string $type): array
+    protected function getPropertyAttributes(mixed $type): array
     {
         $propertyAttributes = [];
-        $refClass = new \ReflectionClass($type);
+        $refClass = $type instanceof \ReflectionClass ? $type : new \ReflectionClass($type);
         foreach ($refClass->getProperties() as $property) {
             $attributes = $property->getAttributes(DenormalizeEntity::class);
             $attributeCount = count($attributes);
@@ -132,7 +137,11 @@ class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareIn
                 throw new \LogicException(sprintf('Attribute "%s" is not allowed to be repeated', DenormalizeEntity::class));
             }
             if (1 === $attributeCount) {
-                $propertyAttributes[$property->getName()] = $attributes[0]->newInstance();
+                $propertyAttributes[] = new PropertyAttribute(
+                    $property->getName(),
+                    $property->getType()?->allowsNull() ?? false,
+                    $attributes[0]->newInstance(),
+                );
             }
         }
 

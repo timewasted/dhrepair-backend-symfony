@@ -8,7 +8,7 @@ use App\Normalizer\ApiRequestNormalizer;
 
 class TestApiRequestNormalizer extends ApiRequestNormalizer
 {
-    public function getPropertyAttributes(string $type): array
+    public function getPropertyAttributes(mixed $type): array
     {
         return parent::getPropertyAttributes($type);
     }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Normalizer\ApiRequestNormalizer;
 
+use App\Attribute\DenormalizeEntity;
+use App\Entity\Availability;
 use App\Entity\Image;
 use App\Entity\Item;
 use App\Entity\Manufacturer;
@@ -25,24 +27,51 @@ class GetPropertyAttributesTest extends TestCase
     public function testGetPropertyAttributesSuccess(): void
     {
         $propertyAttributes = $this->normalizer->getPropertyAttributes(TestApiRequestValid::class);
-        $this->assertCount(3, $propertyAttributes);
+        $this->assertCount(4, $propertyAttributes);
 
-        $this->assertArrayHasKey('item', $propertyAttributes);
-        $this->assertSame(Item::class, $propertyAttributes['item']->getClass());
-        $this->assertSame('id', $propertyAttributes['item']->getEntityId());
-        $this->assertSame('itemId', $propertyAttributes['item']->getDataSource());
-        $this->assertFalse($propertyAttributes['item']->isCollection());
+        $this->assertSame('item', $propertyAttributes[0]->getName());
+        $this->assertFalse($propertyAttributes[0]->isNullable());
+        $this->assertSame(Item::class, $propertyAttributes[0]->getAttribute()->getClass());
+        $this->assertSame('id', $propertyAttributes[0]->getAttribute()->getEntityId());
+        $this->assertSame('itemId', $propertyAttributes[0]->getAttribute()->getDataSource());
+        $this->assertFalse($propertyAttributes[0]->getAttribute()->isCollection());
 
-        $this->assertArrayHasKey('images', $propertyAttributes);
-        $this->assertSame(Image::class, $propertyAttributes['images']->getClass());
-        $this->assertSame('id', $propertyAttributes['images']->getEntityId());
-        $this->assertSame('imageIds', $propertyAttributes['images']->getDataSource());
-        $this->assertTrue($propertyAttributes['images']->isCollection());
+        $this->assertSame('images', $propertyAttributes[1]->getName());
+        $this->assertFalse($propertyAttributes[1]->isNullable());
+        $this->assertSame(Image::class, $propertyAttributes[1]->getAttribute()->getClass());
+        $this->assertSame('id', $propertyAttributes[1]->getAttribute()->getEntityId());
+        $this->assertSame('imageIds', $propertyAttributes[1]->getAttribute()->getDataSource());
+        $this->assertTrue($propertyAttributes[1]->getAttribute()->isCollection());
 
-        $this->assertArrayHasKey('manufacturer', $propertyAttributes);
-        $this->assertSame(Manufacturer::class, $propertyAttributes['manufacturer']->getClass());
-        $this->assertSame('id', $propertyAttributes['manufacturer']->getEntityId());
-        $this->assertNull($propertyAttributes['manufacturer']->getDataSource());
-        $this->assertFalse($propertyAttributes['manufacturer']->isCollection());
+        $this->assertSame('manufacturer', $propertyAttributes[2]->getName());
+        $this->assertFalse($propertyAttributes[2]->isNullable());
+        $this->assertSame(Manufacturer::class, $propertyAttributes[2]->getAttribute()->getClass());
+        $this->assertSame('id', $propertyAttributes[2]->getAttribute()->getEntityId());
+        $this->assertNull($propertyAttributes[2]->getAttribute()->getDataSource());
+        $this->assertFalse($propertyAttributes[2]->getAttribute()->isCollection());
+
+        $this->assertSame('availability', $propertyAttributes[3]->getName());
+        $this->assertTrue($propertyAttributes[3]->isNullable());
+        $this->assertSame(Availability::class, $propertyAttributes[3]->getAttribute()->getClass());
+        $this->assertSame('id', $propertyAttributes[3]->getAttribute()->getEntityId());
+        $this->assertNull($propertyAttributes[3]->getAttribute()->getDataSource());
+        $this->assertFalse($propertyAttributes[3]->getAttribute()->isCollection());
+    }
+
+    public function testGetPropertyAttributesFailure(): void
+    {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage(sprintf('Attribute "%s" is not allowed to be repeated', DenormalizeEntity::class));
+        $mockReflectionProperty = $this->createMock(\ReflectionProperty::class);
+        $mockReflectionProperty->expects($this->once())->method('getAttributes')
+            ->willReturn([
+                new DenormalizeEntity(\stdClass::class),
+                new DenormalizeEntity(\stdClass::class),
+            ]);
+        $mockReflectionClass = $this->createMock(\ReflectionClass::class);
+        $mockReflectionClass->expects($this->once())->method('getProperties')
+            ->willReturn([$mockReflectionProperty]);
+
+        $this->normalizer->getPropertyAttributes($mockReflectionClass);
     }
 }
