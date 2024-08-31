@@ -8,6 +8,7 @@ use App\Exception\JsonValidation\JsonValidationException;
 use Opis\JsonSchema\Errors\ErrorFormatter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -30,7 +31,7 @@ class JsonValidationExceptionSubscriber implements EventSubscriberInterface
         $errorFormatter = new ErrorFormatter();
         $jsonResponse = new JsonResponse([
             'requestValidation' => $errorFormatter->formatOutput($error, 'basic'),
-        ]);
+        ], Response::HTTP_BAD_REQUEST);
 
         $event->setResponse($jsonResponse);
     }
