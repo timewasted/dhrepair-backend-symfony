@@ -30,18 +30,16 @@ services:
             - name: kernel.event_subscriber
               dispatcher: security.event_dispatcher.api_v1
 
-    App\EventSubscriber\JsonValidationControllerArgumentsSubscriber:
-        arguments:
-            $schemaPrefix: 'file://'
-        tags:
-            - name: kernel.event_subscriber
-
     App\Purger\MySQLORMPurgerFactory:
         arguments:
             $disableForeignKeyChecks: true
         tags:
             - name: doctrine.fixtures.purger_factory
               alias: mysql_purger
+
+    App\Service\JsonValidationService:
+        arguments:
+            $schemaPrefix: 'file://'
 
     Opis\JsonSchema\Resolvers\SchemaResolver:
         calls:

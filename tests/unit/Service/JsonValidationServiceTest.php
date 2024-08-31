@@ -2,79 +2,73 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Attribute;
+namespace App\Tests\unit\Service;
 
-use App\Attribute\JsonValidation;
 use App\Exception\JsonValidation\DataPathNotFoundException;
 use App\Exception\JsonValidation\InvalidJsonException;
 use App\Exception\JsonValidation\JsonValidationException;
 use App\Exception\JsonValidation\SchemaNotFoundException;
+use App\Tests\helpers\Service\TestJsonValidationService;
 use Opis\JsonSchema\Errors\ValidationError;
 use Opis\JsonSchema\ValidationResult;
 use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class JsonValidationTest extends TestCase
+class JsonValidationServiceTest extends TestCase
 {
-    public function testConstructSchemaIsRequired(): void
+    public function testParseDataPathNotSpecifiedIsBody(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Schema cannot be null');
-        new JsonValidation(null);
+        $service = new TestJsonValidationService($this->createMock(Validator::class));
+
+        $this->assertSame(['body'], $service->parseDataPath(null));
     }
 
-    public function testConstructDataPathNotSpecifiedIsValid(): void
+    public function testParseDataPathBody(): void
     {
-        new JsonValidation('schema', null);
-        $this->expectNotToPerformAssertions();
+        $service = new TestJsonValidationService($this->createMock(Validator::class));
+
+        $this->assertSame(['body'], $service->parseDataPath('body'));
     }
 
-    public function testConstructDataPathBodyIsValid(): void
+    public function testParseDataPathBodyWithElementPath(): void
     {
-        new JsonValidation('schema', 'body');
-        $this->expectNotToPerformAssertions();
+        $service = new TestJsonValidationService($this->createMock(Validator::class));
+
+        $this->assertSame([
+            'body',
+            'with',
+            'deeper',
+            'path',
+        ], $service->parseDataPath('body.with.deeper.path'));
     }
 
-    public function testConstructDataPathBodyWithElementPathIsValid(): void
-    {
-        new JsonValidation('schema', 'body.with.deeper.path');
-        $this->expectNotToPerformAssertions();
-    }
-
-    public function testConstructDataPathQueryRequiresElementPath(): void
+    public function testParseDataPathQueryIsInvalid(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Data path query is not valid');
-        new JsonValidation('schema', 'query');
+
+        (new TestJsonValidationService($this->createMock(Validator::class)))
+            ->parseDataPath('query');
     }
 
-    public function testConstructDataPathQuerySingleElementPathIsValid(): void
+    public function testParseDataPathQueryWithElementPath(): void
     {
-        new JsonValidation('schema', 'query.parameter');
-        $this->expectNotToPerformAssertions();
+        $service = new TestJsonValidationService($this->createMock(Validator::class));
+
+        $this->assertSame([
+            'query',
+            'parameter',
+        ], $service->parseDataPath('query.parameter'));
     }
 
-    public function testValidateRequestIsRequired(): void
+    public function testParseDataPathInvalidBase(): void
     {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Request must be supplied before attempting validation');
-        (new JsonValidation('schema', 'body'))->validate();
-    }
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Data path invalid is not valid');
 
-    public function testValidateValidatorIsOptional(): void
-    {
-        $this->expectException(SchemaNotFoundException::class);
-
-        $schema = '/schema-file.json';
-        $requestData = json_encode([
-            'object' => true,
-        ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
-
-        (new JsonValidation($schema, 'body'))
-            ->setRequest($request)
-            ->validate();
+        (new TestJsonValidationService($this->createMock(Validator::class)))
+            ->parseDataPath('invalid');
     }
 
     public function testValidateSuccessBodyObject(): void
@@ -83,39 +77,33 @@ class JsonValidationTest extends TestCase
         $requestData = json_encode([
             'object' => true,
         ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
-        $validator = $this->getValidator($requestData, $schema);
+        $request = $this->createRequest('/', $requestData);
+        $validator = $this->getSuccessValidator($requestData, $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'body'));
     }
 
     public function testValidateSuccessBodyArray(): void
     {
         $schema = '/schema-file.json';
         $requestData = json_encode(['a', 'b', 'c']);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
-        $validator = $this->getValidator($requestData, $schema);
+        $request = $this->createRequest('/', $requestData);
+        $validator = $this->getSuccessValidator($requestData, $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'body'));
     }
 
     public function testValidateSuccessBodyScalar(): void
     {
         $schema = '/schema-file.json';
         $requestData = json_encode('foobar');
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
-        $validator = $this->getValidator($requestData, $schema);
+        $request = $this->createRequest('/', $requestData);
+        $validator = $this->getSuccessValidator($requestData, $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'body'));
     }
 
     public function testValidateSuccessBodyElementPathObject(): void
@@ -130,13 +118,11 @@ class JsonValidationTest extends TestCase
                 ],
             ],
         ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
-        $validator = $this->getValidator(json_encode(['object' => true]), $schema);
+        $request = $this->createRequest('/', $requestData);
+        $validator = $this->getSuccessValidator(json_encode(['object' => true]), $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body.a.nested.value'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'body.a.nested.value'));
     }
 
     public function testValidateSuccessBodyElementPathArray(): void
@@ -149,13 +135,11 @@ class JsonValidationTest extends TestCase
                 ],
             ],
         ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
-        $validator = $this->getValidator(json_encode(['a', 'b', 'c']), $schema);
+        $request = $this->createRequest('/', $requestData);
+        $validator = $this->getSuccessValidator(json_encode(['a', 'b', 'c']), $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body.a.nested.value'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'body.a.nested.value'));
     }
 
     public function testValidateSuccessBodyElementPathScalar(): void
@@ -168,13 +152,11 @@ class JsonValidationTest extends TestCase
                 ],
             ],
         ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
-        $validator = $this->getValidator(json_encode('foobar'), $schema);
+        $request = $this->createRequest('/', $requestData);
+        $validator = $this->getSuccessValidator(json_encode('foobar'), $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body.a.nested.value'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'body.a.nested.value'));
     }
 
     public function testValidateSuccessBodyObjectsAndArrays(): void
@@ -190,13 +172,11 @@ class JsonValidationTest extends TestCase
                 ],
             ],
         ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
-        $validator = $this->getValidator(json_encode('3'), $schema);
+        $request = $this->createRequest('/', $requestData);
+        $validator = $this->getSuccessValidator(json_encode('3'), $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body.a.1.b.c.2'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'body.a.1.b.c.2'));
     }
 
     public function testValidateSuccessQueryObject(): void
@@ -205,39 +185,33 @@ class JsonValidationTest extends TestCase
         $requestData = json_encode([
             'object' => true,
         ]);
-        $request = Request::create('/?foo='.$requestData);
-        $validator = $this->getValidator($requestData, $schema);
+        $request = $this->createRequest('/?foo='.$requestData);
+        $validator = $this->getSuccessValidator($requestData, $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'query.foo'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'query.foo'));
     }
 
     public function testValidateSuccessQueryArray(): void
     {
         $schema = '/schema-file.json';
         $requestData = json_encode(['a', 'b', 'c']);
-        $request = Request::create('/?foo='.$requestData);
-        $validator = $this->getValidator($requestData, $schema);
+        $request = $this->createRequest('/?foo='.$requestData);
+        $validator = $this->getSuccessValidator($requestData, $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'query.foo'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'query.foo'));
     }
 
     public function testValidateSuccessQueryScalar(): void
     {
         $schema = '/schema-file.json';
         $requestData = json_encode('foobar');
-        $request = Request::create('/?foo='.$requestData);
-        $validator = $this->getValidator($requestData, $schema);
+        $request = $this->createRequest('/?foo='.$requestData);
+        $validator = $this->getSuccessValidator($requestData, $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'query.foo'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'query.foo'));
     }
 
     public function testValidateSuccessQueryElementPathObject(): void
@@ -252,13 +226,11 @@ class JsonValidationTest extends TestCase
                 ],
             ],
         ]);
-        $request = Request::create('/?foo='.$requestData);
-        $validator = $this->getValidator(json_encode(['object' => true]), $schema);
+        $request = $this->createRequest('/?foo='.$requestData);
+        $validator = $this->getSuccessValidator(json_encode(['object' => true]), $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'query.foo.a.nested.value'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'query.foo.a.nested.value'));
     }
 
     public function testValidateSuccessQueryElementPathArray(): void
@@ -271,13 +243,11 @@ class JsonValidationTest extends TestCase
                 ],
             ],
         ]);
-        $request = Request::create('/?foo='.$requestData);
-        $validator = $this->getValidator(json_encode(['a', 'b', 'c']), $schema);
+        $request = $this->createRequest('/?foo='.$requestData);
+        $validator = $this->getSuccessValidator(json_encode(['a', 'b', 'c']), $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'query.foo.a.nested.value'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'query.foo.a.nested.value'));
     }
 
     public function testValidateSuccessQueryElementPathScalar(): void
@@ -290,13 +260,11 @@ class JsonValidationTest extends TestCase
                 ],
             ],
         ]);
-        $request = Request::create('/?foo='.$requestData);
-        $validator = $this->getValidator(json_encode('foobar'), $schema);
+        $request = $this->createRequest('/?foo='.$requestData);
+        $validator = $this->getSuccessValidator(json_encode('foobar'), $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'query.foo.a.nested.value'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'query.foo.a.nested.value'));
     }
 
     public function testValidateSuccessQueryObjectsAndArrays(): void
@@ -312,13 +280,11 @@ class JsonValidationTest extends TestCase
                 ],
             ],
         ]);
-        $request = Request::create('/?foo='.$requestData);
-        $validator = $this->getValidator(json_encode('3'), $schema);
+        $request = $this->createRequest('/?foo='.$requestData);
+        $validator = $this->getSuccessValidator(json_encode('3'), $schema);
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'query.foo.a.1.b.c.2'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $this->assertTrue($service->validate($request, $schema, 'query.foo.a.1.b.c.2'));
     }
 
     public function testValidateFailureNoJsonData(): void
@@ -327,15 +293,13 @@ class JsonValidationTest extends TestCase
 
         $schema = '/schema-file.json';
         $requestData = '';
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+        $request = $this->createRequest('/', $requestData);
 
         $validator = $this->createMock(Validator::class);
         $validator->expects($this->never())->method('validate');
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $service->validate($request, $schema, 'body');
     }
 
     public function testValidateFailureInvalidJsonData(): void
@@ -344,15 +308,31 @@ class JsonValidationTest extends TestCase
 
         $schema = '/schema-file.json';
         $requestData = 'invalid-json';
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+        $request = $this->createRequest('/', $requestData);
 
         $validator = $this->createMock(Validator::class);
         $validator->expects($this->never())->method('validate');
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $service->validate($request, $schema, 'body');
+    }
+
+    public function testValidateFailureQueryParamNotFound(): void
+    {
+        $this->expectException(DataPathNotFoundException::class);
+        $this->expectExceptionMessage('');
+
+        $schema = '/schema-file.json';
+        $requestData = json_encode([
+            'foo' => 'bar',
+        ]);
+        $request = $this->createRequest('/?foobar='.$requestData);
+
+        $validator = $this->createMock(Validator::class);
+        $validator->expects($this->never())->method('validate');
+        $service = new TestJsonValidationService($validator);
+
+        $service->validate($request, $schema, 'query.foo');
     }
 
     public function testValidateFailurePathDoesNotExistEarlyObject(): void
@@ -364,15 +344,13 @@ class JsonValidationTest extends TestCase
         $requestData = json_encode([
             'foo' => 'bar',
         ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+        $request = $this->createRequest('/', $requestData);
 
         $validator = $this->createMock(Validator::class);
         $validator->expects($this->never())->method('validate');
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body.foobar.baz'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $service->validate($request, $schema, 'body.foobar.baz');
     }
 
     public function testValidateFailurePathDoesNotExistLateObject(): void
@@ -390,15 +368,13 @@ class JsonValidationTest extends TestCase
                 ],
             ],
         ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+        $request = $this->createRequest('/', $requestData);
 
         $validator = $this->createMock(Validator::class);
         $validator->expects($this->never())->method('validate');
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body.a.deeply.nested.value'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $service->validate($request, $schema, 'body.a.deeply.nested.value');
     }
 
     public function testValidateFailureCanNotProceedDeeperObject(): void
@@ -412,15 +388,13 @@ class JsonValidationTest extends TestCase
                 'deeply' => 'foo',
             ],
         ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+        $request = $this->createRequest('/', $requestData);
 
         $validator = $this->createMock(Validator::class);
         $validator->expects($this->never())->method('validate');
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body.a.deeply.nested.value'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $service->validate($request, $schema, 'body.a.deeply.nested.value');
     }
 
     public function testValidateFailurePathDoesNotExistEarlyArray(): void
@@ -430,15 +404,13 @@ class JsonValidationTest extends TestCase
 
         $schema = '/schema-file.json';
         $requestData = json_encode(['a', 'b']);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+        $request = $this->createRequest('/', $requestData);
 
         $validator = $this->createMock(Validator::class);
         $validator->expects($this->never())->method('validate');
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body.2.foo'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $service->validate($request, $schema, 'body.2.foo');
     }
 
     public function testValidateFailurePathDoesNotExistLateArray(): void
@@ -457,15 +429,13 @@ class JsonValidationTest extends TestCase
                 ],
             ],
         ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+        $request = $this->createRequest('/', $requestData);
 
         $validator = $this->createMock(Validator::class);
         $validator->expects($this->never())->method('validate');
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body.0.1.2.3'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $service->validate($request, $schema, 'body.0.1.2.3');
     }
 
     public function testValidateFailureExceptionDuringValidationSchemaNotFound(): void
@@ -479,16 +449,14 @@ class JsonValidationTest extends TestCase
         $requestData = json_encode([
             'object' => true,
         ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+        $request = $this->createRequest('/', $requestData);
 
         $validator = $this->createMock(Validator::class);
         $validator->expects($this->once())->method('validate')
             ->willThrowException(new \RuntimeException($schemaNotFoundMsg));
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $service->validate($request, $schema, 'body');
     }
 
     public function testValidateFailureExceptionDuringValidation(): void
@@ -502,16 +470,14 @@ class JsonValidationTest extends TestCase
         $requestData = json_encode([
             'object' => true,
         ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+        $request = $this->createRequest('/', $requestData);
 
         $validator = $this->createMock(Validator::class);
         $validator->expects($this->once())->method('validate')
             ->willThrowException(new \RuntimeException($exceptionMsg));
+        $service = new TestJsonValidationService($validator);
 
-        (new JsonValidation($schema, 'body'))
-            ->setRequest($request)
-            ->setValidator($validator)
-            ->validate();
+        $service->validate($request, $schema, 'body');
     }
 
     public function testValidateFailureNoErrorInException(): void
@@ -522,7 +488,7 @@ class JsonValidationTest extends TestCase
         $requestData = json_encode([
             'object' => true,
         ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+        $request = $this->createRequest('/', $requestData);
 
         $validationResult = $this->createMock(ValidationResult::class);
         $validationResult->expects($this->once())
@@ -535,12 +501,10 @@ class JsonValidationTest extends TestCase
         $validator = $this->createMock(Validator::class);
         $validator->expects($this->once())->method('validate')
             ->willReturn($validationResult);
+        $service = new TestJsonValidationService($validator);
 
         try {
-            (new JsonValidation($schema, 'body'))
-                ->setRequest($request)
-                ->setValidator($validator)
-                ->validate();
+            $service->validate($request, $schema, 'body');
         } catch (JsonValidationException $exception) {
             $this->assertNull($exception->getError());
             throw $exception;
@@ -555,7 +519,7 @@ class JsonValidationTest extends TestCase
         $requestData = json_encode([
             'object' => true,
         ]);
-        $request = Request::create('/', 'GET', [], [], [], [], $requestData);
+        $request = $this->createRequest('/', $requestData);
 
         $validationError = $this->createMock(ValidationError::class);
 
@@ -570,16 +534,19 @@ class JsonValidationTest extends TestCase
         $validator = $this->createMock(Validator::class);
         $validator->expects($this->once())->method('validate')
             ->willReturn($validationResult);
+        $service = new TestJsonValidationService($validator);
 
         try {
-            (new JsonValidation($schema, 'body'))
-                ->setRequest($request)
-                ->setValidator($validator)
-                ->validate();
+            $service->validate($request, $schema, 'body');
         } catch (JsonValidationException $exception) {
             $this->assertSame($validationError, $exception->getError());
             throw $exception;
         }
+    }
+
+    private function createRequest(string $url, ?string $requestData = null): Request
+    {
+        return Request::create($url, 'GET', [], [], [], [], $requestData);
     }
 
     private function getSuccessfulValidationResult(): ValidationResult
@@ -592,12 +559,12 @@ class JsonValidationTest extends TestCase
         return $validationResult;
     }
 
-    private function getValidator(string $requestData, string $schema, ?array $globals = null, ?array $slots = null): Validator
+    private function getSuccessValidator(string $requestData, string $schema): Validator
     {
         $validator = $this->createMock(Validator::class);
         $validator->expects($this->once())
             ->method('validate')
-            ->with(json_decode($requestData, false), $schema, $globals, $slots)
+            ->with(json_decode($requestData, false), $schema, null, null)
             ->willReturn($this->getSuccessfulValidationResult());
 
         return $validator;
