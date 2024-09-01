@@ -80,7 +80,7 @@ cc: sf
 check: check-code ## Check the project for potential issues
 
 check-code: ## Check the code with psalm
-	@$(PHP_CONT) vendor/bin/psalm
+	@$(PHP_CONT) vendor/bin/psalm --config=/app/psalm.xml
 
 fix-code: ## Run php-cs-fixer
 	@$(PHP_CONT) vendor/bin/php-cs-fixer fix
