@@ -22,7 +22,7 @@ readonly class JsonValidationService
     /**
      * @throws JsonValidationException
      */
-    public function validate(Request $request, string $schema, ?string $dataPath, ?array $globals = null, ?array $slots = null): bool
+    public function validate(Request $request, string $schema, ?string $dataPath, ?array $globals = null, ?array $slots = null): void
     {
         $dataPath = $this->parseDataPath($dataPath);
         if ('body' === $dataPath[0]) {
@@ -53,8 +53,6 @@ readonly class JsonValidationService
             }
             throw $exception;
         }
-
-        return true;
     }
 
     /**

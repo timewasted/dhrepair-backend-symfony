@@ -81,7 +81,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator($requestData, $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'body'));
+        $service->validate($request, $schema, 'body');
     }
 
     public function testValidateSuccessBodyArray(): void
@@ -92,7 +92,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator($requestData, $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'body'));
+        $service->validate($request, $schema, 'body');
     }
 
     public function testValidateSuccessBodyScalar(): void
@@ -103,7 +103,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator($requestData, $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'body'));
+        $service->validate($request, $schema, 'body');
     }
 
     public function testValidateSuccessBodyElementPathObject(): void
@@ -122,7 +122,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator(json_encode(['object' => true]), $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'body.a.nested.value'));
+        $service->validate($request, $schema, 'body.a.nested.value');
     }
 
     public function testValidateSuccessBodyElementPathArray(): void
@@ -139,7 +139,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator(json_encode(['a', 'b', 'c']), $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'body.a.nested.value'));
+        $service->validate($request, $schema, 'body.a.nested.value');
     }
 
     public function testValidateSuccessBodyElementPathScalar(): void
@@ -156,7 +156,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator(json_encode('foobar'), $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'body.a.nested.value'));
+        $service->validate($request, $schema, 'body.a.nested.value');
     }
 
     public function testValidateSuccessBodyObjectsAndArrays(): void
@@ -176,7 +176,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator(json_encode('3'), $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'body.a.1.b.c.2'));
+        $service->validate($request, $schema, 'body.a.1.b.c.2');
     }
 
     public function testValidateSuccessQueryObject(): void
@@ -189,7 +189,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator($requestData, $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'query.foo'));
+        $service->validate($request, $schema, 'query.foo');
     }
 
     public function testValidateSuccessQueryArray(): void
@@ -200,7 +200,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator($requestData, $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'query.foo'));
+        $service->validate($request, $schema, 'query.foo');
     }
 
     public function testValidateSuccessQueryScalar(): void
@@ -211,7 +211,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator($requestData, $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'query.foo'));
+        $service->validate($request, $schema, 'query.foo');
     }
 
     public function testValidateSuccessQueryElementPathObject(): void
@@ -230,7 +230,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator(json_encode(['object' => true]), $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'query.foo.a.nested.value'));
+        $service->validate($request, $schema, 'query.foo.a.nested.value');
     }
 
     public function testValidateSuccessQueryElementPathArray(): void
@@ -247,7 +247,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator(json_encode(['a', 'b', 'c']), $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'query.foo.a.nested.value'));
+        $service->validate($request, $schema, 'query.foo.a.nested.value');
     }
 
     public function testValidateSuccessQueryElementPathScalar(): void
@@ -264,7 +264,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator(json_encode('foobar'), $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'query.foo.a.nested.value'));
+        $service->validate($request, $schema, 'query.foo.a.nested.value');
     }
 
     public function testValidateSuccessQueryObjectsAndArrays(): void
@@ -284,7 +284,7 @@ class JsonValidationServiceTest extends TestCase
         $validator = $this->getSuccessValidator(json_encode('3'), $schema);
         $service = new TestJsonValidationService($validator);
 
-        $this->assertTrue($service->validate($request, $schema, 'query.foo.a.1.b.c.2'));
+        $service->validate($request, $schema, 'query.foo.a.1.b.c.2');
     }
 
     public function testValidateFailureNoJsonData(): void
