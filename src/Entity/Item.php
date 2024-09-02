@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\DTO\UpdateItemRequest;
 use App\Repository\ItemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -126,7 +127,7 @@ class Item
     private Collection $itemImages;
 
     /**
-     * @var array<int, Image>
+     * @var Image[]
      */
     private array $images = [];
 
@@ -406,6 +407,17 @@ class Item
         return $this->categories;
     }
 
+    /**
+     * @param Category[] $categories
+     */
+    public function setCategories(array $categories): static
+    {
+        $this->categories->clear();
+        array_map(fn (Category $category) => $this->categories->add($category), $categories);
+
+        return $this;
+    }
+
     public function addCategory(Category $category): static
     {
         if (!$this->categories->contains($category)) {
@@ -431,29 +443,36 @@ class Item
     }
 
     /**
-     * @return array<int, Image>
+     * @return Image[]
      */
     public function getImages(): array
     {
         return $this->images;
     }
 
+    /**
+     * @param Image[] $images
+     */
+    public function setImages(array $images): static
+    {
+        $this->images = $images;
+        $this->rebuildItemImages();
+
+        return $this;
+    }
+
     public function addImage(Image $image, ?int $position): static
     {
         $arrayPosition = array_search($image, $this->images, true);
-        if (null === $position) {
-            if (false !== $arrayPosition) {
-                unset($this->images[$arrayPosition]);
-            }
-            $this->images[] = $image;
-            $this->rebuildItemImages();
-        } else {
-            if (false !== $arrayPosition) {
-                unset($this->images[$arrayPosition]);
-            }
-            array_splice($this->images, max($position, 0), 0, [$image]);
-            $this->rebuildItemImages();
+        if (false !== $arrayPosition) {
+            unset($this->images[$arrayPosition]);
         }
+        if (null === $position) {
+            $this->images[] = $image;
+        } else {
+            array_splice($this->images, max($position, 0), 0, [$image]);
+        }
+        $this->rebuildItemImages();
 
         return $this;
     }
@@ -472,6 +491,34 @@ class Item
         }
 
         return $this;
+    }
+
+    public function applyUpdate(UpdateItemRequest $dto): void
+    {
+        $this
+            ->setName($dto->getName())
+            ->setSku($dto->getSku())
+            ->setDescription($dto->getDescription())
+            ->setManufacturer($dto->getManufacturer())
+            ->setCost($dto->getCost())
+            ->setQuantity($dto->getQuantity())
+            ->setAvailability($dto->getAvailability())
+            ->setWeight($dto->getWeight())
+            ->setLength($dto->getLength())
+            ->setWidth($dto->getWidth())
+            ->setHeight($dto->getHeight())
+            ->setIsProduct($dto->isProduct())
+            ->setIsViewable($dto->isViewable())
+            ->setIsPurchasable($dto->isPurchasable())
+            ->setIsSpecial($dto->isSpecial())
+            ->setIsNew($dto->isNew())
+            ->setChargeTax($dto->isChargeTax())
+            ->setChargeShipping($dto->isChargeShipping())
+            ->setIsFreeShipping($dto->isFreeShipping())
+            ->setFreightQuoteRequired($dto->isFreightQuoteRequired())
+            ->setCategories($dto->getCategories())
+            ->setImages($dto->getImages())
+        ;
     }
 
     #[ORM\PostLoad]

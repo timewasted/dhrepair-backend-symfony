@@ -48,12 +48,13 @@ class ItemGeneralTest extends KernelTestCase
     {
         $item = $this->createItem();
         $slugPrev = $item->getSlug();
+        $item->setSku('test sku 123');
         $item->setName('this is a test');
         $this->entityManager->persist($item);
         $this->entityManager->flush();
 
         $this->assertNotSame($slugPrev, $item->getSlug());
-        $this->assertSame('this-is-a-test', $item->getSlug());
+        $this->assertSame('test-sku-123-this-is-a-test', $item->getSlug());
     }
 
     public function testSlugAfterUpdate(): void
@@ -62,6 +63,7 @@ class ItemGeneralTest extends KernelTestCase
         $item = $this->itemRepository->find(1);
         $slugPrev = bin2hex(random_bytes(16));
         $item
+            ->setSku('test sku 123')
             ->setName('this is a test')
             ->setSlug($slugPrev)
         ;
@@ -69,7 +71,7 @@ class ItemGeneralTest extends KernelTestCase
         $this->entityManager->flush();
 
         $this->assertNotSame($slugPrev, $item->getSlug());
-        $this->assertSame('this-is-a-test', $item->getSlug());
+        $this->assertSame('test-sku-123-this-is-a-test', $item->getSlug());
     }
 
     public function testModifiedAtAfterInsert(): void

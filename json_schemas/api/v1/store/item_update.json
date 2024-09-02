@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.doghouserepair.com/api/v1/store/item_update.json",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "sku": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "description": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 65535
+    },
+    "manufacturerId": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "cost": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "quantity": {
+      "type": "integer",
+      "minimum": -1
+    },
+    "availabilityId": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "weight": {
+      "type": "string",
+      "pattern": "^\\d{0,3}\\.\\d{0,2}$"
+    },
+    "length": {
+      "type": "string",
+      "pattern": "^\\d{0,3}\\.\\d{0,2}$"
+    },
+    "width": {
+      "type": "string",
+      "pattern": "^\\d{0,3}\\.\\d{0,2}$"
+    },
+    "height": {
+      "type": "string",
+      "pattern": "^\\d{0,3}\\.\\d{0,2}$"
+    },
+    "isProduct": {
+      "type": "boolean"
+    },
+    "isViewable": {
+      "type": "boolean"
+    },
+    "isPurchasable": {
+      "type": "boolean"
+    },
+    "isSpecial": {
+      "type": "boolean"
+    },
+    "isNew": {
+      "type": "boolean"
+    },
+    "chargeTax": {
+      "type": "boolean"
+    },
+    "chargeShipping": {
+      "type": "boolean"
+    },
+    "isFreeShipping": {
+      "type": "boolean"
+    },
+    "freightQuoteRequired": {
+      "type": "boolean"
+    },
+    "categoryIds": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "imageIds": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "sku",
+    "description",
+    "manufacturerId",
+    "cost",
+    "quantity",
+    "availabilityId",
+    "weight",
+    "length",
+    "width",
+    "height",
+    "isProduct",
+    "isViewable",
+    "isPurchasable",
+    "isSpecial",
+    "isNew",
+    "chargeTax",
+    "chargeShipping",
+    "isFreeShipping",
+    "freightQuoteRequired",
+    "categoryIds",
+    "imageIds"
+  ],
+  "additionalProperties": false
+}

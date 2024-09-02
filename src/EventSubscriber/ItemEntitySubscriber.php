@@ -29,8 +29,15 @@ readonly class ItemEntitySubscriber
 
     private function setSlug(Item $item): void
     {
+        $slugPieces = [];
+        if (null !== $item->getSku()) {
+            $slugPieces[] = $item->getSku();
+        }
         if (null !== $item->getName()) {
-            $item->setSlug((string) $this->slugger->slug((string) $item->getName())->lower());
+            $slugPieces[] = $item->getName();
+        }
+        if (!empty($slugPieces)) {
+            $item->setSlug((string) $this->slugger->slug(implode('-', $slugPieces))->lower());
         }
     }
 }
