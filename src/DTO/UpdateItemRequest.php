@@ -16,7 +16,7 @@ class UpdateItemRequest implements \JsonSerializable
 {
     #[Context(denormalizationContext: [Item::class => ['denormalized' => true]])]
     #[DenormalizeEntity(class: Item::class, dataSource: 'id', nullable: true)]
-    private ?Item $item;
+    private ?Item $item = null;
 
     #[Context(denormalizationContext: [Manufacturer::class => ['denormalized' => true]])]
     #[DenormalizeEntity(class: Manufacturer::class, dataSource: 'manufacturerId')]
@@ -185,7 +185,7 @@ class UpdateItemRequest implements \JsonSerializable
         return $this->item;
     }
 
-    public function setItem(Item $item): static
+    public function setItem(?Item $item): static
     {
         $this->item = $item;
 
