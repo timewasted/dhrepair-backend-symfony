@@ -159,13 +159,6 @@ class Image
         return $this->addedAt;
     }
 
-    public function setAddedAt(\DateTimeImmutable $addedAt): static
-    {
-        $this->addedAt = $addedAt;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Item>
      */
