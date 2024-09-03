@@ -49,6 +49,8 @@ class CategoryRepository extends ServiceEntityRepository
 
     /**
      * @return Category[]
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function getPathToCategoryRoot(Category $category): array
     {
