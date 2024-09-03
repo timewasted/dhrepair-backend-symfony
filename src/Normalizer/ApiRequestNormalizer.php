@@ -79,8 +79,16 @@ class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareIn
                 $entityData = [];
                 /** @psalm-suppress MixedAssignment */
                 foreach ($data[$dataSource] as $value) {
+                    if (null === $value) {
+                        if (!$attribute->isNullable()) {
+                            throw new NullDataException(sprintf('Null data is not allowed for key "%s"', $dataSource));
+                        }
+                        $entityData[] = null;
+                        continue;
+                    }
+
                     $entity = $this->entityRepositories[$entityClass]->findOneBy([$entityId => $value]);
-                    if (null === $entity && !$propertyAttribute->isNullable()) {
+                    if (null === $entity) {
                         /** @psalm-suppress MixedArgument */
                         throw new EntityNotFoundException(sprintf('Unable to find an instance of %s where "%s" = "%s"', $entityClass, $entityId, $value));
                     }

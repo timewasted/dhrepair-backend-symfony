@@ -292,10 +292,42 @@ class DenormalizeTest extends TestCase
         $this->normalizer->denormalize(['foo' => [123, 456]], \stdClass::class);
     }
 
+    public function testDenormalizeCollectionEntityNotFoundNullableAttribute(): void
+    {
+        $this->expectException(EntityNotFoundException::class);
+        $this->expectExceptionMessage('Unable to find an instance of stdClass where "foobar" = "456"');
+        $this->denormalizer->expects($this->never())->method('denormalize');
+        $this->entityManager->expects($this->once())->method('getRepository')
+            ->with(\stdClass::class)->willReturn($this->repository);
+        $this->normalizer->expects($this->once())->method('getPropertyAttributes')
+            ->willReturn([
+                new PropertyAttribute(
+                    'foo',
+                    false,
+                    new DenormalizeEntity(class: \stdClass::class, entityId: 'foobar', isCollection: true, nullable: true)
+                ),
+            ]);
+        $this->repository->expects($this->exactly(2))->method('findOneBy')
+            ->with($this->callback(static function (array $criteria) {
+                /** @var int $invocations */
+                static $invocations = 0;
+
+                return match (++$invocations) {
+                    1 => ['foobar' => 123] === $criteria,
+                    2 => ['foobar' => 456] === $criteria,
+                    default => throw new \LogicException('Invalid number of invocations')
+                };
+            }))
+            ->willReturnOnConsecutiveCalls(new \stdClass(), null);
+
+        $this->normalizer->denormalize(['foo' => [123, 456]], \stdClass::class);
+    }
+
     public function testDenormalizeCollectionEntityNotFoundNullableProperty(): void
     {
-        $repoResult = new \stdClass();
-        $this->denormalizer->expects($this->once())->method('denormalize')->willReturnArgument(0);
+        $this->expectException(EntityNotFoundException::class);
+        $this->expectExceptionMessage('Unable to find an instance of stdClass where "foobar" = "456"');
+        $this->denormalizer->expects($this->never())->method('denormalize');
         $this->entityManager->expects($this->once())->method('getRepository')
             ->with(\stdClass::class)->willReturn($this->repository);
         $this->normalizer->expects($this->once())->method('getPropertyAttributes')
@@ -317,13 +349,52 @@ class DenormalizeTest extends TestCase
                     default => throw new \LogicException('Invalid number of invocations')
                 };
             }))
-            ->willReturnOnConsecutiveCalls($repoResult, null);
+            ->willReturnOnConsecutiveCalls(new \stdClass(), null);
 
-        $denormalized = $this->normalizer->denormalize(['foo' => [123, 456]], \stdClass::class);
+        $this->normalizer->denormalize(['foo' => [123, 456]], \stdClass::class);
+    }
+
+    public function testDenormalizeCollectionEntityNullableAttribute(): void
+    {
+        $repoResult = new \stdClass();
+        $this->denormalizer->expects($this->once())->method('denormalize')->willReturnArgument(0);
+        $this->entityManager->expects($this->once())->method('getRepository')
+            ->with(\stdClass::class)->willReturn($this->repository);
+        $this->normalizer->expects($this->once())->method('getPropertyAttributes')
+            ->willReturn([
+                new PropertyAttribute(
+                    'foo',
+                    false,
+                    new DenormalizeEntity(class: \stdClass::class, entityId: 'foobar', isCollection: true, nullable: true)
+                ),
+            ]);
+        $this->repository->expects($this->once())->method('findOneBy')->willReturn($repoResult);
+
+        $denormalized = $this->normalizer->denormalize(['foo' => [123, null]], \stdClass::class);
 
         $this->assertSame([
             'foo' => [$repoResult, null],
         ], $denormalized);
+    }
+
+    public function testDenormalizeCollectionEntityNonNullableAttribute(): void
+    {
+        $this->expectException(NullDataException::class);
+        $this->expectExceptionMessage('Null data is not allowed for key "foo"');
+        $this->denormalizer->expects($this->never())->method('denormalize');
+        $this->entityManager->expects($this->once())->method('getRepository')
+            ->with(\stdClass::class)->willReturn($this->repository);
+        $this->normalizer->expects($this->once())->method('getPropertyAttributes')
+            ->willReturn([
+                new PropertyAttribute(
+                    'foo',
+                    false,
+                    new DenormalizeEntity(class: \stdClass::class, entityId: 'foobar', isCollection: true)
+                ),
+            ]);
+        $this->repository->expects($this->once())->method('findOneBy')->willReturn(new \stdClass());
+
+        $this->normalizer->denormalize(['foo' => [123, null]], \stdClass::class);
     }
 
     public function testDenormalizeCollectionEntity(): void
