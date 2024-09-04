@@ -101,7 +101,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, CartItem>
      */
-    #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'user', cascade: ['persist'])]
     private Collection $cartItems;
 
     private ?string $passwordPlain = null;
@@ -371,22 +371,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->cartItems;
     }
 
-    public function addCartItem(CartItem $cartItem): static
+    public function addCartItem(Item $item, int $quantity): static
     {
-        if (!$this->cartItems->contains($cartItem)) {
-            $this->cartItems->add($cartItem);
-            $cartItem->setUser($this);
+        if ($quantity <= 0) {
+            $this->removeCartItem($item);
+        } else {
+            foreach ($this->cartItems as $cartItem) {
+                if ($item === $cartItem->getItem()) {
+                    $cartItem->setQuantity($quantity);
+
+                    return $this;
+                }
+            }
+
+            $this->cartItems->add((new CartItem())
+                ->setUser($this)
+                ->setItem($item)
+                ->setQuantity($quantity)
+            );
         }
 
         return $this;
     }
 
-    public function removeCartItem(CartItem $cartItem): static
+    public function removeCartItem(Item $item): static
     {
-        if ($this->cartItems->removeElement($cartItem)) {
-            // set the owning side to null (unless already changed)
-            if ($cartItem->getUser() === $this) {
-                $cartItem->setUser(null);
+        foreach ($this->cartItems as $index => $cartItem) {
+            if ($item === $cartItem->getItem()) {
+                $this->cartItems->remove($index);
+                break;
             }
         }
 

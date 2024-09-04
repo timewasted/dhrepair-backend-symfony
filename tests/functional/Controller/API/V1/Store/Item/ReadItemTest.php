@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\functional\Controller\API\V1\Store\Item;
 
+use App\DataFixtures\ShoppingFixtures;
 use App\DTO\ReadItemResponse;
 use App\Entity\Category;
 use App\Entity\Item;
@@ -19,13 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 class ReadItemTest extends WebTestCase
 {
     use ApiRequestTrait;
-
-    // NOTE: This is the first item in the first grandchild category
-    private const int ITEM_ID_EVERYTHING_VIEWABLE = 5;
-    // NOTE: This is the last item in the first grandchild category
-    private const int ITEM_ID_NOT_VIEWABLE = 8;
-    // NOTE: This is the first item in the first grandchild category of the first non-viewable root category
-    private const int ITEM_ID_ANCESTOR_NOT_VIEWABLE = 149;
 
     private const string READ_URL = '/api/v1/store/item/';
 
@@ -83,7 +77,7 @@ class ReadItemTest extends WebTestCase
 
     public function testReadUnauthenticatedItemIsNotViewable(): void
     {
-        $itemId = self::ITEM_ID_NOT_VIEWABLE;
+        $itemId = ShoppingFixtures::ITEM_ID_NOT_VIEWABLE;
         /** @var Item $item */
         $item = $this->itemRepository->find($itemId);
         $this->assertFalse($item->isViewable());
@@ -95,7 +89,7 @@ class ReadItemTest extends WebTestCase
 
     public function testReadUnauthenticatedAncestorCategoryIsNotViewable(): void
     {
-        $itemId = self::ITEM_ID_ANCESTOR_NOT_VIEWABLE;
+        $itemId = ShoppingFixtures::ITEM_ID_ANCESTOR_NOT_VIEWABLE;
         /** @var Item $item */
         $item = $this->itemRepository->find($itemId);
         $this->assertTrue($item->isViewable());
@@ -108,7 +102,7 @@ class ReadItemTest extends WebTestCase
 
     public function testReadUnauthenticated(): void
     {
-        $itemId = self::ITEM_ID_EVERYTHING_VIEWABLE;
+        $itemId = ShoppingFixtures::ITEM_ID_EVERYTHING_VIEWABLE;
         /** @var Item $item */
         $item = $this->itemRepository->find($itemId);
         $this->assertTrue($item->isViewable());
@@ -144,7 +138,7 @@ class ReadItemTest extends WebTestCase
     public function testReadAuthenticatedItemIsNotViewable(string $username, bool $canSeeHidden): void
     {
         $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
-        $itemId = self::ITEM_ID_NOT_VIEWABLE;
+        $itemId = ShoppingFixtures::ITEM_ID_NOT_VIEWABLE;
         /** @var Item $item */
         $item = $this->itemRepository->find($itemId);
         $this->assertFalse($item->isViewable());
@@ -172,7 +166,7 @@ class ReadItemTest extends WebTestCase
     public function testReadAuthenticatedAncestorCategoryIsNotViewable(string $username, bool $canSeeHidden): void
     {
         $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
-        $itemId = self::ITEM_ID_ANCESTOR_NOT_VIEWABLE;
+        $itemId = ShoppingFixtures::ITEM_ID_ANCESTOR_NOT_VIEWABLE;
         /** @var Item $item */
         $item = $this->itemRepository->find($itemId);
         $this->assertTrue($item->isViewable());
@@ -203,7 +197,7 @@ class ReadItemTest extends WebTestCase
     public function testReadAuthenticated(string $username, bool $canSeeHidden): void
     {
         $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
-        $itemId = self::ITEM_ID_EVERYTHING_VIEWABLE;
+        $itemId = ShoppingFixtures::ITEM_ID_EVERYTHING_VIEWABLE;
         /** @var Item $item */
         $item = $this->itemRepository->find($itemId);
         $this->assertTrue($item->isViewable());

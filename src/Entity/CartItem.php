@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CartItemRepository::class)]
-#[ORM\Index(name: 'item_id', fields: ['itemId'])]
-#[ORM\UniqueConstraint(name: 'user_item', fields: ['userId', 'itemId'])]
+#[ORM\Index(name: 'item_id', columns: ['item_id'])]
+#[ORM\UniqueConstraint(name: 'user_item', columns: ['user_id', 'item_id'])]
 class CartItem
 {
     #[ORM\Id]
@@ -18,65 +18,21 @@ class CartItem
     #[ORM\Column(options: ['unsigned' => true])]
     private ?int $id = null;
 
-    #[ORM\Column(options: ['unsigned' => true])]
-    #[Assert\GreaterThan(value: 0, message: 'entity.cart_item.user_id.greater_than')]
-    private ?int $userId = null;
+    #[ORM\ManyToOne(inversedBy: 'cartItems')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE', options: ['unsigned' => true])]
+    private ?User $user = null;
 
-    #[ORM\Column(options: ['unsigned' => true])]
-    #[Assert\GreaterThan(value: 0, message: 'entity.cart_item.item_id.greater_than')]
-    private ?int $itemId = null;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE', options: ['unsigned' => true])]
+    private ?Item $item = null;
 
     #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThan(value: 0, message: 'entity.cart_item.quantity.greater_than')]
     private ?int $quantity = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cartItems')]
-    #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    private ?User $user = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    private ?Item $item = null;
-
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(int $userId): static
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
-    public function getItemId(): ?int
-    {
-        return $this->itemId;
-    }
-
-    public function setItemId(int $itemId): static
-    {
-        $this->itemId = $itemId;
-
-        return $this;
-    }
-
-    public function getQuantity(): ?int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): static
-    {
-        $this->quantity = $quantity;
-
-        return $this;
     }
 
     public function getUser(): ?User
@@ -99,6 +55,18 @@ class CartItem
     public function setItem(?Item $item): static
     {
         $this->item = $item;
+
+        return $this;
+    }
+
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(int $quantity): static
+    {
+        $this->quantity = $quantity;
 
         return $this;
     }

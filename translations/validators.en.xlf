@@ -50,17 +50,9 @@
         <source>entity.availability.availability.too_long</source>
         <target>Property "availability" is too long (max length: { limit })</target>
       </trans-unit>
-      <trans-unit id="entity.cart_item.item_id.greater_than">
-        <source>entity.cart_item.item_id.greater_than</source>
-        <target>Property "itemId" must be greater than { compared_value }</target>
-      </trans-unit>
       <trans-unit id="entity.cart_item.quantity.greater_than">
         <source>entity.cart_item.quantity.greater_than</source>
         <target>Property "quantity" must be greater than { compared_value }</target>
-      </trans-unit>
-      <trans-unit id="entity.cart_item.user_id.greater_than">
-        <source>entity.cart_item.user_id.greater_than</source>
-        <target>Property "userId" must be greater than { compared_value }</target>
       </trans-unit>
       <trans-unit id="entity.category.description.too_long">
         <source>entity.category.description.too_long</source>

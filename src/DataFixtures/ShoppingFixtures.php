@@ -14,6 +14,13 @@ use Doctrine\Persistence\ObjectManager;
 
 class ShoppingFixtures extends Fixture
 {
+    // NOTE: This is the first item in the first grandchild category
+    public const int ITEM_ID_EVERYTHING_VIEWABLE = 5;
+    // NOTE: This is the last item in the first grandchild category
+    public const int ITEM_ID_NOT_VIEWABLE = 8;
+    // NOTE: This is the first item in the first grandchild category of the first non-viewable root category
+    public const int ITEM_ID_ANCESTOR_NOT_VIEWABLE = 149;
+
     private int $categoryIdSuffix = 0;
     private int $imageIdSuffix = 0;
     private int $itemIdSuffix = 0;
