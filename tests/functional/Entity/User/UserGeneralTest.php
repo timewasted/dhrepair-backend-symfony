@@ -23,6 +23,22 @@ class UserGeneralTest extends KernelTestCase
         $this->userRepository = $this->entityManager->getRepository(User::class);
     }
 
+    public function testCreateTemporaryUser(): void
+    {
+        $authToken = $this->userRepository->createTemporaryUser();
+        $user = $authToken->getUser();
+        $this->assertNotNull($user);
+        $user = $this->userRepository->find($user->getId());
+        $this->assertNotNull($user);
+
+        $this->assertSame($authToken->getUser(), $user);
+        $this->assertMatchesRegularExpression('/^temp_[A-Fa-f\d]{32}$/', (string) $user->getUsername());
+        $this->assertMatchesRegularExpression('/^temp_[A-Fa-f\d]{32}$/', (string) $user->getEmail());
+        $this->assertTrue($user->isAccountEnabled());
+        $this->assertFalse($user->isAccountLocked());
+        $this->assertSame([User::ROLE_TEMPORARY], $user->getRoles());
+    }
+
     public function testEntityInserted(): void
     {
         $username = 'THIS iš ä țèşť';

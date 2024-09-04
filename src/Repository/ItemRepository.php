@@ -41,6 +41,42 @@ class ItemRepository extends ServiceEntityRepository
         return $paths;
     }
 
+    /**
+     * @param int[] $itemIds
+     *
+     * @return Item[]
+     */
+    public function getItems(array $itemIds): array
+    {
+        if ($this->security->isGranted(User::ROLE_ADMIN)) {
+            return $this->findBy(['id' => $itemIds], ['id' => 'ASC']);
+        }
+
+        $items = $this->getEntityManager()->createQueryBuilder()
+            ->select('item', 'categories')
+            ->from(Item::class, 'item')
+            ->join('item.categories', 'categories')
+            ->where('item.id IN (:itemIds)')
+            ->andWhere('item.isViewable = true')
+            ->orderBy('item.id', 'ASC')
+            ->setParameter('itemIds', $itemIds)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $validItems = [];
+        foreach ($items as $item) {
+            foreach ($item->getCategories() as $category) {
+                if (!$this->categoryRepository->isViewable($category)) {
+                    continue 2;
+                }
+            }
+            $validItems[] = $item;
+        }
+
+        return $validItems;
+    }
+
     public function isViewable(Item $item): bool
     {
         if (!$this->security->isGranted(User::ROLE_ADMIN) && !$item->isViewable()) {

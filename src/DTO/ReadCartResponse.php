@@ -6,6 +6,7 @@ namespace App\DTO;
 
 use App\Entity\CartItem;
 use App\Entity\Item;
+use App\Entity\UserAuthToken;
 
 readonly class ReadCartResponse implements \JsonSerializable
 {
@@ -14,9 +15,9 @@ readonly class ReadCartResponse implements \JsonSerializable
     private array $jsonData;
 
     /**
-     * @param list<CartItem> $cartItems
+     * @param CartItem[] $cartItems
      */
-    public function __construct(array $cartItems)
+    public function __construct(array $cartItems, ?UserAuthToken $authToken = null)
     {
         $items = [];
         $totalCost = 0;
@@ -34,10 +35,17 @@ readonly class ReadCartResponse implements \JsonSerializable
             ];
         }
 
-        $this->jsonData = [
+        $jsonData = [
             'items' => $items,
             'totalCost' => $totalCost,
         ];
+        if (null !== $authToken && null !== ($user = $authToken->getUser())) {
+            $jsonData['account'] = [
+                'user' => $user->getUserIdentifier(),
+                'token' => $authToken->getAuthToken(),
+            ];
+        }
+        $this->jsonData = $jsonData;
     }
 
     public function jsonSerialize(): array

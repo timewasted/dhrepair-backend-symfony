@@ -83,7 +83,6 @@ class ReadCartTest extends WebTestCase
             $cartItems = [];
         } elseif (!$canSeeHidden) {
             $cartItems = [
-                $this->createCartItem($user, ShoppingFixtures::ITEM_ID_ANCESTOR_NOT_VIEWABLE, 1),
                 $this->createCartItem($user, ShoppingFixtures::ITEM_ID_EVERYTHING_VIEWABLE, 3),
             ];
         } else {

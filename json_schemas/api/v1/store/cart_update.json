@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.doghouserepair.com/api/v1/store/cart_update.json",
+  "type": "object",
+  "patternProperties": {
+    "^\\d+$": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "minProperties": 1
+}

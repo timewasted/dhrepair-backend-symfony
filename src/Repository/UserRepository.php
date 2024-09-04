@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\CartItem;
 use App\Entity\User;
+use App\Entity\UserAuthToken;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -18,31 +17,27 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(
-        ManagerRegistry $registry,
-        private readonly Security $security,
-    ) {
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, User::class);
     }
 
-    /**
-     * @return list<CartItem>
-     */
-    public function getCartItems(User $user): array
+    public function createTemporaryUser(): UserAuthToken
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
-            ->select('cart_item')
-            ->from(CartItem::class, 'cart_item')
-            ->join('cart_item.item', 'item')
-            ->where('cart_item.user = :user')
-            ->orderBy('item.name', 'ASC')
-            ->setParameter('user', $user)
+        $tempString = 'temp_'.bin2hex(random_bytes(16));
+        $user = (new User())
+            ->setUsername($tempString)
+            ->setEmail($tempString)
+            ->setPasswordPlain(random_bytes(16))
+            ->setAccountEnabled(true)
+            ->setAccountLocked(false)
+            ->setRoles([User::ROLE_TEMPORARY])
         ;
-        if (!$this->security->isGranted(User::ROLE_ADMIN)) {
-            $queryBuilder->andWhere('item.isViewable != 0');
-        }
+        $authToken = $user->addAuthToken();
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
 
-        return $queryBuilder->getQuery()->getResult();
+        return $authToken;
     }
 
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
