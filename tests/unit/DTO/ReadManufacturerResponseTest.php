@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\unit\DTO;
 
 use App\DTO\ReadManufacturerResponse;
-use App\Entity\CostModifier;
 use PHPUnit\Framework\TestCase;
 
 class ReadManufacturerResponseTest extends TestCase
@@ -15,19 +14,19 @@ class ReadManufacturerResponseTest extends TestCase
     public function testJsonSerialize(): void
     {
         $manufacturer1 = $this->createManufacturer();
-        $manufacturer2 = $this->createManufacturer((new CostModifier())->setModifier('1.23'));
+        $manufacturer2 = $this->createManufacturer();
         $dto = new ReadManufacturerResponse([$manufacturer1, $manufacturer2]);
 
         $this->assertSame([
             [
                 'id' => $manufacturer1->getId(),
                 'name' => $manufacturer1->getName(),
-                'costModifier' => null,
+                'costModifier' => $manufacturer1->getCostModifier(),
             ],
             [
                 'id' => $manufacturer2->getId(),
                 'name' => $manufacturer2->getName(),
-                'costModifier' => '1.23',
+                'costModifier' => $manufacturer2->getCostModifier(),
             ],
         ], $dto->jsonSerialize());
     }

@@ -20,7 +20,7 @@ readonly class ReadManufacturerResponse implements \JsonSerializable
             $jsonData[] = [
                 'id' => $manufacturer->getId(),
                 'name' => $manufacturer->getName(),
-                'costModifier' => $manufacturer->getCostModifier()?->getModifier(),
+                'costModifier' => $manufacturer->getCostModifier(),
             ];
         }
         $this->jsonData = $jsonData;

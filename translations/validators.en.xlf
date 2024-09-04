@@ -98,10 +98,6 @@
         <source>entity.category_hierarchy.sets.not_blank</source>
         <target>Property "sets" can not be blank</target>
       </trans-unit>
-      <trans-unit id="entity.cost_modifier.modifier.greater_than_or_equal">
-        <source>entity.cost_modifier.modifier.greater_than_or_equal</source>
-        <target>Property "modifier" must be greater than or equal to { compared_value }</target>
-      </trans-unit>
       <trans-unit id="entity.customer.bill_address1.not_blank">
         <source>entity.customer.bill_address1.not_blank</source>
         <target>Property "billAddress1" can not be blank</target>
@@ -357,6 +353,10 @@
       <trans-unit id="entity.manufacturer.name.not_blank">
         <source>entity.manufacturer.name.not_blank</source>
         <target>Property "manufacturer" can not be blank</target>
+      </trans-unit>
+      <trans-unit id="entity.manufacturer.cost_modifier.greater_than_or_equal">
+        <source>entity.manufacturer.cost_modifier.greater_than_or_equal</source>
+        <target>Property "costModifier" must be greater than or equal to { compared_value }</target>
       </trans-unit>
       <trans-unit id="entity.manufacturer.name.too_long">
         <source>entity.manufacturer.name.too_long</source>
