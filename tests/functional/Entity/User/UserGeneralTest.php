@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\functional\Entity\User;
 
+use App\DataFixtures\UserFixtures;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectManager;
@@ -72,5 +73,15 @@ class UserGeneralTest extends KernelTestCase
         $this->assertNotNull($user->getPassword());
         $this->assertNull($user->getPasswordPlain());
         $this->assertSame($userCreatedAt->getTimestamp(), $user->getCreatedAt()?->getTimestamp());
+    }
+
+    public function testUpgradePassword(): void
+    {
+        $user = $this->userRepository->findOneBy(['usernameCanonical' => 'valid_user']);
+        $this->assertNotNull($user);
+        $newPassword = password_hash(UserFixtures::DEFAULT_PASSWORD.'!', PASSWORD_DEFAULT);
+        $this->userRepository->upgradePassword($user, $newPassword);
+
+        $this->assertSame($newPassword, $user->getPassword());
     }
 }
