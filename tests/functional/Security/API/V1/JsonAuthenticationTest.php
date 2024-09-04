@@ -127,6 +127,17 @@ class JsonAuthenticationTest extends WebTestCase
         ], $responseData);
     }
 
+    public function testAuthenticationFailureUserLockedUntil(): void
+    {
+        $username = 'locked_until_user';
+        $responseData = $this->doAuthRequest($username, UserFixtures::DEFAULT_PASSWORD, Response::HTTP_UNAUTHORIZED);
+
+        $this->assertSame([
+            'msg' => AuthenticationFailureHandler::MSG_FAILURE,
+            'error' => LockedException::class,
+        ], $responseData);
+    }
+
     public function testAuthenticationFailureUserDisabled(): void
     {
         $username = 'disabled_user';

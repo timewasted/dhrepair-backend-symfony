@@ -30,17 +30,17 @@ class CheckPassportSubscriber implements EventSubscriberInterface
             throw new UnsupportedUserException();
         }
 
+        $currentTime = new \DateTimeImmutable();
         if (null !== $user->getConfirmationToken()) {
             throw new NotConfirmedException();
         }
-        if ($user->isAccountLocked()) {
+        if ($user->isAccountLocked() || $currentTime < $user->getAccountLockedUntil()) {
             throw new LockedException();
         }
         if (!$user->isAccountEnabled()) {
             throw new DisabledException();
         }
 
-        $currentTime = new \DateTimeImmutable();
         if (null !== $user->getAccountExpiresAt() && $currentTime >= $user->getAccountExpiresAt()) {
             throw new AccountExpiredException();
         }

@@ -62,6 +62,15 @@ class UserFixtures extends Fixture
         $manager->persist($user);
 
         $user = $this->getBaseUser()
+            ->setUsername('locked_until_user')
+            ->setEmail('locked_until_user@example.com')
+            ->setAccountLocked(false)
+            ->setAccountLockedUntil((new \DateTimeImmutable())->add(new \DateInterval('P10Y')))
+        ;
+        $user->addAuthToken();
+        $manager->persist($user);
+
+        $user = $this->getBaseUser()
             ->setUsername('disabled_user')
             ->setEmail('disabled_user@example.com')
             ->setAccountEnabled(false)
