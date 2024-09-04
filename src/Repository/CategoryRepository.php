@@ -33,9 +33,14 @@ class CategoryRepository extends ServiceEntityRepository
     public function getItemsInCategory(Category $category): array
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()
-            ->select('item')
+            ->select('item', 'manufacturer', 'costModifier', 'availability', 'itemImages', 'image')
             ->from(Item::class, 'item')
+            ->join('item.manufacturer', 'manufacturer')
+            ->leftJoin('manufacturer.costModifier', 'costModifier')
+            ->join('item.availability', 'availability')
             ->join('item.categories', 'category')
+            ->leftJoin('item.itemImages', 'itemImages')
+            ->leftJoin('itemImages.image', 'image')
             ->where('category.id = :categoryId')
             ->orderBy('item.name', 'ASC')
             ->setParameter('categoryId', $category->getId())
