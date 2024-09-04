@@ -204,6 +204,10 @@ class Item
 
     public function getCost(): ?int
     {
+        if (null !== $this->cost && null !== $this->manufacturer && null !== ($modifier = $this->manufacturer->getCostModifier())) {
+            return (int) ceil($this->cost * (float) $modifier);
+        }
+
         return $this->cost;
     }
 

@@ -33,6 +33,27 @@ class ItemGeneralTest extends KernelTestCase
         $this->manufacturerRepository = $this->entityManager->getRepository(Manufacturer::class);
     }
 
+    public function testGetCostWithoutManufacturer(): void
+    {
+        /** @var Item $item */
+        $item = $this->itemRepository->find(1);
+        $item->setManufacturer(null)->setCost(123456789);
+
+        $this->assertSame(123456789, $item->getCost());
+    }
+
+    public function testGetCost(): void
+    {
+        /** @var Item $item */
+        $item = $this->itemRepository->find(1);
+        $manufacturer = $item->getManufacturer();
+        $this->assertNotNull($manufacturer);
+        $manufacturer->setCostModifier('1.25');
+        $item->setCost(123456789);
+
+        $this->assertSame(154320987, $item->getCost());
+    }
+
     public function testGetImages(): void
     {
         /** @var Item $item */

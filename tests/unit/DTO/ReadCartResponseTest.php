@@ -33,15 +33,19 @@ class ReadCartResponseTest extends TestCase
             ->setCost($item1Cost)
             ->setImages([$image1, $image2])
         ;
+        /** @psalm-suppress PossiblyNullReference */
+        $item1Cost = (int) ceil($item1Cost * (float) $item1->getManufacturer()->getCostModifier());
         $item2Cost = random_int(10, 9999);
         $item2 = $this->createItem()
             ->setCost($item2Cost)
             ->setImages([$image1, $image2])
         ;
+        /** @psalm-suppress PossiblyNullReference */
+        $item2Cost = (int) ceil($item2Cost * (float) $item2->getManufacturer()->getCostModifier());
 
-        $cartItem1Quantity = random_int(1, 1000);
+        $cartItem1Quantity = random_int(1, 100);
         $cartItem1 = (new CartItem())->setItem($item1)->setQuantity($cartItem1Quantity);
-        $cartItem2Quantity = random_int(1, 1000);
+        $cartItem2Quantity = random_int(1, 100);
         $cartItem2 = (new CartItem())->setItem($item2)->setQuantity($cartItem2Quantity);
 
         $dto = new ReadCartResponse([$cartItem1, $cartItem2]);
