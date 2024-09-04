@@ -7,15 +7,10 @@ namespace App\DataFixtures;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
     public const string DEFAULT_PASSWORD = 'test123';
-
-    public function __construct(readonly private UserPasswordHasherInterface $passwordHasher)
-    {
-    }
 
     public function load(ObjectManager $manager): void
     {
@@ -97,12 +92,11 @@ class UserFixtures extends Fixture
 
     private function getBaseUser(): User
     {
-        $user = (new User())
+        return (new User())
             ->setAccountEnabled(true)
             ->setAccountLocked(false)
+            ->setPasswordPlain(self::DEFAULT_PASSWORD)
             ->setRoles([User::ROLE_USER])
         ;
-
-        return $user->setPassword($this->passwordHasher->hashPassword($user, self::DEFAULT_PASSWORD));
     }
 }

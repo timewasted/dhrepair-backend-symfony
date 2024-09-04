@@ -104,6 +104,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'user')]
     private Collection $cartItems;
 
+    private ?string $passwordPlain = null;
+
     public function __construct()
     {
         $this->authTokens = new ArrayCollection();
@@ -133,6 +135,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->usernameCanonical;
     }
 
+    public function setUsernameCanonical(string $usernameCanonical): static
+    {
+        $this->usernameCanonical = $usernameCanonical;
+
+        return $this;
+    }
+
     public function getEmail(): ?string
     {
         return $this->email;
@@ -151,6 +160,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->emailCanonical;
     }
 
+    public function setEmailCanonical(string $emailCanonical): static
+    {
+        $this->emailCanonical = $emailCanonical;
+
+        return $this;
+    }
+
     public function getPassword(): ?string
     {
         return $this->password;
@@ -159,6 +175,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getPasswordPlain(): ?string
+    {
+        return $this->passwordPlain;
+    }
+
+    public function setPasswordPlain(#[\SensitiveParameter] ?string $passwordPlain): static
+    {
+        $this->passwordPlain = $passwordPlain;
 
         return $this;
     }
