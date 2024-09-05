@@ -7,7 +7,6 @@ namespace App\Entity;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -24,7 +23,7 @@ class Order
     #[ORM\Column(options: ['unsigned' => true])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true, options: ['default' => null])]
     #[Assert\Length(max: 255, maxMessage: 'entity.order.username.too_long')]
     private ?string $username = null;
 
@@ -42,7 +41,7 @@ class Order
     #[Assert\Length(max: 100, maxMessage: 'entity.order.bill_name.too_long')]
     private ?string $billName = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true, options: ['default' => null])]
     #[Assert\Length(max: 100, maxMessage: 'entity.order.bill_company.too_long')]
     private ?string $billCompany = null;
 
@@ -52,7 +51,7 @@ class Order
     #[Assert\Regex(pattern: '/[\d]/', message: 'entity.order.bill_address1.requires_digits')]
     private ?string $billAddress1 = null;
 
-    #[ORM\Column(name: 'bill_address_2', length: 100)]
+    #[ORM\Column(name: 'bill_address_2', length: 100, nullable: true, options: ['default' => null])]
     #[Assert\Length(max: 100, maxMessage: 'entity.order.bill_address2.too_long')]
     private ?string $billAddress2 = null;
 
@@ -81,7 +80,7 @@ class Order
     #[Assert\Length(max: 100, maxMessage: 'entity.order.ship_name.too_long')]
     private ?string $shipName = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true, options: ['default' => null])]
     #[Assert\Length(max: 100, maxMessage: 'entity.order.ship_company.too_long')]
     private ?string $shipCompany = null;
 
@@ -91,7 +90,7 @@ class Order
     #[Assert\Regex(pattern: '/[\d]/', message: 'entity.order.ship_address1.requires_digits')]
     private ?string $shipAddress1 = null;
 
-    #[ORM\Column(name: 'ship_address_2', length: 100)]
+    #[ORM\Column(name: 'ship_address_2', length: 100, nullable: true, options: ['default' => null])]
     #[Assert\Length(max: 100, maxMessage: 'entity.order.ship_address2.too_long')]
     private ?string $shipAddress2 = null;
 
@@ -146,13 +145,6 @@ class Order
     #[ORM\Column]
     private ?bool $refundUnusedShipping = null;
 
-    /**
-     * @var ?resource
-     */
-    #[ORM\Column(type: Types::BINARY, length: 768, nullable: true, options: ['default' => null])]
-    #[Assert\Length(max: 768, maxMessage: 'entity.order.credit_card.too_long')]
-    private $creditCard;
-
     #[ORM\Column(updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -184,7 +176,7 @@ class Order
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setUsername(?string $username): static
     {
         $this->username = $username;
 
@@ -487,24 +479,6 @@ class Order
     public function setRefundUnusedShipping(bool $refundUnusedShipping): static
     {
         $this->refundUnusedShipping = $refundUnusedShipping;
-
-        return $this;
-    }
-
-    /**
-     * @return ?resource
-     */
-    public function getCreditCard()
-    {
-        return $this->creditCard;
-    }
-
-    /**
-     * @param ?resource $creditCard
-     */
-    public function setCreditCard($creditCard): static
-    {
-        $this->creditCard = $creditCard;
 
         return $this;
     }

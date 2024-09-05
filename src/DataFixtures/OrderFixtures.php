@@ -68,7 +68,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
     private function createBaseOrder(int $baseId, ?string $username): Order
     {
         return (new Order())
-            ->setUsername($username ?? '')
+            ->setUsername($username)
             ->setOrderNumber(sprintf('%02d-090124-%d', $baseId, $baseId * 111))
             ->setReceiptId(sha1(sprintf('%02d-090124-%d', $baseId, $baseId * 111)))
             ->setBillName(bin2hex(random_bytes(16)))

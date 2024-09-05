@@ -430,10 +430,6 @@
         <source>entity.order.comments.too_long</source>
         <target>Property "comments" is too long (max length: { limit })</target>
       </trans-unit>
-      <trans-unit id="entity.order.credit_card.too_long">
-        <source>entity.order.credit_card.too_long</source>
-        <target>Property "creditCard" is too long (max length: { limit })</target>
-      </trans-unit>
       <trans-unit id="entity.order.email.invalid">
         <source>entity.order.email.invalid</source>
         <target>Property "email" does not contain a valid email address</target>
