@@ -165,7 +165,7 @@ class Order
     /**
      * @var Collection<int, OrderItem>
      */
-    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'orderInfo')]
+    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'orderInfo', cascade: ['persist'])]
     private Collection $items;
 
     public function __construct()
@@ -512,13 +512,6 @@ class Order
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     /**

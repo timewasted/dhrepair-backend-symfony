@@ -562,10 +562,6 @@
         <source>entity.order_item.name.too_long</source>
         <target>Property "name" is too long (max length: { limit })</target>
       </trans-unit>
-      <trans-unit id="entity.order_item.order_id.greater_than">
-        <source>entity.order_item.order_id.greater_than</source>
-        <target>Property "orderId" must be greater than { compared_value }</target>
-      </trans-unit>
       <trans-unit id="entity.order_item.quantity.greater_than">
         <source>entity.order_item.quantity.greater_than</source>
         <target>Property "quantity" must be greater than { compared_value }</target>

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
-#[ORM\Index(name: 'order_id', fields: ['orderId'])]
+#[ORM\Index(name: 'order_id', columns: ['order_id'])]
 class OrderItem
 {
     #[ORM\Id]
@@ -17,9 +17,9 @@ class OrderItem
     #[ORM\Column(options: ['unsigned' => true])]
     private ?int $id = null;
 
-    #[ORM\Column(options: ['unsigned' => true])]
-    #[Assert\GreaterThan(value: 0, message: 'entity.order_item.order_id.greater_than')]
-    private ?int $orderId = null;
+    #[ORM\ManyToOne(inversedBy: 'items')]
+    #[ORM\JoinColumn(name: 'order_id', nullable: false, onDelete: 'CASCADE', options: ['unsigned' => true])]
+    private ?Order $orderInfo = null;
 
     #[ORM\Column(options: ['unsigned' => true])]
     #[Assert\GreaterThan(value: 0, message: 'entity.order_item.quantity.greater_than')]
@@ -39,23 +39,19 @@ class OrderItem
     #[Assert\GreaterThanOrEqual(value: 0, message: 'entity.order_item.cost.greater_than_or_equal')]
     private ?int $cost = null;
 
-    #[ORM\ManyToOne(inversedBy: 'items')]
-    #[ORM\JoinColumn(name: 'order_id', onDelete: 'CASCADE')]
-    private ?Order $orderInfo = null;
-
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getOrderId(): ?int
+    public function getOrderInfo(): ?Order
     {
-        return $this->orderId;
+        return $this->orderInfo;
     }
 
-    public function setOrderId(int $orderId): static
+    public function setOrderInfo(?Order $orderInfo): static
     {
-        $this->orderId = $orderId;
+        $this->orderInfo = $orderInfo;
 
         return $this;
     }
@@ -104,18 +100,6 @@ class OrderItem
     public function setCost(int $cost): static
     {
         $this->cost = $cost;
-
-        return $this;
-    }
-
-    public function getOrderInfo(): ?Order
-    {
-        return $this->orderInfo;
-    }
-
-    public function setOrderInfo(?Order $orderInfo): static
-    {
-        $this->orderInfo = $orderInfo;
 
         return $this;
     }
