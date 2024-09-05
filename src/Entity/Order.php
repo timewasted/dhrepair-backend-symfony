@@ -532,18 +532,6 @@ class Order
         return $this;
     }
 
-    public function removeTransactionLog(TransactionLog $transactionLog): static
-    {
-        if ($this->transactionLog->removeElement($transactionLog)) {
-            // set the owning side to null (unless already changed)
-            if ($transactionLog->getOrderInfo() === $this) {
-                $transactionLog->setOrderInfo(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, OrderItem>
      */
@@ -557,18 +545,6 @@ class Order
         if (!$this->items->contains($item)) {
             $this->items->add($item);
             $item->setOrderInfo($this);
-        }
-
-        return $this;
-    }
-
-    public function removeItem(OrderItem $item): static
-    {
-        if ($this->items->removeElement($item)) {
-            // set the owning side to null (unless already changed)
-            if ($item->getOrderInfo() === $this) {
-                $item->setOrderInfo(null);
-            }
         }
 
         return $this;
