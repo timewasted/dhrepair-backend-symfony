@@ -46,14 +46,9 @@ trait OrderTestTrait
         return new OrderItem();
     }
 
-    protected function getOrderData(Order $order): array
+    protected function getOrderData(Order $order, bool $includeItems = true): array
     {
-        $items = [];
-        foreach ($order->getItems() as $item) {
-            $items[] = $this->getOrderItemData($item);
-        }
-
-        return [
+        $orderData = [
             'id' => $order->getId(),
             'username' => $order->getUsername(),
             'orderNumber' => $order->getOrderNumber(),
@@ -87,9 +82,19 @@ trait OrderTestTrait
                 'shipping' => $order->getShipping(),
                 'refundUnusedShipping' => $order->isRefundUnusedShipping(),
             ],
-            'items' => $items,
+            'items' => [],
             'createdAt' => $order->getCreatedAt()?->format(\DateTimeInterface::ATOM),
         ];
+
+        if ($includeItems) {
+            foreach ($order->getItems() as $item) {
+                $orderData['items'][] = $this->getOrderItemData($item);
+            }
+        } else {
+            unset($orderData['items']);
+        }
+
+        return $orderData;
     }
 
     protected function getOrderItemData(OrderItem $item): array
