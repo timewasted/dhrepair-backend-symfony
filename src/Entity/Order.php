@@ -151,7 +151,7 @@ class Order
     /**
      * @var Collection<int, TransactionLog>
      */
-    #[ORM\OneToMany(targetEntity: TransactionLog::class, mappedBy: 'orderInfo')]
+    #[ORM\OneToMany(targetEntity: TransactionLog::class, mappedBy: 'orderInfo', cascade: ['persist'])]
     private Collection $transactionLog;
 
     /**

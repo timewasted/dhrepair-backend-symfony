@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: TransactionLogRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(name: 'transaction_id', fields: ['transactionId'])]
-#[ORM\Index(name: 'order_id', fields: ['orderId'])]
+#[ORM\Index(name: 'order_id', columns: ['order_id'])]
 class TransactionLog
 {
     #[ORM\Id]
@@ -19,9 +19,9 @@ class TransactionLog
     #[ORM\Column(options: ['unsigned' => true])]
     private ?int $id = null;
 
-    #[ORM\Column(options: ['unsigned' => true])]
-    #[Assert\GreaterThan(value: 0, message: 'entity.transaction_log.order_id.greater_than')]
-    private ?int $orderId = null;
+    #[ORM\ManyToOne(fetch: 'EAGER', inversedBy: 'transactionLog')]
+    #[ORM\JoinColumn(name: 'order_id', referencedColumnName: 'id', nullable: false, options: ['unsigned' => true])]
+    private ?Order $orderInfo = null;
 
     #[ORM\Column(length: 32, nullable: true, options: ['default' => null])]
     #[Assert\Length(max: 32, maxMessage: 'entity.transaction_log.referenced_id.too_long')]
@@ -53,23 +53,19 @@ class TransactionLog
     #[ORM\Column(updatable: false, options: ['default' => 'CURRENT_TIMESTAMP'], generated: 'INSERT')]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transactionLog')]
-    #[ORM\JoinColumn(name: 'order_id', referencedColumnName: 'id')]
-    private ?Order $orderInfo = null;
-
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getOrderId(): ?int
+    public function getOrderInfo(): ?Order
     {
-        return $this->orderId;
+        return $this->orderInfo;
     }
 
-    public function setOrderId(int $orderId): static
+    public function setOrderInfo(?Order $orderInfo): static
     {
-        $this->orderId = $orderId;
+        $this->orderInfo = $orderInfo;
 
         return $this;
     }
@@ -166,18 +162,6 @@ class TransactionLog
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getOrderInfo(): ?Order
-    {
-        return $this->orderInfo;
-    }
-
-    public function setOrderInfo(?Order $orderInfo): static
-    {
-        $this->orderInfo = $orderInfo;
 
         return $this;
     }

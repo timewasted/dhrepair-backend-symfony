@@ -6,6 +6,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Order;
 use App\Entity\OrderItem;
+use App\Entity\TransactionLog;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -59,6 +60,29 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
                     $order->addItem($item);
                 }
                 $order->setSubtotal($subtotal);
+
+                $transactionLogAuth = $this->createBaseTransactionLog($order)
+                    ->setAction('AUTHORIZE')
+                    ->setAmount(12345)
+                ;
+                $order->addTransactionLog($transactionLogAuth);
+                $transactionLogCapture = $this->createBaseTransactionLog($order)
+                    ->setReferencedId((string) $transactionLogAuth->getTransactionId())
+                    ->setAction('CAPTURE')
+                    ->setAmount((int) $transactionLogAuth->getAmount())
+                    ->setIsAvsSuccess(null)
+                    ->setIsCvv2Success(null)
+                ;
+                $order->addTransactionLog($transactionLogCapture);
+                $transactionLogCredit = $this->createBaseTransactionLog($order)
+                    ->setReferencedId((string) $transactionLogCapture->getTransactionId())
+                    ->setAction('CREDIT')
+                    ->setAmount(2346)
+                    ->setIsAvsSuccess(null)
+                    ->setIsCvv2Success(null)
+                ;
+                $order->addTransactionLog($transactionLogCredit);
+
                 $manager->persist($order);
             }
         }
@@ -94,6 +118,17 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
             ->setTax(0)
             ->setShipping(0)
             ->setRefundUnusedShipping(true)
+        ;
+    }
+
+    private function createBaseTransactionLog(Order $order): TransactionLog
+    {
+        return (new TransactionLog())
+            ->setOrderInfo($order)
+            ->setTransactionId(bin2hex(random_bytes(16)))
+            ->setIsSuccess(true)
+            ->setIsAvsSuccess(true)
+            ->setIsCvv2Success(true)
         ;
     }
 }
