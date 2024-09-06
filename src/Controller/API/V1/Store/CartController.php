@@ -11,6 +11,7 @@ use App\Entity\User;
 use App\Repository\CartItemRepository;
 use App\Repository\ItemRepository;
 use App\Repository\UserRepository;
+use App\ValueObject\ShoppingCart;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +26,9 @@ class CartController extends AbstractController
         #[CurrentUser] ?User $user,
         CartItemRepository $cartItemRepository,
     ): Response {
-        $cartItems = null !== $user ? $cartItemRepository->getCartItems($user) : [];
+        $shoppingCart = null !== $user ? $cartItemRepository->getShoppingCart($user) : new ShoppingCart(null, []);
 
-        return $this->json(new ReadCartResponse($cartItems));
+        return $this->json(new ReadCartResponse($shoppingCart));
     }
 
     #[Route('/cart', name: 'update', methods: ['PUT'])]
@@ -56,9 +57,9 @@ class CartController extends AbstractController
                 'invalidItems' => array_values($invalidIds),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        $cartItemRepository->setCartContents($user, $items, $itemQuantities);
+        $shoppingCart = $cartItemRepository->setCartContents($user, $items, $itemQuantities);
 
-        return $this->json(new ReadCartResponse($cartItemRepository->getCartItems($user), $authToken));
+        return $this->json(new ReadCartResponse($shoppingCart, $authToken));
     }
 
     #[Route('/cart', name: 'delete', methods: ['DELETE'])]
@@ -68,6 +69,6 @@ class CartController extends AbstractController
     ): Response {
         $cartItemRepository->emptyCart($user);
 
-        return $this->json(new ReadCartResponse([]));
+        return $this->json(new ReadCartResponse(new ShoppingCart($user, [])));
     }
 }

@@ -8,6 +8,7 @@ use App\DTO\ReadCartResponse;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Tests\traits\ApiRequestTrait;
+use App\ValueObject\ShoppingCart;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -66,6 +67,7 @@ class DeleteCartTest extends WebTestCase
         $this->assertJson((string) $response->getContent());
         $jsonData = (array) json_decode((string) $response->getContent(), true);
 
-        $this->assertSame((new ReadCartResponse([]))->jsonSerialize(), $jsonData);
+        $shoppingCart = new ShoppingCart($user, []);
+        $this->assertSame((new ReadCartResponse($shoppingCart))->jsonSerialize(), $jsonData);
     }
 }

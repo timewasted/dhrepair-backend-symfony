@@ -12,6 +12,7 @@ use App\Entity\User;
 use App\Repository\ItemRepository;
 use App\Repository\UserRepository;
 use App\Tests\traits\ApiRequestTrait;
+use App\ValueObject\ShoppingCart;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -65,7 +66,7 @@ class ReadCartTest extends WebTestCase
 
     public function testReadUnauthenticated(): void
     {
-        $dto = new ReadCartResponse([]);
+        $dto = new ReadCartResponse(new ShoppingCart(null, []));
         $this->makeApiRequest('GET', self::READ_URL);
 
         $this->assertSame($dto->jsonSerialize(), $this->getJsonData());
@@ -92,7 +93,7 @@ class ReadCartTest extends WebTestCase
                 $this->createCartItem($user, ShoppingFixtures::ITEM_ID_NOT_VIEWABLE, 2),
             ];
         }
-        $dto = new ReadCartResponse($cartItems);
+        $dto = new ReadCartResponse(new ShoppingCart($user, $cartItems));
         $this->makeApiRequest('GET', self::READ_URL, null, null, $user);
 
         $this->assertSame($dto->jsonSerialize(), $this->getJsonData());

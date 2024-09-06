@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Entity\CartItem;
 use App\Entity\Item;
 use App\Entity\User;
+use App\ValueObject\ShoppingCart;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -36,10 +37,7 @@ class CartItemRepository extends ServiceEntityRepository
         ;
     }
 
-    /**
-     * @return list<CartItem>
-     */
-    public function getCartItems(User $user): array
+    public function getShoppingCart(User $user): ShoppingCart
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->select('cart_item', 'item')
@@ -50,7 +48,7 @@ class CartItemRepository extends ServiceEntityRepository
             ->setParameter('user', $user)
         ;
         if ($this->security->isGranted(User::ROLE_ADMIN)) {
-            return $queryBuilder->getQuery()->getResult();
+            return new ShoppingCart($user, $queryBuilder->getQuery()->getResult());
         }
 
         /** @var CartItem[] $cartItems */
@@ -72,14 +70,14 @@ class CartItemRepository extends ServiceEntityRepository
             $validCartItems[] = $cartItem;
         }
 
-        return $validCartItems;
+        return new ShoppingCart($user, $validCartItems);
     }
 
     /**
      * @param Item[]          $items
      * @param array<int, int> $itemQuantities
      */
-    public function setCartContents(User $user, array $items, array $itemQuantities): void
+    public function setCartContents(User $user, array $items, array $itemQuantities): ShoppingCart
     {
         $entityManager = $this->getEntityManager();
 
@@ -100,5 +98,7 @@ class CartItemRepository extends ServiceEntityRepository
             ]);
             $entityManager->flush();
         });
+
+        return $this->getShoppingCart($user);
     }
 }

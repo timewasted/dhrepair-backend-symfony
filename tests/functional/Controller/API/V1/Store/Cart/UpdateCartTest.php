@@ -15,6 +15,7 @@ use App\Repository\ItemRepository;
 use App\Repository\UserAuthTokenRepository;
 use App\Repository\UserRepository;
 use App\Tests\traits\ApiRequestTrait;
+use App\ValueObject\ShoppingCart;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -208,7 +209,8 @@ class UpdateCartTest extends WebTestCase
         foreach ($itemQuantities as $itemId => $quantity) {
             $cartItems[] = $this->createCartItem($user, $itemId, $quantity);
         }
-        $this->assertSame((new ReadCartResponse($cartItems, $authToken))->jsonSerialize(), $jsonData);
+        $shoppingCart = new ShoppingCart($user, $cartItems);
+        $this->assertSame((new ReadCartResponse($shoppingCart, $authToken))->jsonSerialize(), $jsonData);
 
         $storedCartItems = $this->cartItemRepository->findBy(['user' => $user]);
         $this->assertSame(count($cartItems), count($storedCartItems));

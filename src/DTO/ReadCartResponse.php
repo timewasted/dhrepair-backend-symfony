@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\DTO;
 
-use App\Entity\CartItem;
 use App\Entity\Item;
 use App\Entity\UserAuthToken;
+use App\ValueObject\ShoppingCart;
 
 readonly class ReadCartResponse implements \JsonSerializable
 {
@@ -14,30 +14,22 @@ readonly class ReadCartResponse implements \JsonSerializable
 
     private array $jsonData;
 
-    /**
-     * @param CartItem[] $cartItems
-     */
-    public function __construct(array $cartItems, ?UserAuthToken $authToken = null)
+    public function __construct(ShoppingCart $shoppingCart, ?UserAuthToken $authToken = null)
     {
         $items = [];
-        $totalCost = 0;
-        foreach ($cartItems as $cartItem) {
+        foreach ($shoppingCart->getCartItems() as $cartItem) {
             /** @var Item $item */
             $item = $cartItem->getItem();
-            $quantity = (int) $cartItem->getQuantity();
-            $quantityCost = $quantity * (int) $item->getCost();
-            $totalCost += $quantityCost;
-
             $items[] = [
                 'item' => $this->getItemData($item),
-                'quantity' => $quantity,
-                'quantityCost' => $quantityCost,
+                'quantity' => (int) $cartItem->getQuantity(),
+                'quantityCost' => $cartItem->getQuantityCost(),
             ];
         }
 
         $jsonData = [
             'items' => $items,
-            'totalCost' => $totalCost,
+            'totalCost' => $shoppingCart->getTotalCost(),
         ];
         if (null !== $authToken && null !== ($user = $authToken->getUser())) {
             $jsonData['account'] = [

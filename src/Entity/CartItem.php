@@ -70,4 +70,13 @@ class CartItem
 
         return $this;
     }
+
+    public function getQuantityCost(): ?int
+    {
+        if (null === $this->item) {
+            return null;
+        }
+
+        return max(0, (int) $this->quantity) * (int) $this->item->getCost();
+    }
 }

@@ -6,6 +6,7 @@ namespace App\Tests\unit\DTO;
 
 use App\DTO\ReadCartResponse;
 use App\Entity\CartItem;
+use App\ValueObject\ShoppingCart;
 use PHPUnit\Framework\TestCase;
 
 class ReadCartResponseTest extends TestCase
@@ -15,7 +16,7 @@ class ReadCartResponseTest extends TestCase
 
     public function testJsonSerializeWithoutItems(): void
     {
-        $dto = new ReadCartResponse([]);
+        $dto = new ReadCartResponse(new ShoppingCart(null, []));
 
         $this->assertSame([
             'items' => [],
@@ -48,7 +49,7 @@ class ReadCartResponseTest extends TestCase
         $cartItem2Quantity = random_int(1, 100);
         $cartItem2 = (new CartItem())->setItem($item2)->setQuantity($cartItem2Quantity);
 
-        $dto = new ReadCartResponse([$cartItem1, $cartItem2]);
+        $dto = new ReadCartResponse(new ShoppingCart(null, [$cartItem1, $cartItem2]));
 
         $this->assertSame([
             'items' => [
