@@ -17,6 +17,7 @@
         "doctrine/orm": "^3.2",
         "opis/json-schema": "^2.3",
         "runtime/frankenphp-symfony": "^0.2.0",
+        "stripe/stripe-php": "^15.8",
         "symfony/console": "7.1.*",
         "symfony/dotenv": "7.1.*",
         "symfony/flex": "^2",
