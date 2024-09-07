@@ -8,11 +8,15 @@ use App\Attribute\JsonValidation;
 use App\DTO\ReadCartResponse;
 use App\Entity\Item;
 use App\Entity\User;
+use App\Event\CartCreatedEvent;
+use App\Event\CartDeletedEvent;
+use App\Event\CartUpdatedEvent;
 use App\Repository\CartItemRepository;
 use App\Repository\ItemRepository;
 use App\Repository\UserRepository;
 use App\ValueObject\ShoppingCart;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -39,12 +43,16 @@ class CartController extends AbstractController
         CartItemRepository $cartItemRepository,
         ItemRepository $itemRepository,
         UserRepository $userRepository,
+        EventDispatcherInterface $eventDispatcher,
     ): Response {
         $authToken = null;
         if (null === $user) {
             $authToken = $userRepository->createTemporaryUser();
             /** @var User $user */
             $user = $authToken->getUser();
+            $isNewCart = true;
+        } else {
+            $isNewCart = $user->getCartItems()->isEmpty();
         }
 
         /** @var array<int, int> $itemQuantities */
@@ -59,16 +67,39 @@ class CartController extends AbstractController
         }
         $shoppingCart = $cartItemRepository->setCartContents($user, $items, $itemQuantities);
 
-        return $this->json(new ReadCartResponse($shoppingCart, $authToken));
+        try {
+            return $this->json(new ReadCartResponse($shoppingCart, $authToken));
+        } finally {
+            if ($shoppingCart->isEmpty()) {
+                if (!$isNewCart) {
+                    $eventDispatcher->dispatch(new CartDeletedEvent($shoppingCart));
+                }
+            } elseif ($isNewCart) {
+                $eventDispatcher->dispatch(new CartCreatedEvent($shoppingCart));
+            } else {
+                $eventDispatcher->dispatch(new CartUpdatedEvent($shoppingCart));
+            }
+        }
     }
 
     #[Route('/cart', name: 'delete', methods: ['DELETE'])]
     public function delete(
         #[CurrentUser] User $user,
         CartItemRepository $cartItemRepository,
+        EventDispatcherInterface $eventDispatcher,
     ): Response {
-        $cartItemRepository->emptyCart($user);
+        $isCartEmpty = $user->getCartItems()->isEmpty();
+        if (!$isCartEmpty) {
+            $cartItemRepository->emptyCart($user);
+        }
+        $shoppingCart = new ShoppingCart($user, []);
 
-        return $this->json(new ReadCartResponse(new ShoppingCart($user, [])));
+        try {
+            return $this->json(new ReadCartResponse($shoppingCart));
+        } finally {
+            if (!$isCartEmpty) {
+                $eventDispatcher->dispatch(new CartDeletedEvent($shoppingCart));
+            }
+        }
     }
 }

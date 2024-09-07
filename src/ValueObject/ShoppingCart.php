@@ -48,4 +48,9 @@ class ShoppingCart
     {
         return $this->user;
     }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->cartItems);
+    }
 }

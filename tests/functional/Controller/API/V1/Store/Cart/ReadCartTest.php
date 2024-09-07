@@ -69,7 +69,7 @@ class ReadCartTest extends WebTestCase
         $dto = new ReadCartResponse(new ShoppingCart(null, []));
         $this->makeApiRequest('GET', self::READ_URL);
 
-        $this->assertSame($dto->jsonSerialize(), $this->getJsonData());
+        $this->assertSame($dto->jsonSerialize(), $this->getJsonResponseData());
     }
 
     /**
@@ -96,7 +96,7 @@ class ReadCartTest extends WebTestCase
         $dto = new ReadCartResponse(new ShoppingCart($user, $cartItems));
         $this->makeApiRequest('GET', self::READ_URL, null, null, $user);
 
-        $this->assertSame($dto->jsonSerialize(), $this->getJsonData());
+        $this->assertSame($dto->jsonSerialize(), $this->getJsonResponseData());
     }
 
     private function createCartItem(User $user, int $itemId, int $quantity): CartItem
@@ -106,14 +106,5 @@ class ReadCartTest extends WebTestCase
             ->setItem($this->itemRepository->find($itemId))
             ->setQuantity($quantity)
         ;
-    }
-
-    private function getJsonData(): array
-    {
-        $this->assertResponseIsSuccessful();
-        $response = $this->client->getResponse();
-        $this->assertJson((string) $response->getContent());
-
-        return (array) json_decode((string) $response->getContent(), true);
     }
 }

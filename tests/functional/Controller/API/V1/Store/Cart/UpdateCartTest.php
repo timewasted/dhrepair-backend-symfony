@@ -10,14 +10,20 @@ use App\Entity\CartItem;
 use App\Entity\Item;
 use App\Entity\User;
 use App\Entity\UserAuthToken;
+use App\Event\BaseCartEvent;
+use App\Event\CartCreatedEvent;
+use App\Event\CartDeletedEvent;
+use App\Event\CartUpdatedEvent;
 use App\Repository\CartItemRepository;
 use App\Repository\ItemRepository;
 use App\Repository\UserAuthTokenRepository;
 use App\Repository\UserRepository;
+use App\Tests\helpers\EventDispatcher\TestEventDispatcher;
 use App\Tests\traits\ApiRequestTrait;
 use App\ValueObject\ShoppingCart;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class UpdateCartTest extends WebTestCase
@@ -27,6 +33,7 @@ class UpdateCartTest extends WebTestCase
     private const string UPDATE_URL = '/api/v1/store/cart';
 
     private KernelBrowser $client;
+    private TestEventDispatcher $eventDispatcher;
     private CartItemRepository $cartItemRepository;
     private ItemRepository $itemRepository;
     private UserRepository $userRepository;
@@ -38,8 +45,10 @@ class UpdateCartTest extends WebTestCase
         $this->client->catchExceptions(false);
 
         $container = self::getContainer();
-        $entityManager = $container->get('doctrine')->getManager();
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
+        $this->eventDispatcher = $container->get(EventDispatcherInterface::class);
 
+        $entityManager = $container->get('doctrine')->getManager();
         $this->cartItemRepository = $entityManager->getRepository(CartItem::class);
         $this->itemRepository = $entityManager->getRepository(Item::class);
         $this->userRepository = $entityManager->getRepository(User::class);
@@ -72,6 +81,19 @@ class UpdateCartTest extends WebTestCase
         ];
     }
 
+    /**
+     * @return list<array{string, bool, string}>
+     */
+    public static function providerUsernameAndCanSeeHiddenAndCartEvent(): array
+    {
+        return [
+            ['temporary_user', false, CartUpdatedEvent::class],
+            ['valid_user', false, CartUpdatedEvent::class],
+            ['admin_user', true, CartUpdatedEvent::class],
+            ['super_admin_user', true, CartCreatedEvent::class],
+        ];
+    }
+
     public function testUpdateUnauthenticatedInvalidItemIds(): void
     {
         /** @var array<int, int> $itemQuantities */
@@ -82,7 +104,7 @@ class UpdateCartTest extends WebTestCase
         ];
         $this->makeApiRequest('PUT', self::UPDATE_URL, null, $itemQuantities);
 
-        $jsonData = $this->getJsonData(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $jsonData = $this->getJsonResponseData(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->assertArrayHasKey('invalidItems', $jsonData);
         $this->assertIsArray($jsonData['invalidItems']);
 
@@ -92,6 +114,8 @@ class UpdateCartTest extends WebTestCase
             ShoppingFixtures::ITEM_ID_NOT_VIEWABLE,
             ShoppingFixtures::ITEM_ID_ANCESTOR_NOT_VIEWABLE,
         ], $invalidIds);
+
+        $this->assertFalse($this->eventDispatcher->eventDispatched(BaseCartEvent::class));
     }
 
     public function testUpdateUnauthenticated(): void
@@ -103,6 +127,7 @@ class UpdateCartTest extends WebTestCase
         $this->makeApiRequest('PUT', self::UPDATE_URL, null, $itemQuantities);
 
         $this->validateCartResponse($itemQuantities, null);
+        $this->assertTrue($this->eventDispatcher->eventDispatched(CartCreatedEvent::class));
     }
 
     /**
@@ -110,8 +135,8 @@ class UpdateCartTest extends WebTestCase
      */
     public function testUpdateAuthenticatedInvalidItemIds(string $username, bool $canSeeHidden): void
     {
-        /** @var User $user */
         $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
+        $this->assertNotNull($user);
         if ($canSeeHidden) {
             /** @var array<int, int> $itemQuantities */
             $itemQuantities = [
@@ -130,7 +155,7 @@ class UpdateCartTest extends WebTestCase
         }
         $this->makeApiRequest('PUT', self::UPDATE_URL, null, $itemQuantities, $user);
 
-        $jsonData = $this->getJsonData(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $jsonData = $this->getJsonResponseData(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->assertArrayHasKey('invalidItems', $jsonData);
         $this->assertIsArray($jsonData['invalidItems']);
 
@@ -144,15 +169,16 @@ class UpdateCartTest extends WebTestCase
                 ShoppingFixtures::ITEM_ID_ANCESTOR_NOT_VIEWABLE,
             ], $invalidIds);
         }
+        $this->assertFalse($this->eventDispatcher->eventDispatched(BaseCartEvent::class));
     }
 
     /**
-     * @dataProvider providerUsernameAndCanSeeHidden
+     * @dataProvider providerUsernameAndCanSeeHiddenAndCartEvent
      */
-    public function testUpdateAuthenticated(string $username, bool $canSeeHidden): void
+    public function testUpdateAuthenticated(string $username, bool $canSeeHidden, string $cartEvent): void
     {
-        /** @var User $user */
         $user = $this->userRepository->findOneBy(['usernameCanonical' => $username]);
+        $this->assertNotNull($user);
         if ($canSeeHidden) {
             /** @var array<int, int> $itemQuantities */
             $itemQuantities = [
@@ -170,6 +196,35 @@ class UpdateCartTest extends WebTestCase
         $this->makeApiRequest('PUT', self::UPDATE_URL, null, $itemQuantities, $user);
 
         $this->validateCartResponse($itemQuantities, $user);
+        $this->assertTrue($this->eventDispatcher->eventDispatched($cartEvent));
+    }
+
+    public function testUpdateAuthenticatedCartEmptied(): void
+    {
+        $user = $this->userRepository->findOneBy(['usernameCanonical' => 'valid_user']);
+        $this->assertNotNull($user);
+        $itemQuantities = [
+            ShoppingFixtures::ITEM_ID_EVERYTHING_VIEWABLE => 0,
+        ];
+
+        $this->makeApiRequest('PUT', self::UPDATE_URL, null, $itemQuantities, $user);
+
+        $this->validateCartResponse([], $user);
+        $this->assertTrue($this->eventDispatcher->eventDispatched(CartDeletedEvent::class));
+    }
+
+    public function testUpdateAuthenticatedEmptyCartIsEmptied(): void
+    {
+        $user = $this->userRepository->findOneBy(['usernameCanonical' => 'super_admin_user']);
+        $this->assertNotNull($user);
+        $itemQuantities = [
+            ShoppingFixtures::ITEM_ID_EVERYTHING_VIEWABLE => 0,
+        ];
+
+        $this->makeApiRequest('PUT', self::UPDATE_URL, null, $itemQuantities, $user);
+
+        $this->validateCartResponse([], $user);
+        $this->assertFalse($this->eventDispatcher->eventDispatched(BaseCartEvent::class));
     }
 
     private function createCartItem(User $user, int $itemId, int $quantity): CartItem
@@ -186,7 +241,7 @@ class UpdateCartTest extends WebTestCase
      */
     private function validateCartResponse(array $itemQuantities, ?User $user): void
     {
-        $jsonData = $this->getJsonData();
+        $jsonData = $this->getJsonResponseData();
 
         if (null === $user) {
             $this->assertArrayHasKey('account', $jsonData);
@@ -232,14 +287,5 @@ class UpdateCartTest extends WebTestCase
             /** @psalm-suppress PossiblyNullReference */
             $this->assertSame($cartItem->getItem()->getId(), $storedCartItems[$index]->getItem()->getId());
         }
-    }
-
-    private function getJsonData(int $expectedResponse = Response::HTTP_OK): array
-    {
-        $this->assertResponseStatusCodeSame($expectedResponse);
-        $response = $this->client->getResponse();
-        $this->assertJson((string) $response->getContent());
-
-        return (array) json_decode((string) $response->getContent(), true);
     }
 }
