@@ -51,6 +51,12 @@ services:
 
     Opis\JsonSchema\Validator: ~
 
+    Stripe\HttpClient\ClientInterface:
+        factory: ['Stripe\HttpClient\CurlClient', 'instance']
+
+    Stripe\HttpClient\StreamingClientInterface:
+        factory: ['Stripe\HttpClient\CurlClient', 'instance']
+
     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
         arguments:
             - '%env(DATABASE_URL)%'

@@ -6,5 +6,11 @@ services:
     App\Tests\helpers\:
         resource: '../tests/helpers/'
 
+    Stripe\HttpClient\ClientInterface:
+        alias: App\Tests\helpers\Service\Stripe\TestStripeHttpClient
+
+    Stripe\HttpClient\StreamingClientInterface:
+        alias: App\Tests\helpers\Service\Stripe\TestStripeHttpClient
+
     Symfony\Component\EventDispatcher\EventDispatcherInterface:
         alias: App\Tests\helpers\EventDispatcher\TestEventDispatcher
