@@ -12,12 +12,12 @@ class TestStripeHttpClient implements ClientInterface, StreamingClientInterface
 {
     private const string PATH_SERVICE_REGEX = '/^\/v1\/([\w]+)\/?/';
 
-    public function request($method, $absUrl, $headers, $params, $hasFile): array
+    public function request($method, $absUrl, $headers, $params, $hasFile, $apiMode = 'v1', $maxNetworkRetries = null): array
     {
         return $this->handleRequest($method, $absUrl);
     }
 
-    public function requestStream($method, $absUrl, $headers, $params, $hasFile, $readBodyChunkCallable): array
+    public function requestStream($method, $absUrl, $headers, $params, $hasFile, $readBodyChunkCallable, $maxNetworkRetries = null): array
     {
         return $this->handleRequest($method, $absUrl);
     }

@@ -19,9 +19,9 @@ readonly class MySQLORMPurgerFactory implements PurgerFactory
         ?string $emName,
         EntityManagerInterface $em,
         array $excluded = [],
-        bool $purgeWithTruncate = false
+        bool $purgeWithTruncate = false,
     ): PurgerInterface {
-        $purger = new MySQLORMPurger();
+        $purger = new MySQLORMPurger(new ORMPurger());
         $purger->setPurgeMode($purgeWithTruncate ? ORMPurger::PURGE_MODE_TRUNCATE : ORMPurger::PURGE_MODE_DELETE);
         $purger->setDisableForeignKeyChecks($this->disableForeignKeyChecks);
 
