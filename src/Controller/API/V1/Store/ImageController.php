@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/store', name: 'store_image_')]
-class ImageController extends AbstractController
+final class ImageController extends AbstractController
 {
     #[IsGranted(User::ROLE_ADMIN)]
     #[Route('/image/{id}', name: 'read', requirements: ['id' => '\d+'], methods: ['GET'])]

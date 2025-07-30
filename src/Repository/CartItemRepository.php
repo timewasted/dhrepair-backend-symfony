@@ -16,7 +16,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 /**
  * @extends ServiceEntityRepository<CartItem>
  */
-class CartItemRepository extends ServiceEntityRepository
+final class CartItemRepository extends ServiceEntityRepository
 {
     public function __construct(
         ManagerRegistry $registry,
@@ -84,7 +84,7 @@ class CartItemRepository extends ServiceEntityRepository
         foreach ($items as $item) {
             $quantity = $itemQuantities[$item->getId()] ?? 0;
             if ($quantity > 0) {
-                $entityManager->persist((new CartItem())
+                $entityManager->persist(new CartItem()
                     ->setUser($user)
                     ->setItem($item)
                     ->setQuantity($itemQuantities[$item->getId()])

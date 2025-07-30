@@ -229,7 +229,7 @@ class UpdateCartTest extends WebTestCase
 
     private function createCartItem(User $user, int $itemId, int $quantity): CartItem
     {
-        return (new CartItem())
+        return new CartItem()
             ->setUser($user)
             ->setItem($this->itemRepository->find($itemId))
             ->setQuantity($quantity)
@@ -265,21 +265,11 @@ class UpdateCartTest extends WebTestCase
             $cartItems[] = $this->createCartItem($user, $itemId, $quantity);
         }
         $shoppingCart = new ShoppingCart($user, $cartItems);
-        $this->assertSame((new ReadCartResponse($shoppingCart, $authToken))->jsonSerialize(), $jsonData);
+        $this->assertSame(new ReadCartResponse($shoppingCart, $authToken)->jsonSerialize(), $jsonData);
 
         $storedCartItems = $this->cartItemRepository->findBy(['user' => $user]);
         $this->assertSame(count($cartItems), count($storedCartItems));
-        $sortFunc = static function (CartItem $a, CartItem $b): int {
-            /** @var Item $itemA */
-            $itemA = $a->getItem();
-            /** @var Item $itemB */
-            $itemB = $b->getItem();
-            if ($itemA->getId() === $itemB->getId()) {
-                return 0;
-            }
-
-            return $itemA->getId() <=> $itemB->getId();
-        };
+        $sortFunc = static fn (CartItem $a, CartItem $b): int => $a->getItem()->getId() <=> $b->getItem()->getId();
         usort($cartItems, $sortFunc);
         usort($storedCartItems, $sortFunc);
 

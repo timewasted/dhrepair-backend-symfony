@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TaxRateRepository::class)]
 #[ORM\UniqueConstraint(name: 'state', fields: ['state'])]
-class TaxRate
+final class TaxRate
 {
     #[ORM\Id]
     #[ORM\Column(length: 2, unique: true, options: ['fixed' => true])]
@@ -28,7 +28,7 @@ class TaxRate
         return $this->state;
     }
 
-    public function setState(string $state): static
+    public function setState(string $state): TaxRate
     {
         $this->state = $state;
 
@@ -40,7 +40,7 @@ class TaxRate
         return $this->rate;
     }
 
-    public function setRate(string $rate): static
+    public function setRate(string $rate): TaxRate
     {
         $this->rate = $rate;
 

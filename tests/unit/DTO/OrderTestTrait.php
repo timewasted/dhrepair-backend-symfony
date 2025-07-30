@@ -11,7 +11,7 @@ trait OrderTestTrait
 {
     protected function createOrder(): Order
     {
-        return (new Order())
+        return new Order()
             ->setUsername(bin2hex(random_bytes(16)))
             ->setOrderNumber(bin2hex(random_bytes(12)))
             ->setReceiptId(bin2hex(random_bytes(16)))

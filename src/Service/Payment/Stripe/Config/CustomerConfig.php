@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Payment\Stripe\Config;
 
-class CustomerConfig implements ConfigInterface
+final class CustomerConfig implements ConfigInterface
 {
     use SetArrayFieldTrait;
 
@@ -12,62 +12,63 @@ class CustomerConfig implements ConfigInterface
     private ?array $metadata = null;
     private ?array $shippingAddress = null;
 
-    public function setEmail(?string $email): static
+    public function setEmail(?string $email): CustomerConfig
     {
         $this->email = $email;
 
         return $this;
     }
 
-    public function setMetadata(string $key, ?string $value): static
+    public function setMetadata(string $key, ?string $value): CustomerConfig
     {
         $this->setArrayField($this->metadata, $key, $value);
 
         return $this;
     }
 
-    public function setShippingAddressLine1(?string $value): static
+    public function setShippingAddressLine1(?string $value): CustomerConfig
     {
         $this->setArrayField($this->shippingAddress, 'line1', $value);
 
         return $this;
     }
 
-    public function setShippingAddressLine2(?string $value): static
+    public function setShippingAddressLine2(?string $value): CustomerConfig
     {
         $this->setArrayField($this->shippingAddress, 'line2', $value);
 
         return $this;
     }
 
-    public function setShippingAddressCity(?string $value): static
+    public function setShippingAddressCity(?string $value): CustomerConfig
     {
         $this->setArrayField($this->shippingAddress, 'city', $value);
 
         return $this;
     }
 
-    public function setShippingAddressState(?string $value): static
+    public function setShippingAddressState(?string $value): CustomerConfig
     {
         $this->setArrayField($this->shippingAddress, 'state', $value);
 
         return $this;
     }
 
-    public function setShippingAddressPostalCode(?string $value): static
+    public function setShippingAddressPostalCode(?string $value): CustomerConfig
     {
         $this->setArrayField($this->shippingAddress, 'postal_code', $value);
 
         return $this;
     }
 
-    public function setShippingAddressCountry(?string $value): static
+    public function setShippingAddressCountry(?string $value): CustomerConfig
     {
         $this->setArrayField($this->shippingAddress, 'country', $value);
 
         return $this;
     }
 
+    #[\Override]
     public function toArray(): array
     {
         $config = [];

@@ -48,7 +48,7 @@ class JsonValidationServiceTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Data path query is not valid');
 
-        (new TestJsonValidationService($this->createMock(Validator::class)))
+        new TestJsonValidationService($this->createMock(Validator::class))
             ->parseDataPath('query');
     }
 
@@ -67,7 +67,7 @@ class JsonValidationServiceTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Data path invalid is not valid');
 
-        (new TestJsonValidationService($this->createMock(Validator::class)))
+        new TestJsonValidationService($this->createMock(Validator::class))
             ->parseDataPath('invalid');
     }
 

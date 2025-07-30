@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Attribute;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
-readonly class DenormalizeEntity
+final readonly class DenormalizeEntity
 {
     public function __construct(
         /** @var class-string $class */

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Payment\Stripe\Config;
 
-class PaymentIntentConfig implements ConfigInterface
+final class PaymentIntentConfig implements ConfigInterface
 {
     use SetArrayFieldTrait;
 
@@ -22,69 +22,70 @@ class PaymentIntentConfig implements ConfigInterface
     private ?string $paymentMethod = null;
     private ?string $setupFutureUsage = null;
 
-    public function setAmount(?int $amount): static
+    public function setAmount(?int $amount): PaymentIntentConfig
     {
         $this->amount = $amount;
 
         return $this;
     }
 
-    public function setCancellationReason(?string $cancellationReason): static
+    public function setCancellationReason(?string $cancellationReason): PaymentIntentConfig
     {
         $this->cancellationReason = $cancellationReason;
 
         return $this;
     }
 
-    public function setCardPaymentMethodOption(string $key, mixed $value): static
+    public function setCardPaymentMethodOption(string $key, mixed $value): PaymentIntentConfig
     {
         $this->setArrayField($this->cardPaymentMethodOptions, $key, $value);
 
         return $this;
     }
 
-    public function setCurrency(?string $currency): static
+    public function setCurrency(?string $currency): PaymentIntentConfig
     {
         $this->currency = $currency;
 
         return $this;
     }
 
-    public function setCustomerId(?string $customerId): static
+    public function setCustomerId(?string $customerId): PaymentIntentConfig
     {
         $this->customerId = $customerId;
 
         return $this;
     }
 
-    public function setDescription(?string $description): static
+    public function setDescription(?string $description): PaymentIntentConfig
     {
         $this->description = $description;
 
         return $this;
     }
 
-    public function setMetadata(string $key, ?string $value): static
+    public function setMetadata(string $key, ?string $value): PaymentIntentConfig
     {
         $this->setArrayField($this->metadata, $key, $value);
 
         return $this;
     }
 
-    public function setPaymentMethod(?string $paymentMethod): static
+    public function setPaymentMethod(?string $paymentMethod): PaymentIntentConfig
     {
         $this->paymentMethod = $paymentMethod;
 
         return $this;
     }
 
-    public function setSetupFutureUsage(?string $setupFutureUsage): static
+    public function setSetupFutureUsage(?string $setupFutureUsage): PaymentIntentConfig
     {
         $this->setupFutureUsage = $setupFutureUsage;
 
         return $this;
     }
 
+    #[\Override]
     public function toArray(): array
     {
         $config = [];

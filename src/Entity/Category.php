@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(name: 'parent', fields: ['parent'])]
-class Category
+final class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -81,7 +81,7 @@ class Category
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): Category
     {
         $this->name = $name;
 
@@ -93,7 +93,7 @@ class Category
         return $this->slug;
     }
 
-    public function setSlug(string $slug): static
+    public function setSlug(string $slug): Category
     {
         $this->slug = $slug;
 
@@ -105,7 +105,7 @@ class Category
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(string $description): Category
     {
         $this->description = $description;
 
@@ -117,7 +117,7 @@ class Category
         return $this->isViewable;
     }
 
-    public function setIsViewable(bool $isViewable): static
+    public function setIsViewable(bool $isViewable): Category
     {
         $this->isViewable = $isViewable;
 
@@ -129,7 +129,7 @@ class Category
         return $this->modifiedAt;
     }
 
-    public function setModifiedAt(\DateTimeImmutable $modifiedAt): static
+    public function setModifiedAt(\DateTimeImmutable $modifiedAt): Category
     {
         $this->modifiedAt = $modifiedAt;
 
@@ -141,7 +141,7 @@ class Category
         return $this->parent;
     }
 
-    public function setParent(?self $parent): static
+    public function setParent(?self $parent): Category
     {
         $this->parent = $parent;
 
@@ -164,7 +164,7 @@ class Category
         return $this->items;
     }
 
-    public function addItem(Item $item): static
+    public function addItem(Item $item): Category
     {
         if (!$this->items->contains($item)) {
             $this->items->add($item);
@@ -174,7 +174,7 @@ class Category
         return $this;
     }
 
-    public function removeItem(Item $item): static
+    public function removeItem(Item $item): Category
     {
         if ($this->items->removeElement($item)) {
             $item->removeCategory($this);

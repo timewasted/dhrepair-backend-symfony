@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CategoryClosureRepository::class)]
 #[ORM\UniqueConstraint(name: 'pdc', fields: ['parent', 'depth', 'child'])]
 #[ORM\UniqueConstraint(name: 'cpd', fields: ['child', 'parent', 'depth'])]
-class CategoryClosure
+final class CategoryClosure
 {
     #[ORM\Id]
     #[ORM\Column(options: ['unsigned' => true])]
@@ -37,7 +37,7 @@ class CategoryClosure
         return $this->parent;
     }
 
-    public function setParent(int $parent): static
+    public function setParent(int $parent): CategoryClosure
     {
         $this->parent = $parent;
 
@@ -49,7 +49,7 @@ class CategoryClosure
         return $this->child;
     }
 
-    public function setChild(int $child): static
+    public function setChild(int $child): CategoryClosure
     {
         $this->child = $child;
 
@@ -61,7 +61,7 @@ class CategoryClosure
         return $this->depth;
     }
 
-    public function setDepth(int $depth): static
+    public function setDepth(int $depth): CategoryClosure
     {
         $this->depth = $depth;
 
@@ -73,7 +73,7 @@ class CategoryClosure
         return $this->category;
     }
 
-    public function setCategory(?Category $category): static
+    public function setCategory(?Category $category): CategoryClosure
     {
         $this->category = $category;
 

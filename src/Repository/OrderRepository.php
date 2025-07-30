@@ -13,7 +13,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 /**
  * @extends ServiceEntityRepository<Order>
  */
-class OrderRepository extends ServiceEntityRepository
+final class OrderRepository extends ServiceEntityRepository
 {
     public function __construct(
         ManagerRegistry $registry,

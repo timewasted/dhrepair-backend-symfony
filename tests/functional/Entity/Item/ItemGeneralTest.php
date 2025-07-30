@@ -119,7 +119,7 @@ class ItemGeneralTest extends KernelTestCase
 
     private function createItem(): Item
     {
-        return (new Item())
+        return new Item()
             ->setName(bin2hex(random_bytes(16)))
             ->setSku(bin2hex(random_bytes(16)))
             ->setDescription(bin2hex(random_bytes(16)))

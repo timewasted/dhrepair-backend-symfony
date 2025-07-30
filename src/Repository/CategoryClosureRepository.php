@@ -12,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<CategoryClosure>
  */
-class CategoryClosureRepository extends ServiceEntityRepository
+final class CategoryClosureRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

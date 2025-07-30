@@ -10,7 +10,7 @@ trait ManufacturerTestTrait
 {
     protected function createManufacturer(): Manufacturer
     {
-        return (new Manufacturer())
+        return new Manufacturer()
             ->setName(bin2hex(random_bytes(16)))
             ->setCostModifier(sprintf('%d.%02d', random_int(0, 999), random_int(0, 99)))
         ;

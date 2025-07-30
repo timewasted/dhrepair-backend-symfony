@@ -11,7 +11,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[AsEntityListener(event: Events::prePersist, entity: Item::class)]
 #[AsEntityListener(event: Events::preUpdate, entity: Item::class)]
-readonly class ItemEntitySubscriber
+final readonly class ItemEntitySubscriber
 {
     public function __construct(private SluggerInterface $slugger)
     {

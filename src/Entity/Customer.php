@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[ORM\UniqueConstraint(name: 'user_id', fields: ['userId'])]
-class Customer
+final class Customer
 {
     #[ORM\Id]
     #[ORM\Column(options: ['unsigned' => true])]
@@ -116,7 +116,7 @@ class Customer
         return $this->userId;
     }
 
-    public function setUserId(int $userId): static
+    public function setUserId(int $userId): Customer
     {
         $this->userId = $userId;
 
@@ -128,7 +128,7 @@ class Customer
         return $this->billName;
     }
 
-    public function setBillName(string $billName): static
+    public function setBillName(string $billName): Customer
     {
         $this->billName = $billName;
 
@@ -140,7 +140,7 @@ class Customer
         return $this->billCompany;
     }
 
-    public function setBillCompany(string $billCompany): static
+    public function setBillCompany(string $billCompany): Customer
     {
         $this->billCompany = $billCompany;
 
@@ -152,7 +152,7 @@ class Customer
         return $this->billAddress1;
     }
 
-    public function setBillAddress1(string $billAddress1): static
+    public function setBillAddress1(string $billAddress1): Customer
     {
         $this->billAddress1 = $billAddress1;
 
@@ -164,7 +164,7 @@ class Customer
         return $this->billAddress2;
     }
 
-    public function setBillAddress2(string $billAddress2): static
+    public function setBillAddress2(string $billAddress2): Customer
     {
         $this->billAddress2 = $billAddress2;
 
@@ -176,7 +176,7 @@ class Customer
         return $this->billCity;
     }
 
-    public function setBillCity(string $billCity): static
+    public function setBillCity(string $billCity): Customer
     {
         $this->billCity = $billCity;
 
@@ -188,7 +188,7 @@ class Customer
         return $this->billState;
     }
 
-    public function setBillState(string $billState): static
+    public function setBillState(string $billState): Customer
     {
         $this->billState = $billState;
 
@@ -200,7 +200,7 @@ class Customer
         return $this->billZipCode;
     }
 
-    public function setBillZipCode(string $billZipCode): static
+    public function setBillZipCode(string $billZipCode): Customer
     {
         $this->billZipCode = $billZipCode;
 
@@ -212,7 +212,7 @@ class Customer
         return $this->billCountry;
     }
 
-    public function setBillCountry(string $billCountry): static
+    public function setBillCountry(string $billCountry): Customer
     {
         $this->billCountry = $billCountry;
 
@@ -224,7 +224,7 @@ class Customer
         return $this->shipName;
     }
 
-    public function setShipName(string $shipName): static
+    public function setShipName(string $shipName): Customer
     {
         $this->shipName = $shipName;
 
@@ -236,7 +236,7 @@ class Customer
         return $this->shipCompany;
     }
 
-    public function setShipCompany(string $shipCompany): static
+    public function setShipCompany(string $shipCompany): Customer
     {
         $this->shipCompany = $shipCompany;
 
@@ -248,7 +248,7 @@ class Customer
         return $this->shipAddress1;
     }
 
-    public function setShipAddress1(string $shipAddress1): static
+    public function setShipAddress1(string $shipAddress1): Customer
     {
         $this->shipAddress1 = $shipAddress1;
 
@@ -260,7 +260,7 @@ class Customer
         return $this->shipAddress2;
     }
 
-    public function setShipAddress2(string $shipAddress2): static
+    public function setShipAddress2(string $shipAddress2): Customer
     {
         $this->shipAddress2 = $shipAddress2;
 
@@ -272,7 +272,7 @@ class Customer
         return $this->shipCity;
     }
 
-    public function setShipCity(string $shipCity): static
+    public function setShipCity(string $shipCity): Customer
     {
         $this->shipCity = $shipCity;
 
@@ -284,7 +284,7 @@ class Customer
         return $this->shipState;
     }
 
-    public function setShipState(string $shipState): static
+    public function setShipState(string $shipState): Customer
     {
         $this->shipState = $shipState;
 
@@ -296,7 +296,7 @@ class Customer
         return $this->shipZipCode;
     }
 
-    public function setShipZipCode(string $shipZipCode): static
+    public function setShipZipCode(string $shipZipCode): Customer
     {
         $this->shipZipCode = $shipZipCode;
 
@@ -308,7 +308,7 @@ class Customer
         return $this->shipCountry;
     }
 
-    public function setShipCountry(string $shipCountry): static
+    public function setShipCountry(string $shipCountry): Customer
     {
         $this->shipCountry = $shipCountry;
 
@@ -320,7 +320,7 @@ class Customer
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(string $phoneNumber): static
+    public function setPhoneNumber(string $phoneNumber): Customer
     {
         $this->phoneNumber = $phoneNumber;
 
@@ -332,7 +332,7 @@ class Customer
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): Customer
     {
         $this->email = $email;
 
@@ -344,7 +344,7 @@ class Customer
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?User $user): Customer
     {
         $this->user = $user;
 

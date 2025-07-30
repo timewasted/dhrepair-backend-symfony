@@ -6,8 +6,9 @@ namespace App\Exception\Authorization;
 
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
-class NotConfirmedException extends AuthenticationException
+final class NotConfirmedException extends AuthenticationException
 {
+    #[\Override]
     public function getMessageKey(): string
     {
         return 'Account has not been confirmed.';

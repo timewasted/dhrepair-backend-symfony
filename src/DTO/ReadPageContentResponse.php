@@ -6,7 +6,7 @@ namespace App\DTO;
 
 use App\Entity\PageContent;
 
-readonly class ReadPageContentResponse implements \JsonSerializable
+final readonly class ReadPageContentResponse implements \JsonSerializable
 {
     private array $jsonData;
 
@@ -20,6 +20,7 @@ readonly class ReadPageContentResponse implements \JsonSerializable
         ];
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return $this->jsonData;

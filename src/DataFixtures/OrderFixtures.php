@@ -12,7 +12,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class OrderFixtures extends Fixture implements DependentFixtureInterface
+final class OrderFixtures extends Fixture implements DependentFixtureInterface
 {
     private const array ORDER_USERS = [
         null,
@@ -21,6 +21,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
         'temporary_user',
     ];
 
+    #[\Override]
     public function getDependencies(): array
     {
         return [
@@ -28,6 +29,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
         ];
     }
 
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $userRepository = $manager->getRepository(User::class);
@@ -49,7 +51,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
                 $subtotal = 0;
                 for ($i = 1; $i <= 3; ++$i) {
                     $cost = $i * 1000;
-                    $item = (new OrderItem())
+                    $item = new OrderItem()
                         ->setOrderInfo($order)
                         ->setQuantity($i)
                         ->setName(sprintf('Order item %d for user %d', $i, (int) $user?->getId()))
@@ -91,7 +93,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
 
     private function createBaseOrder(int $baseId, ?string $username): Order
     {
-        return (new Order())
+        return new Order()
             ->setUsername($username)
             ->setOrderNumber(sprintf('%02d-090124-%d', $baseId, $baseId * 111))
             ->setReceiptId(sha1(sprintf('%02d-090124-%d', $baseId, $baseId * 111)))
@@ -123,7 +125,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
 
     private function createBaseTransactionLog(Order $order): TransactionLog
     {
-        return (new TransactionLog())
+        return new TransactionLog()
             ->setOrderInfo($order)
             ->setTransactionId(bin2hex(random_bytes(16)))
             ->setIsSuccess(true)

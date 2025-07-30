@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AccessLogRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class AccessLog
+final class AccessLog
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -61,7 +61,7 @@ class AccessLog
         return $this->ip;
     }
 
-    public function setIp(string $ip): static
+    public function setIp(string $ip): AccessLog
     {
         $this->ip = $ip;
 
@@ -73,7 +73,7 @@ class AccessLog
         return $this->username;
     }
 
-    public function setUsername(?string $username): static
+    public function setUsername(?string $username): AccessLog
     {
         $this->username = $username;
 
@@ -85,7 +85,7 @@ class AccessLog
         return $this->timestamp;
     }
 
-    public function setTimestamp(\DateTimeImmutable $timestamp): static
+    public function setTimestamp(\DateTimeImmutable $timestamp): AccessLog
     {
         $this->timestamp = $timestamp;
 
@@ -97,7 +97,7 @@ class AccessLog
         return $this->uri;
     }
 
-    public function setUri(string $uri): static
+    public function setUri(string $uri): AccessLog
     {
         $this->uri = $uri;
 
@@ -109,7 +109,7 @@ class AccessLog
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+    public function setTitle(string $title): AccessLog
     {
         $this->title = $title;
 
@@ -121,7 +121,7 @@ class AccessLog
         return $this->referer;
     }
 
-    public function setReferer(?string $referer): static
+    public function setReferer(?string $referer): AccessLog
     {
         $this->referer = $referer;
 
@@ -133,7 +133,7 @@ class AccessLog
         return $this->refererTitle;
     }
 
-    public function setRefererTitle(?string $refererTitle): static
+    public function setRefererTitle(?string $refererTitle): AccessLog
     {
         $this->refererTitle = $refererTitle;
 
@@ -145,7 +145,7 @@ class AccessLog
         return $this->browser;
     }
 
-    public function setBrowser(?string $browser): static
+    public function setBrowser(?string $browser): AccessLog
     {
         $this->browser = $browser;
 

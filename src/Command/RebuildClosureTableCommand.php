@@ -22,7 +22,7 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
     name: 'app:rebuild-closure-table',
     description: 'Rebuild the category_closure table',
 )]
-class RebuildClosureTableCommand extends Command implements ServiceSubscriberInterface
+final class RebuildClosureTableCommand extends Command implements ServiceSubscriberInterface
 {
     use ServiceMethodsSubscriberTrait;
 
@@ -31,6 +31,7 @@ class RebuildClosureTableCommand extends Command implements ServiceSubscriberInt
         parent::__construct();
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -93,7 +94,7 @@ class RebuildClosureTableCommand extends Command implements ServiceSubscriberInt
      */
     private function getChildren(?int $parentId): array
     {
-        $rsm = (new ResultSetMapping())
+        $rsm = new ResultSetMapping()
             ->addScalarResult('id', 'id')
             ->addScalarResult('parent', 'parent')
         ;

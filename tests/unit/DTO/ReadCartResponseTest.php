@@ -45,9 +45,9 @@ class ReadCartResponseTest extends TestCase
         $item2Cost = (int) ceil($item2Cost * (float) $item2->getManufacturer()->getCostModifier());
 
         $cartItem1Quantity = random_int(1, 100);
-        $cartItem1 = (new CartItem())->setItem($item1)->setQuantity($cartItem1Quantity);
+        $cartItem1 = new CartItem()->setItem($item1)->setQuantity($cartItem1Quantity);
         $cartItem2Quantity = random_int(1, 100);
-        $cartItem2 = (new CartItem())->setItem($item2)->setQuantity($cartItem2Quantity);
+        $cartItem2 = new CartItem()->setItem($item2)->setQuantity($cartItem2Quantity);
 
         $dto = new ReadCartResponse(new ShoppingCart(null, [$cartItem1, $cartItem2]));
 

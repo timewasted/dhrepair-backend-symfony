@@ -8,7 +8,7 @@ use App\Entity\Item;
 use App\Entity\UserAuthToken;
 use App\ValueObject\ShoppingCart;
 
-readonly class ReadCartResponse implements \JsonSerializable
+final readonly class ReadCartResponse implements \JsonSerializable
 {
     use ItemResponseTrait;
 
@@ -40,6 +40,7 @@ readonly class ReadCartResponse implements \JsonSerializable
         $this->jsonData = $jsonData;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return $this->jsonData;

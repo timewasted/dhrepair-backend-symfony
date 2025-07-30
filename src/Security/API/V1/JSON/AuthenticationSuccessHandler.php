@@ -14,12 +14,13 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
 /** @psalm-suppress UnusedClass */
-readonly class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
+final readonly class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
 
+    #[\Override]
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): ?Response
     {
         $user = $token->getUser();

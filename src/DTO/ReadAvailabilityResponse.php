@@ -6,7 +6,7 @@ namespace App\DTO;
 
 use App\Entity\Availability;
 
-readonly class ReadAvailabilityResponse implements \JsonSerializable
+final readonly class ReadAvailabilityResponse implements \JsonSerializable
 {
     private array $jsonData;
 
@@ -25,7 +25,8 @@ readonly class ReadAvailabilityResponse implements \JsonSerializable
         $this->jsonData = $jsonData;
     }
 
-    public function jsonSerialize(): mixed
+    #[\Override]
+    public function jsonSerialize(): array
     {
         return $this->jsonData;
     }

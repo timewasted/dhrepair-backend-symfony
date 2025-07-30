@@ -59,7 +59,7 @@ class JsonAuthenticationTest extends WebTestCase
 
         /** @var \DateTimeInterface $lastLogin */
         $lastLogin = $user->getLastLogin();
-        $this->assertEqualsWithDelta((new \DateTimeImmutable())->getTimestamp(), $lastLogin->getTimestamp(), 2);
+        $this->assertEqualsWithDelta(new \DateTimeImmutable()->getTimestamp(), $lastLogin->getTimestamp(), 2);
     }
 
     public function testAuthenticationFailureInvalidUsername(): void

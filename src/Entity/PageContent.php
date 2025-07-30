@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PageContentRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class PageContent
+final class PageContent
 {
     #[ORM\Id]
     #[ORM\Column(length: 255)]
@@ -37,7 +37,7 @@ class PageContent
         return $this->page;
     }
 
-    public function setPage(string $page): static
+    public function setPage(string $page): PageContent
     {
         $this->page = $page;
 
@@ -49,7 +49,7 @@ class PageContent
         return $this->title;
     }
 
-    public function setTitle(?string $title): static
+    public function setTitle(?string $title): PageContent
     {
         $this->title = $title;
 
@@ -61,7 +61,7 @@ class PageContent
         return $this->content;
     }
 
-    public function setContent(string $content): static
+    public function setContent(string $content): PageContent
     {
         $this->content = $content;
 
@@ -73,7 +73,7 @@ class PageContent
         return $this->modifiedAt;
     }
 
-    public function setModifiedAt(\DateTimeImmutable $modifiedAt): static
+    public function setModifiedAt(\DateTimeImmutable $modifiedAt): PageContent
     {
         $this->modifiedAt = $modifiedAt;
 

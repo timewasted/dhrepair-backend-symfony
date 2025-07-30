@@ -11,12 +11,13 @@ use Symfony\Component\Security\Http\AccessToken\AccessTokenHandlerInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 
 /** @psalm-suppress UnusedClass */
-readonly class AccessTokenHandler implements AccessTokenHandlerInterface
+final readonly class AccessTokenHandler implements AccessTokenHandlerInterface
 {
     public function __construct(private UserAuthTokenRepository $repository)
     {
     }
 
+    #[\Override]
     public function getUserBadgeFrom(#[\SensitiveParameter] string $accessToken): UserBadge
     {
         $accessToken = $this->repository->findOneBy(['authToken' => $accessToken]);

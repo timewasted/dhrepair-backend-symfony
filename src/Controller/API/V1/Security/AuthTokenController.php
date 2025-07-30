@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/security', name: 'security_')]
-class AuthTokenController extends AbstractController
+final class AuthTokenController extends AbstractController
 {
     #[Route('/auth-token', name: 'auth_token', methods: ['POST'])]
     public function authToken(): Response

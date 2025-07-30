@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/store', name: 'store_availability_')]
-class AvailabilityController extends AbstractController
+final class AvailabilityController extends AbstractController
 {
     #[IsGranted(User::ROLE_ADMIN)]
     #[Route('/availabilities', name: 'list', methods: ['GET'])]

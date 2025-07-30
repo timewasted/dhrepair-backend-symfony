@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ItemImageRepository::class)]
 #[ORM\Index(name: 'image_id', columns: ['image_id'])]
 #[ORM\UniqueConstraint(name: 'item_image', columns: ['item_id', 'image_id'])]
-class ItemImage
+final class ItemImage
 {
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'itemImages')]
@@ -31,7 +31,7 @@ class ItemImage
         return $this->item;
     }
 
-    public function setItem(Item $item): static
+    public function setItem(Item $item): ItemImage
     {
         $this->item = $item;
 
@@ -43,7 +43,7 @@ class ItemImage
         return $this->image;
     }
 
-    public function setImage(Image $image): static
+    public function setImage(Image $image): ItemImage
     {
         $this->image = $image;
 
@@ -55,7 +55,7 @@ class ItemImage
         return $this->position;
     }
 
-    public function setPosition(int $position): static
+    public function setPosition(int $position): ItemImage
     {
         $this->position = $position;
 

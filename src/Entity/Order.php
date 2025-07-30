@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Index(name: 'username', fields: ['username'])]
 #[ORM\Index(name: 'order_number', fields: ['orderNumber'])]
 #[ORM\Index(name: 'created_at', fields: ['createdAt'])]
-class Order
+final class Order
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -176,7 +176,7 @@ class Order
         return $this->username;
     }
 
-    public function setUsername(?string $username): static
+    public function setUsername(?string $username): Order
     {
         $this->username = $username;
 
@@ -188,7 +188,7 @@ class Order
         return $this->orderNumber;
     }
 
-    public function setOrderNumber(?string $orderNumber): static
+    public function setOrderNumber(?string $orderNumber): Order
     {
         $this->orderNumber = $orderNumber;
 
@@ -200,7 +200,7 @@ class Order
         return $this->receiptId;
     }
 
-    public function setReceiptId(string $receiptId): static
+    public function setReceiptId(string $receiptId): Order
     {
         $this->receiptId = $receiptId;
 
@@ -212,7 +212,7 @@ class Order
         return $this->billName;
     }
 
-    public function setBillName(string $billName): static
+    public function setBillName(string $billName): Order
     {
         $this->billName = $billName;
 
@@ -224,7 +224,7 @@ class Order
         return $this->billCompany;
     }
 
-    public function setBillCompany(string $billCompany): static
+    public function setBillCompany(string $billCompany): Order
     {
         $this->billCompany = $billCompany;
 
@@ -236,7 +236,7 @@ class Order
         return $this->billAddress1;
     }
 
-    public function setBillAddress1(string $billAddress1): static
+    public function setBillAddress1(string $billAddress1): Order
     {
         $this->billAddress1 = $billAddress1;
 
@@ -248,7 +248,7 @@ class Order
         return $this->billAddress2;
     }
 
-    public function setBillAddress2(string $billAddress2): static
+    public function setBillAddress2(string $billAddress2): Order
     {
         $this->billAddress2 = $billAddress2;
 
@@ -260,7 +260,7 @@ class Order
         return $this->billCity;
     }
 
-    public function setBillCity(string $billCity): static
+    public function setBillCity(string $billCity): Order
     {
         $this->billCity = $billCity;
 
@@ -272,7 +272,7 @@ class Order
         return $this->billState;
     }
 
-    public function setBillState(string $billState): static
+    public function setBillState(string $billState): Order
     {
         $this->billState = $billState;
 
@@ -284,7 +284,7 @@ class Order
         return $this->billZipCode;
     }
 
-    public function setBillZipCode(string $billZipCode): static
+    public function setBillZipCode(string $billZipCode): Order
     {
         $this->billZipCode = $billZipCode;
 
@@ -296,7 +296,7 @@ class Order
         return $this->billCountry;
     }
 
-    public function setBillCountry(string $billCountry): static
+    public function setBillCountry(string $billCountry): Order
     {
         $this->billCountry = $billCountry;
 
@@ -308,7 +308,7 @@ class Order
         return $this->shipName;
     }
 
-    public function setShipName(string $shipName): static
+    public function setShipName(string $shipName): Order
     {
         $this->shipName = $shipName;
 
@@ -320,7 +320,7 @@ class Order
         return $this->shipCompany;
     }
 
-    public function setShipCompany(string $shipCompany): static
+    public function setShipCompany(string $shipCompany): Order
     {
         $this->shipCompany = $shipCompany;
 
@@ -332,7 +332,7 @@ class Order
         return $this->shipAddress1;
     }
 
-    public function setShipAddress1(string $shipAddress1): static
+    public function setShipAddress1(string $shipAddress1): Order
     {
         $this->shipAddress1 = $shipAddress1;
 
@@ -344,7 +344,7 @@ class Order
         return $this->shipAddress2;
     }
 
-    public function setShipAddress2(string $shipAddress2): static
+    public function setShipAddress2(string $shipAddress2): Order
     {
         $this->shipAddress2 = $shipAddress2;
 
@@ -356,7 +356,7 @@ class Order
         return $this->shipCity;
     }
 
-    public function setShipCity(string $shipCity): static
+    public function setShipCity(string $shipCity): Order
     {
         $this->shipCity = $shipCity;
 
@@ -368,7 +368,7 @@ class Order
         return $this->shipState;
     }
 
-    public function setShipState(string $shipState): static
+    public function setShipState(string $shipState): Order
     {
         $this->shipState = $shipState;
 
@@ -380,7 +380,7 @@ class Order
         return $this->shipZipCode;
     }
 
-    public function setShipZipCode(string $shipZipCode): static
+    public function setShipZipCode(string $shipZipCode): Order
     {
         $this->shipZipCode = $shipZipCode;
 
@@ -392,7 +392,7 @@ class Order
         return $this->shipCountry;
     }
 
-    public function setShipCountry(string $shipCountry): static
+    public function setShipCountry(string $shipCountry): Order
     {
         $this->shipCountry = $shipCountry;
 
@@ -404,7 +404,7 @@ class Order
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(string $phoneNumber): static
+    public function setPhoneNumber(string $phoneNumber): Order
     {
         $this->phoneNumber = $phoneNumber;
 
@@ -416,7 +416,7 @@ class Order
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): Order
     {
         $this->email = $email;
 
@@ -428,7 +428,7 @@ class Order
         return $this->comments;
     }
 
-    public function setComments(?string $comments): static
+    public function setComments(?string $comments): Order
     {
         $this->comments = $comments;
 
@@ -440,7 +440,7 @@ class Order
         return $this->subtotal;
     }
 
-    public function setSubtotal(int $subtotal): static
+    public function setSubtotal(int $subtotal): Order
     {
         $this->subtotal = $subtotal;
 
@@ -452,7 +452,7 @@ class Order
         return $this->tax;
     }
 
-    public function setTax(int $tax): static
+    public function setTax(int $tax): Order
     {
         $this->tax = $tax;
 
@@ -464,7 +464,7 @@ class Order
         return $this->shipping;
     }
 
-    public function setShipping(int $shipping): static
+    public function setShipping(int $shipping): Order
     {
         $this->shipping = $shipping;
 
@@ -476,7 +476,7 @@ class Order
         return $this->refundUnusedShipping;
     }
 
-    public function setRefundUnusedShipping(bool $refundUnusedShipping): static
+    public function setRefundUnusedShipping(bool $refundUnusedShipping): Order
     {
         $this->refundUnusedShipping = $refundUnusedShipping;
 
@@ -496,7 +496,7 @@ class Order
         return $this->transactionLog;
     }
 
-    public function addTransactionLog(TransactionLog $transactionLog): static
+    public function addTransactionLog(TransactionLog $transactionLog): Order
     {
         if (!$this->transactionLog->contains($transactionLog)) {
             $this->transactionLog->add($transactionLog);
@@ -514,7 +514,7 @@ class Order
         return $this->items;
     }
 
-    public function addItem(OrderItem $item): static
+    public function addItem(OrderItem $item): Order
     {
         if (!$this->items->contains($item)) {
             $this->items->add($item);

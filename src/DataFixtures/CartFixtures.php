@@ -10,7 +10,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class CartFixtures extends Fixture implements DependentFixtureInterface
+final class CartFixtures extends Fixture implements DependentFixtureInterface
 {
     private const array CART_USERS = [
         'admin_user',
@@ -18,6 +18,7 @@ class CartFixtures extends Fixture implements DependentFixtureInterface
         'temporary_user',
     ];
 
+    #[\Override]
     public function getDependencies(): array
     {
         return [
@@ -26,6 +27,7 @@ class CartFixtures extends Fixture implements DependentFixtureInterface
         ];
     }
 
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $itemRepository = $manager->getRepository(Item::class);

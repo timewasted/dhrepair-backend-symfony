@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CartItemRepository::class)]
 #[ORM\Index(name: 'item_id', columns: ['item_id'])]
 #[ORM\UniqueConstraint(name: 'user_item', columns: ['user_id', 'item_id'])]
-class CartItem
+final class CartItem
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -40,7 +40,7 @@ class CartItem
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?User $user): CartItem
     {
         $this->user = $user;
 
@@ -52,7 +52,7 @@ class CartItem
         return $this->item;
     }
 
-    public function setItem(?Item $item): static
+    public function setItem(?Item $item): CartItem
     {
         $this->item = $item;
 
@@ -64,7 +64,7 @@ class CartItem
         return $this->quantity;
     }
 
-    public function setQuantity(int $quantity): static
+    public function setQuantity(int $quantity): CartItem
     {
         $this->quantity = $quantity;
 

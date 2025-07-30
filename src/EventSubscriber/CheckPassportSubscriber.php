@@ -14,8 +14,9 @@ use Symfony\Component\Security\Core\Exception\LockedException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Http\Event\CheckPassportEvent;
 
-class CheckPassportSubscriber implements EventSubscriberInterface
+final class CheckPassportSubscriber implements EventSubscriberInterface
 {
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

@@ -7,7 +7,7 @@ namespace App\ValueObject;
 use App\Entity\CartItem;
 use App\Entity\User;
 
-class ShoppingCart
+final class ShoppingCart
 {
     private ?int $totalCost = null;
 

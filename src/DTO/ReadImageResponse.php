@@ -6,7 +6,7 @@ namespace App\DTO;
 
 use App\Entity\Image;
 
-readonly class ReadImageResponse implements \JsonSerializable
+final readonly class ReadImageResponse implements \JsonSerializable
 {
     use ImageResponseTrait;
 
@@ -17,6 +17,7 @@ readonly class ReadImageResponse implements \JsonSerializable
         $this->jsonData = $this->getImageData($image);
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return $this->jsonData;

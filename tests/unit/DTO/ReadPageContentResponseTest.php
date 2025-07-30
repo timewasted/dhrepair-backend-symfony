@@ -16,7 +16,7 @@ class ReadPageContentResponseTest extends TestCase
         $title = bin2hex(random_bytes(16));
         $content = bin2hex(random_bytes(16));
         $modifiedAt = new \DateTimeImmutable();
-        $pageContent = (new PageContent())
+        $pageContent = new PageContent()
             ->setPage($page)
             ->setTitle($title)
             ->setContent($content)

@@ -7,7 +7,7 @@ namespace App\DTO;
 use App\Entity\Category;
 use App\Entity\Item;
 
-class ReadCategoryResponse implements \JsonSerializable
+final class ReadCategoryResponse implements \JsonSerializable
 {
     use CategoryResponseTrait;
     use ItemResponseTrait;
@@ -39,6 +39,7 @@ class ReadCategoryResponse implements \JsonSerializable
         }
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return $this->jsonData;

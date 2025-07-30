@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/store', name: 'store_transaction_log_')]
-class TransactionLogController extends AbstractController
+final class TransactionLogController extends AbstractController
 {
     #[IsGranted(User::ROLE_ADMIN)]
     #[Route('/transaction/{orderId}', name: 'read', requirements: ['orderId' => '^\d+$'], methods: ['GET'])]

@@ -140,7 +140,7 @@ class UpdateCategoryTest extends WebTestCase
         $this->assertSame($category->getName(), $updateDto->getName());
         $this->assertSame($category->getDescription(), $updateDto->getDescription());
         $this->assertSame($category->isViewable(), $updateDto->isViewable());
-        $this->assertEqualsWithDelta((new \DateTimeImmutable())->getTimestamp(), (int) $category->getModifiedAt()?->getTimestamp(), 2);
+        $this->assertEqualsWithDelta(new \DateTimeImmutable()->getTimestamp(), (int) $category->getModifiedAt()?->getTimestamp(), 2);
     }
 
     /**
@@ -159,7 +159,7 @@ class UpdateCategoryTest extends WebTestCase
         $description = bin2hex(random_bytes(16));
         $isViewable = false;
         $category = $this->categoryRepository->find($id);
-        $updateDto = (new UpdateCategoryRequest($id, $parentId, $name, $description, $isViewable))
+        $updateDto = new UpdateCategoryRequest($id, $parentId, $name, $description, $isViewable)
             ->setCategory($category)
             ->setParent($this->categoryRepository->find($parentId));
         $this->assertNotNull($category);
@@ -188,7 +188,7 @@ class UpdateCategoryTest extends WebTestCase
         $this->assertSame($category->getName(), $updateDto->getName());
         $this->assertSame($category->getDescription(), $updateDto->getDescription());
         $this->assertSame($category->isViewable(), $updateDto->isViewable());
-        $this->assertEqualsWithDelta((new \DateTimeImmutable())->getTimestamp(), (int) $category->getModifiedAt()?->getTimestamp(), 2);
+        $this->assertEqualsWithDelta(new \DateTimeImmutable()->getTimestamp(), (int) $category->getModifiedAt()?->getTimestamp(), 2);
     }
 
     /**

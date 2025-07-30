@@ -14,7 +14,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 /**
  * @extends ServiceEntityRepository<Item>
  */
-class ItemRepository extends ServiceEntityRepository
+final class ItemRepository extends ServiceEntityRepository
 {
     public function __construct(
         ManagerRegistry $registry,
@@ -82,12 +82,7 @@ class ItemRepository extends ServiceEntityRepository
         if (!$this->security->isGranted(User::ROLE_ADMIN) && !$item->isViewable()) {
             return false;
         }
-        foreach ($item->getCategories() as $category) {
-            if (!$this->categoryRepository->isViewable($category)) {
-                return false;
-            }
-        }
 
-        return true;
+        return array_all($item->getCategories()->toArray(), fn (Category $category) => $this->categoryRepository->isViewable($category));
     }
 }

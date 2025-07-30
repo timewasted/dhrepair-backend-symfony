@@ -8,7 +8,7 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Purger\ORMPurgerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-class MySQLORMPurger implements ORMPurgerInterface
+final class MySQLORMPurger implements ORMPurgerInterface
 {
     private bool $disableForeignKeyChecks = false;
 
@@ -21,6 +21,7 @@ class MySQLORMPurger implements ORMPurgerInterface
         $this->disableForeignKeyChecks = $disableForeignKeyChecks;
     }
 
+    #[\Override]
     public function setEntityManager(EntityManagerInterface $em): void
     {
         $this->purger->setEntityManager($em);
@@ -31,6 +32,7 @@ class MySQLORMPurger implements ORMPurgerInterface
         $this->purger->setPurgeMode($mode);
     }
 
+    #[\Override]
     public function purge(): void
     {
         $connection = $this->purger->getObjectManager()->getConnection();

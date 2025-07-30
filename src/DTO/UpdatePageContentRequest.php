@@ -8,7 +8,7 @@ use App\Attribute\DenormalizeEntity;
 use App\Entity\PageContent;
 use Symfony\Component\Serializer\Attribute\Context;
 
-class UpdatePageContentRequest implements \JsonSerializable
+final class UpdatePageContentRequest implements \JsonSerializable
 {
     #[Context(denormalizationContext: [PageContent::class => ['denormalized' => true]])]
     #[DenormalizeEntity(class: PageContent::class, entityId: 'page', dataSource: 'id')]
@@ -41,13 +41,14 @@ class UpdatePageContentRequest implements \JsonSerializable
         return $this->pageContent;
     }
 
-    public function setPageContent(?PageContent $pageContent): static
+    public function setPageContent(?PageContent $pageContent): UpdatePageContentRequest
     {
         $this->pageContent = $pageContent;
 
         return $this;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

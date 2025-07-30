@@ -17,12 +17,12 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/content', name: 'content_')]
-class ContentController extends AbstractController
+final class ContentController extends AbstractController
 {
     #[Route(path: '/{id}', name: 'read', requirements: ['id' => '[\w\-]+'], methods: ['GET'])]
     public function read(
         string $id,
-        PageContentRepository $repository
+        PageContentRepository $repository,
     ): Response {
         if (null === ($entity = $repository->find($id))) {
             return $this->json([

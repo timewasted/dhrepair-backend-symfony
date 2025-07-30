@@ -12,8 +12,8 @@ class ReadAvailabilityResponseTest extends TestCase
 {
     public function testJsonSerialize(): void
     {
-        $availability1 = (new Availability())->setAvailability(bin2hex(random_bytes(16)));
-        $availability2 = (new Availability())->setAvailability(bin2hex(random_bytes(16)));
+        $availability1 = new Availability()->setAvailability(bin2hex(random_bytes(16)));
+        $availability2 = new Availability()->setAvailability(bin2hex(random_bytes(16)));
         $dto = new ReadAvailabilityResponse([$availability1, $availability2]);
 
         $this->assertSame([

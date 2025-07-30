@@ -14,18 +14,18 @@ trait ItemTestTrait
 
     protected function createItem(): Item
     {
-        return (new Item())
+        return new Item()
             ->setName(bin2hex(random_bytes(16)))
             ->setSlug(bin2hex(random_bytes(16)))
             ->setSku(bin2hex(random_bytes(16)))
             ->setDescription(bin2hex(random_bytes(16)))
-            ->setManufacturer((new Manufacturer())
+            ->setManufacturer(new Manufacturer()
                 ->setName(bin2hex(random_bytes(16)))
                 ->setCostModifier(sprintf('%d.%02d', random_int(0, 99), random_int(0, 99)))
             )
             ->setCost(random_int(1, 999_999_999))
             ->setQuantity(random_int(1, PHP_INT_MAX))
-            ->setAvailability((new Availability())->setAvailability(bin2hex(random_bytes(16))))
+            ->setAvailability(new Availability()->setAvailability(bin2hex(random_bytes(16))))
             ->setWeight(bin2hex(random_bytes(16)))
             ->setLength(bin2hex(random_bytes(16)))
             ->setWidth(bin2hex(random_bytes(16)))

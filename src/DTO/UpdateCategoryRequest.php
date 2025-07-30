@@ -8,7 +8,7 @@ use App\Attribute\DenormalizeEntity;
 use App\Entity\Category;
 use Symfony\Component\Serializer\Attribute\Context;
 
-class UpdateCategoryRequest implements \JsonSerializable
+final class UpdateCategoryRequest implements \JsonSerializable
 {
     #[Context(denormalizationContext: [Category::class => ['denormalized' => true]])]
     #[DenormalizeEntity(class: Category::class, dataSource: 'id')]
@@ -56,7 +56,7 @@ class UpdateCategoryRequest implements \JsonSerializable
         return $this->category;
     }
 
-    public function setCategory(?Category $category): static
+    public function setCategory(?Category $category): UpdateCategoryRequest
     {
         $this->category = $category;
 
@@ -68,13 +68,14 @@ class UpdateCategoryRequest implements \JsonSerializable
         return $this->parent;
     }
 
-    public function setParent(?Category $parent): static
+    public function setParent(?Category $parent): UpdateCategoryRequest
     {
         $this->parent = $parent;
 
         return $this;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

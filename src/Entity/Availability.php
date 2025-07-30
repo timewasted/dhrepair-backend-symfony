@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AvailabilityRepository::class)]
-class Availability
+final class Availability
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -31,7 +31,7 @@ class Availability
         return $this->availability;
     }
 
-    public function setAvailability(string $availability): static
+    public function setAvailability(string $availability): Availability
     {
         $this->availability = $availability;
 

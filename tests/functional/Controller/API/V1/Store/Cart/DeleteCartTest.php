@@ -71,7 +71,7 @@ class DeleteCartTest extends WebTestCase
         $jsonData = $this->getJsonResponseData();
 
         $shoppingCart = new ShoppingCart($user, []);
-        $this->assertSame((new ReadCartResponse($shoppingCart))->jsonSerialize(), $jsonData);
+        $this->assertSame(new ReadCartResponse($shoppingCart)->jsonSerialize(), $jsonData);
 
         if ($expectEventDispatched) {
             /** @var CartDeletedEvent[] $events */
@@ -92,7 +92,7 @@ class DeleteCartTest extends WebTestCase
         $jsonData = $this->getJsonResponseData();
 
         $shoppingCart = new ShoppingCart($user, []);
-        $this->assertSame((new ReadCartResponse($shoppingCart))->jsonSerialize(), $jsonData);
+        $this->assertSame(new ReadCartResponse($shoppingCart)->jsonSerialize(), $jsonData);
 
         $this->assertFalse($this->eventDispatcher->eventDispatched(BaseCartEvent::class));
     }

@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\UniqueConstraint(name: 'username_canonical', fields: ['usernameCanonical'])]
 #[ORM\UniqueConstraint(name: 'email_canonical', fields: ['emailCanonical'])]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+final class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     public const string ROLE_ADMIN = 'ROLE_ADMIN';
     public const string ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
@@ -122,7 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setUsername(string $username): User
     {
         $this->username = $username;
         $this->usernameCanonical = mb_strtolower($username);
@@ -135,7 +135,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->usernameCanonical;
     }
 
-    public function setUsernameCanonical(string $usernameCanonical): static
+    public function setUsernameCanonical(string $usernameCanonical): User
     {
         $this->usernameCanonical = $usernameCanonical;
 
@@ -147,7 +147,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): User
     {
         $this->email = $email;
         $this->emailCanonical = mb_strtolower($email);
@@ -160,19 +160,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->emailCanonical;
     }
 
-    public function setEmailCanonical(string $emailCanonical): static
+    public function setEmailCanonical(string $emailCanonical): User
     {
         $this->emailCanonical = $emailCanonical;
 
         return $this;
     }
 
+    #[\Override]
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): User
     {
         $this->password = $password;
 
@@ -184,7 +185,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->passwordPlain;
     }
 
-    public function setPasswordPlain(#[\SensitiveParameter] ?string $passwordPlain): static
+    public function setPasswordPlain(#[\SensitiveParameter] ?string $passwordPlain): User
     {
         $this->passwordPlain = $passwordPlain;
 
@@ -196,7 +197,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->confirmationToken;
     }
 
-    public function setConfirmationToken(string $confirmationToken): static
+    public function setConfirmationToken(string $confirmationToken): User
     {
         $this->confirmationToken = $confirmationToken;
 
@@ -213,7 +214,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastLogin;
     }
 
-    public function setLastLogin(\DateTimeImmutable $lastLogin): static
+    public function setLastLogin(\DateTimeImmutable $lastLogin): User
     {
         $this->lastLogin = $lastLogin;
 
@@ -225,7 +226,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->accountEnabled;
     }
 
-    public function setAccountEnabled(bool $accountEnabled): static
+    public function setAccountEnabled(bool $accountEnabled): User
     {
         $this->accountEnabled = $accountEnabled;
 
@@ -237,7 +238,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->accountLocked;
     }
 
-    public function setAccountLocked(bool $accountLocked): static
+    public function setAccountLocked(bool $accountLocked): User
     {
         $this->accountLocked = $accountLocked;
 
@@ -249,7 +250,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->accountLockedUntil;
     }
 
-    public function setAccountLockedUntil(?\DateTimeImmutable $accountLockedUntil): static
+    public function setAccountLockedUntil(?\DateTimeImmutable $accountLockedUntil): User
     {
         $this->accountLockedUntil = $accountLockedUntil;
 
@@ -261,7 +262,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->accountExpiresAt;
     }
 
-    public function setAccountExpiresAt(?\DateTimeImmutable $accountExpiresAt): static
+    public function setAccountExpiresAt(?\DateTimeImmutable $accountExpiresAt): User
     {
         $this->accountExpiresAt = $accountExpiresAt;
 
@@ -273,7 +274,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->credentialsExpireAt;
     }
 
-    public function setCredentialsExpireAt(?\DateTimeImmutable $credentialsExpireAt): static
+    public function setCredentialsExpireAt(?\DateTimeImmutable $credentialsExpireAt): User
     {
         $this->credentialsExpireAt = $credentialsExpireAt;
 
@@ -285,7 +286,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->passwordRequestedAt;
     }
 
-    public function setPasswordRequestedAt(?\DateTimeImmutable $passwordRequestedAt): static
+    public function setPasswordRequestedAt(?\DateTimeImmutable $passwordRequestedAt): User
     {
         $this->passwordRequestedAt = $passwordRequestedAt;
 
@@ -297,13 +298,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->failedLoginAttempts;
     }
 
-    public function setFailedLoginAttempts(int $failedLoginAttempts): static
+    public function setFailedLoginAttempts(int $failedLoginAttempts): User
     {
         $this->failedLoginAttempts = $failedLoginAttempts;
 
         return $this;
     }
 
+    #[\Override]
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -317,17 +319,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param list<string> $roles
      */
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles): User
     {
         $this->roles = $roles;
 
         return $this;
     }
 
+    #[\Override]
     public function eraseCredentials(): void
     {
     }
 
+    /**
+     * @psalm-suppress LessSpecificReturnStatement
+     * @psalm-suppress MoreSpecificReturnType
+     */
+    #[\Override]
     public function getUserIdentifier(): string
     {
         return (string) $this->usernameCanonical;
@@ -349,14 +357,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $authToken;
     }
 
-    public function removeAllAuthTokens(): static
+    public function removeAllAuthTokens(): User
     {
         $this->authTokens->clear();
 
         return $this;
     }
 
-    public function removeAuthToken(UserAuthToken $authToken): static
+    public function removeAuthToken(UserAuthToken $authToken): User
     {
         $this->authTokens->removeElement($authToken);
 
@@ -371,7 +379,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->cartItems;
     }
 
-    public function addCartItem(Item $item, int $quantity): static
+    public function addCartItem(Item $item, int $quantity): User
     {
         if ($quantity <= 0) {
             $this->removeCartItem($item);
@@ -384,7 +392,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 }
             }
 
-            $this->cartItems->add((new CartItem())
+            $this->cartItems->add(new CartItem()
                 ->setUser($this)
                 ->setItem($item)
                 ->setQuantity($quantity)
@@ -394,7 +402,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeCartItem(Item $item): static
+    public function removeCartItem(Item $item): User
     {
         foreach ($this->cartItems as $index => $cartItem) {
             if ($item === $cartItem->getItem()) {

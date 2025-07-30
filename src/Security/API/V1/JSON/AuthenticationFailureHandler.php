@@ -13,14 +13,15 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 /** @psalm-suppress UnusedClass */
-class AuthenticationFailureHandler extends AbstractAuthenticationFailureHandler
+final class AuthenticationFailureHandler extends AbstractAuthenticationFailureHandler
 {
     public const string MSG_FAILURE = 'Failed to authenticate with the given credentials';
 
-    public function __construct(readonly private UserRepository $userRepository)
+    public function __construct(private readonly UserRepository $userRepository)
     {
     }
 
+    #[\Override]
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         if ($exception instanceof BadCredentialsException && null === $exception->getPrevious()) {

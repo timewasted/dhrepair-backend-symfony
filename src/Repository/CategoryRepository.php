@@ -16,7 +16,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 /**
  * @extends ServiceEntityRepository<Category>
  */
-class CategoryRepository extends ServiceEntityRepository
+final class CategoryRepository extends ServiceEntityRepository
 {
     private readonly Security $security;
 

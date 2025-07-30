@@ -12,8 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class JsonValidationExceptionSubscriber implements EventSubscriberInterface
+final class JsonValidationExceptionSubscriber implements EventSubscriberInterface
 {
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

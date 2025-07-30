@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(name: 'user_id', columns: ['user_id'])]
 #[ORM\UniqueConstraint(name: 'auth_token', fields: ['authToken'])]
-class UserAuthToken
+final class UserAuthToken
 {
     #[ORM\ManyToOne(fetch: 'EAGER', inversedBy: 'authTokens')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE', options: ['unsigned' => true])]

@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareInterface
+final class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareInterface
 {
     private ?DenormalizerInterface $denormalizer = null;
     /**
@@ -36,6 +36,7 @@ class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareIn
      *
      * @psalm-suppress MixedReturnStatement
      */
+    #[\Override]
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
     {
         if (null === $this->denormalizer) {
@@ -47,7 +48,7 @@ class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareIn
         }
         if (!is_array($data)) {
             $dataType = is_object($data) ? get_class($data) : gettype($data);
-            throw new DenormalizeEntityException(sprintf('%s only supports denormalizing arrays, but %s was received', static::class, $dataType));
+            throw new DenormalizeEntityException(sprintf('%s only supports denormalizing arrays, but %s was received', ApiRequestNormalizer::class, $dataType));
         }
 
         foreach ($this->getPropertyAttributes($type) as $propertyAttribute) {
@@ -110,6 +111,7 @@ class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareIn
         return $this->denormalizer->denormalize($data, $type, $format, $context);
     }
 
+    #[\Override]
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
         if ((!isset($context['isApiRequest']) || true !== $context['isApiRequest'])
@@ -120,6 +122,7 @@ class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareIn
         return true;
     }
 
+    #[\Override]
     public function getSupportedTypes(?string $format): array
     {
         return [
@@ -127,6 +130,7 @@ class ApiRequestNormalizer implements DenormalizerInterface, DenormalizerAwareIn
         ];
     }
 
+    #[\Override]
     public function setDenormalizer(DenormalizerInterface $denormalizer): void
     {
         $this->denormalizer = $denormalizer;

@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(name: 'image', fields: ['image'])]
 #[ORM\UniqueConstraint(name: 'image_hash', fields: ['imageHash'])]
-class Image
+final class Image
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -75,7 +75,7 @@ class Image
         return $this->image;
     }
 
-    public function setImage(string $image): static
+    public function setImage(string $image): Image
     {
         $this->image = $image;
 
@@ -87,7 +87,7 @@ class Image
         return $this->imageHash;
     }
 
-    public function setImageHash(string $imageHash): static
+    public function setImageHash(string $imageHash): Image
     {
         $this->imageHash = $imageHash;
 
@@ -99,7 +99,7 @@ class Image
         return $this->title;
     }
 
-    public function setTitle(?string $title): static
+    public function setTitle(?string $title): Image
     {
         $this->title = $title;
 
@@ -111,7 +111,7 @@ class Image
         return $this->width;
     }
 
-    public function setWidth(int $width): static
+    public function setWidth(int $width): Image
     {
         $this->width = $width;
 
@@ -123,7 +123,7 @@ class Image
         return $this->height;
     }
 
-    public function setHeight(int $height): static
+    public function setHeight(int $height): Image
     {
         $this->height = $height;
 
@@ -135,7 +135,7 @@ class Image
         return $this->thumbWidth;
     }
 
-    public function setThumbWidth(?int $thumbWidth): static
+    public function setThumbWidth(?int $thumbWidth): Image
     {
         $this->thumbWidth = $thumbWidth;
 
@@ -147,7 +147,7 @@ class Image
         return $this->thumbHeight;
     }
 
-    public function setThumbHeight(?int $thumbHeight): static
+    public function setThumbHeight(?int $thumbHeight): Image
     {
         $this->thumbHeight = $thumbHeight;
 

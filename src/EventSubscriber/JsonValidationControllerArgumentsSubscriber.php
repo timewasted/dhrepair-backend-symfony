@@ -9,12 +9,13 @@ use App\Service\JsonValidationService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 
-readonly class JsonValidationControllerArgumentsSubscriber implements EventSubscriberInterface
+final readonly class JsonValidationControllerArgumentsSubscriber implements EventSubscriberInterface
 {
     public function __construct(private JsonValidationService $jsonValidationService)
     {
     }
 
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [ControllerArgumentsEvent::class => ['onControllerArguments', 5]];

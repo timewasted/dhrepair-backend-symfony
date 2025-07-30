@@ -12,7 +12,7 @@ use App\Entity\Item;
 use App\Entity\Manufacturer;
 use Symfony\Component\Serializer\Attribute\Context;
 
-class UpdateItemRequest implements \JsonSerializable
+final class UpdateItemRequest implements \JsonSerializable
 {
     #[Context(denormalizationContext: [Item::class => ['denormalized' => true]])]
     #[DenormalizeEntity(class: Item::class, dataSource: 'id', nullable: true)]
@@ -185,7 +185,7 @@ class UpdateItemRequest implements \JsonSerializable
         return $this->item;
     }
 
-    public function setItem(?Item $item): static
+    public function setItem(?Item $item): UpdateItemRequest
     {
         $this->item = $item;
 
@@ -197,7 +197,7 @@ class UpdateItemRequest implements \JsonSerializable
         return $this->manufacturer;
     }
 
-    public function setManufacturer(Manufacturer $manufacturer): static
+    public function setManufacturer(Manufacturer $manufacturer): UpdateItemRequest
     {
         $this->manufacturer = $manufacturer;
 
@@ -209,7 +209,7 @@ class UpdateItemRequest implements \JsonSerializable
         return $this->availability;
     }
 
-    public function setAvailability(Availability $availability): static
+    public function setAvailability(Availability $availability): UpdateItemRequest
     {
         $this->availability = $availability;
 
@@ -227,7 +227,7 @@ class UpdateItemRequest implements \JsonSerializable
     /**
      * @param Category[] $categories
      */
-    public function setCategories(array $categories): static
+    public function setCategories(array $categories): UpdateItemRequest
     {
         $this->categories = $categories;
 
@@ -245,13 +245,14 @@ class UpdateItemRequest implements \JsonSerializable
     /**
      * @param Image[] $images
      */
-    public function setImages(array $images): static
+    public function setImages(array $images): UpdateItemRequest
     {
         $this->images = $images;
 
         return $this;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

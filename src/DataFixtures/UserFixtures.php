@@ -8,10 +8,11 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class UserFixtures extends Fixture
+final class UserFixtures extends Fixture
 {
     public const string DEFAULT_PASSWORD = 'test123';
 
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $user = $this->getBaseUser()
@@ -65,7 +66,7 @@ class UserFixtures extends Fixture
             ->setUsername('locked_until_user')
             ->setEmail('locked_until_user@example.com')
             ->setAccountLocked(false)
-            ->setAccountLockedUntil((new \DateTimeImmutable())->add(new \DateInterval('P10Y')))
+            ->setAccountLockedUntil(new \DateTimeImmutable()->add(new \DateInterval('P10Y')))
         ;
         $user->addAuthToken();
         $manager->persist($user);
@@ -78,7 +79,7 @@ class UserFixtures extends Fixture
         $user->addAuthToken();
         $manager->persist($user);
 
-        $pastDate = (new \DateTimeImmutable())->sub(new \DateInterval('P1Y'));
+        $pastDate = new \DateTimeImmutable()->sub(new \DateInterval('P1Y'));
 
         $user = $this->getBaseUser()
             ->setUsername('expired_user')
@@ -101,7 +102,7 @@ class UserFixtures extends Fixture
 
     private function getBaseUser(): User
     {
-        return (new User())
+        return new User()
             ->setAccountEnabled(true)
             ->setAccountLocked(false)
             ->setPasswordPlain(self::DEFAULT_PASSWORD)

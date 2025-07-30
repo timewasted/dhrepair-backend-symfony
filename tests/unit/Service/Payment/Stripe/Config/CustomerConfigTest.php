@@ -11,7 +11,7 @@ class CustomerConfigTest extends TestCase
 {
     public function testToArray(): void
     {
-        $config = (new CustomerConfig())
+        $config = new CustomerConfig()
             ->setEmail('test@example.com')
             ->setMetadata('order_id', '1234')
             ->setShippingAddressLine1('line 1')

@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Availability>
  */
-class AvailabilityRepository extends ServiceEntityRepository
+final class AvailabilityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

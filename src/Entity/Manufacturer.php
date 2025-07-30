@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ManufacturerRepository::class)]
 #[ORM\UniqueConstraint(name: 'name', fields: ['name'])]
-class Manufacturer
+final class Manufacturer
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -37,7 +37,7 @@ class Manufacturer
         return $this->name;
     }
 
-    public function setName(?string $name): static
+    public function setName(?string $name): Manufacturer
     {
         $this->name = $name;
 
@@ -49,7 +49,7 @@ class Manufacturer
         return $this->costModifier;
     }
 
-    public function setCostModifier(string $costModifier): static
+    public function setCostModifier(string $costModifier): Manufacturer
     {
         $this->costModifier = $costModifier;
 

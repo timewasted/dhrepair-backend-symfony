@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/store', name: 'store_item_')]
-class ItemController extends AbstractController
+final class ItemController extends AbstractController
 {
     #[Route('/item/{id}', name: 'read', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function read(

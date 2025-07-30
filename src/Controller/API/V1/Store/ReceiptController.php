@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/store', name: 'store_receipt_')]
-class ReceiptController extends AbstractController
+final class ReceiptController extends AbstractController
 {
     #[IsGranted(User::ROLE_USER)]
     #[Route('/receipts', name: 'list', methods: ['GET'])]
@@ -37,7 +37,7 @@ class ReceiptController extends AbstractController
     public function read(
         string $orderNumber,
         string $receiptId,
-        OrderRepository $repository
+        OrderRepository $repository,
     ): Response {
         $order = $repository->findOneBy(['orderNumber' => $orderNumber, 'receiptId' => $receiptId]);
         if (null === $order) {
@@ -62,7 +62,7 @@ class ReceiptController extends AbstractController
     public function readLegacy(
         string $orderId,
         string $receiptId,
-        OrderRepository $repository
+        OrderRepository $repository,
     ): Response {
         $order = $repository->findOneBy(['id' => $orderId, 'receiptId' => $receiptId]);
         if (null === $order) {

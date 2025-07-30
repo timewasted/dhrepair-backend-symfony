@@ -83,6 +83,7 @@
     },
     "require-dev": {
         "dama/doctrine-test-bundle": "^8.3",
+        "dg/bypass-finals": "^1.9",
         "doctrine/doctrine-fixtures-bundle": "^4.1",
         "friendsofphp/php-cs-fixer": "^3.85",
         "phpunit/phpunit": "^10.0",

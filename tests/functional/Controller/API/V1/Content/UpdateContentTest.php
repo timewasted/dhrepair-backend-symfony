@@ -97,7 +97,7 @@ class UpdateContentTest extends WebTestCase
 
         $this->assertSame($pageContent->getTitle(), $updateDto->getTitle());
         $this->assertSame($pageContent->getContent(), $updateDto->getContent());
-        $this->assertEqualsWithDelta((new \DateTimeImmutable())->getTimestamp(), (int) $pageContent->getModifiedAt()?->getTimestamp(), 2);
+        $this->assertEqualsWithDelta(new \DateTimeImmutable()->getTimestamp(), (int) $pageContent->getModifiedAt()?->getTimestamp(), 2);
     }
 
     public function testUpdateUnauthenticatedPageDoesNotExist(): void

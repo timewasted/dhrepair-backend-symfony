@@ -539,7 +539,7 @@ class UpdateItemTest extends WebTestCase
         $this->assertSame($updateDto->isChargeShipping(), $item->isChargeShipping());
         $this->assertSame($updateDto->isFreeShipping(), $item->isFreeShipping());
         $this->assertSame($updateDto->isFreightQuoteRequired(), $item->isFreightQuoteRequired());
-        $this->assertEqualsWithDelta((new \DateTimeImmutable())->getTimestamp(), (int) $item->getModifiedAt()?->getTimestamp(), 2);
+        $this->assertEqualsWithDelta(new \DateTimeImmutable()->getTimestamp(), (int) $item->getModifiedAt()?->getTimestamp(), 2);
 
         $this->assertCount(count($updateDto->getCategoryIds()), $item->getCategories());
         /**

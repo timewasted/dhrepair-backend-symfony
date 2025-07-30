@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 /**
  * @extends ServiceEntityRepository<User>
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+final class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -25,7 +25,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function createTemporaryUser(): UserAuthToken
     {
         $tempString = 'temp_'.bin2hex(random_bytes(16));
-        $user = (new User())
+        $user = new User()
             ->setUsername($tempString)
             ->setEmail($tempString)
             ->setPasswordPlain(random_bytes(16))
@@ -40,6 +40,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $authToken;
     }
 
+    #[\Override]
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof User) {

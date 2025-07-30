@@ -12,7 +12,7 @@ use App\Entity\Manufacturer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class ShoppingFixtures extends Fixture
+final class ShoppingFixtures extends Fixture
 {
     // NOTE: This is the first item in the first grandchild category
     public const int ITEM_ID_EVERYTHING_VIEWABLE = 5;
@@ -27,6 +27,7 @@ class ShoppingFixtures extends Fixture
     private ?Availability $itemAvailability = null;
     private ?Manufacturer $itemManufacturer = null;
 
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         /*
@@ -62,7 +63,7 @@ class ShoppingFixtures extends Fixture
 
     private function createBaseCategory(?Category $parent, string $labelPrefix, int $idSuffix, bool $isViewable): Category
     {
-        return (new Category())
+        return new Category()
             ->setParent($parent)
             ->setName(sprintf('%s category %d', $labelPrefix, $idSuffix))
             ->setSlug(sprintf('%s-category-%d', str_replace(' ', '-', strtolower($labelPrefix)), $idSuffix))
@@ -73,7 +74,7 @@ class ShoppingFixtures extends Fixture
 
     private function createBaseImage(int $idSuffix): Image
     {
-        return (new Image())
+        return new Image()
             ->setImage(sprintf('image-%d.jpg', $idSuffix))
             ->setImageHash(hash('sha256', sprintf('image-%d.jpg', $idSuffix)))
             ->setTitle(sprintf('Image %d', $idSuffix))
@@ -86,7 +87,7 @@ class ShoppingFixtures extends Fixture
 
     private function createBaseItem(Category $parent, int $idSuffix, bool $isViewable): Item
     {
-        $item = (new Item())
+        $item = new Item()
             ->setName(sprintf('Item %d', $idSuffix))
             ->setSlug(sprintf('item-%d', $idSuffix))
             ->setSku(sprintf('sku-%d', $idSuffix))
@@ -149,7 +150,7 @@ class ShoppingFixtures extends Fixture
             'Ships within 1-3 business days',
         ];
         foreach ($values as $value) {
-            $availability = (new Availability())->setAvailability($value);
+            $availability = new Availability()->setAvailability($value);
             $manager->persist($availability);
             if (!isset($this->itemAvailability)) {
                 $this->itemAvailability = $availability;
@@ -166,7 +167,7 @@ class ShoppingFixtures extends Fixture
             'Manufacturer 2',
         ];
         foreach ($values as $value) {
-            $manufacturer = (new Manufacturer())->setName($value);
+            $manufacturer = new Manufacturer()->setName($value);
             $manager->persist($manufacturer);
             if (!isset($this->itemManufacturer)) {
                 $this->itemManufacturer = $manufacturer;

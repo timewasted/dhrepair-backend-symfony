@@ -35,6 +35,9 @@
 
     <extensions>
         <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
+        <bootstrap class="DG\BypassFinals\PHPUnitExtension">
+            <parameter name="bypassFinal" value="true"/>
+        </bootstrap>
     </extensions>
 
     <source>

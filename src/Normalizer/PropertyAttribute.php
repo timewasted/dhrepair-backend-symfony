@@ -6,7 +6,7 @@ namespace App\Normalizer;
 
 use App\Attribute\DenormalizeEntity;
 
-readonly class PropertyAttribute
+final readonly class PropertyAttribute
 {
     public function __construct(
         private string $name,

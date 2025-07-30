@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Index(name: 'is_new', fields: ['isNew'])]
 #[ORM\Index(name: 'charge_shipping', fields: ['chargeShipping'])]
 #[ORM\Index(name: 'is_free_shipping', fields: ['isFreeShipping'])]
-class Item
+final class Item
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -147,7 +147,7 @@ class Item
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): Item
     {
         $this->name = $name;
 
@@ -159,7 +159,7 @@ class Item
         return $this->slug;
     }
 
-    public function setSlug(string $slug): static
+    public function setSlug(string $slug): Item
     {
         $this->slug = $slug;
 
@@ -171,7 +171,7 @@ class Item
         return $this->sku;
     }
 
-    public function setSku(string $sku): static
+    public function setSku(string $sku): Item
     {
         $this->sku = $sku;
 
@@ -183,7 +183,7 @@ class Item
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(string $description): Item
     {
         $this->description = $description;
 
@@ -195,7 +195,7 @@ class Item
         return $this->manufacturer;
     }
 
-    public function setManufacturer(?Manufacturer $manufacturer): static
+    public function setManufacturer(?Manufacturer $manufacturer): Item
     {
         $this->manufacturer = $manufacturer;
 
@@ -205,13 +205,14 @@ class Item
     public function getCost(): ?int
     {
         if (null !== $this->cost && null !== $this->manufacturer && null !== ($modifier = $this->manufacturer->getCostModifier())) {
+            /** @psalm-suppress InvalidOperand */
             return (int) ceil($this->cost * (float) $modifier);
         }
 
         return $this->cost;
     }
 
-    public function setCost(int $cost): static
+    public function setCost(int $cost): Item
     {
         $this->cost = $cost;
 
@@ -223,7 +224,7 @@ class Item
         return $this->quantity;
     }
 
-    public function setQuantity(int $quantity): static
+    public function setQuantity(int $quantity): Item
     {
         $this->quantity = $quantity;
 
@@ -235,7 +236,7 @@ class Item
         return $this->availability;
     }
 
-    public function setAvailability(?Availability $availability): static
+    public function setAvailability(?Availability $availability): Item
     {
         $this->availability = $availability;
 
@@ -247,7 +248,7 @@ class Item
         return $this->weight;
     }
 
-    public function setWeight(string $weight): static
+    public function setWeight(string $weight): Item
     {
         $this->weight = $weight;
 
@@ -259,7 +260,7 @@ class Item
         return $this->length;
     }
 
-    public function setLength(string $length): static
+    public function setLength(string $length): Item
     {
         $this->length = $length;
 
@@ -271,7 +272,7 @@ class Item
         return $this->width;
     }
 
-    public function setWidth(string $width): static
+    public function setWidth(string $width): Item
     {
         $this->width = $width;
 
@@ -283,7 +284,7 @@ class Item
         return $this->height;
     }
 
-    public function setHeight(string $height): static
+    public function setHeight(string $height): Item
     {
         $this->height = $height;
 
@@ -295,7 +296,7 @@ class Item
         return $this->isProduct;
     }
 
-    public function setIsProduct(bool $isProduct): static
+    public function setIsProduct(bool $isProduct): Item
     {
         $this->isProduct = $isProduct;
 
@@ -307,7 +308,7 @@ class Item
         return $this->isViewable;
     }
 
-    public function setIsViewable(bool $isViewable): static
+    public function setIsViewable(bool $isViewable): Item
     {
         $this->isViewable = $isViewable;
 
@@ -319,7 +320,7 @@ class Item
         return $this->isPurchasable;
     }
 
-    public function setIsPurchasable(bool $isPurchasable): static
+    public function setIsPurchasable(bool $isPurchasable): Item
     {
         $this->isPurchasable = $isPurchasable;
 
@@ -331,7 +332,7 @@ class Item
         return $this->isSpecial;
     }
 
-    public function setIsSpecial(bool $isSpecial): static
+    public function setIsSpecial(bool $isSpecial): Item
     {
         $this->isSpecial = $isSpecial;
 
@@ -343,7 +344,7 @@ class Item
         return $this->isNew;
     }
 
-    public function setIsNew(bool $isNew): static
+    public function setIsNew(bool $isNew): Item
     {
         $this->isNew = $isNew;
 
@@ -355,7 +356,7 @@ class Item
         return $this->chargeTax;
     }
 
-    public function setChargeTax(bool $chargeTax): static
+    public function setChargeTax(bool $chargeTax): Item
     {
         $this->chargeTax = $chargeTax;
 
@@ -367,7 +368,7 @@ class Item
         return $this->chargeShipping;
     }
 
-    public function setChargeShipping(bool $chargeShipping): static
+    public function setChargeShipping(bool $chargeShipping): Item
     {
         $this->chargeShipping = $chargeShipping;
 
@@ -379,7 +380,7 @@ class Item
         return $this->isFreeShipping;
     }
 
-    public function setIsFreeShipping(bool $isFreeShipping): static
+    public function setIsFreeShipping(bool $isFreeShipping): Item
     {
         $this->isFreeShipping = $isFreeShipping;
 
@@ -391,7 +392,7 @@ class Item
         return $this->freightQuoteRequired;
     }
 
-    public function setFreightQuoteRequired(bool $freightQuoteRequired): static
+    public function setFreightQuoteRequired(bool $freightQuoteRequired): Item
     {
         $this->freightQuoteRequired = $freightQuoteRequired;
 
@@ -414,7 +415,7 @@ class Item
     /**
      * @param Category[] $categories
      */
-    public function setCategories(array $categories): static
+    public function setCategories(array $categories): Item
     {
         $this->categories->clear();
         array_map(fn (Category $category) => $this->categories->add($category), $categories);
@@ -422,7 +423,7 @@ class Item
         return $this;
     }
 
-    public function addCategory(Category $category): static
+    public function addCategory(Category $category): Item
     {
         if (!$this->categories->contains($category)) {
             $this->categories->add($category);
@@ -431,7 +432,7 @@ class Item
         return $this;
     }
 
-    public function removeCategory(Category $category): static
+    public function removeCategory(Category $category): Item
     {
         $this->categories->removeElement($category);
 
@@ -457,7 +458,7 @@ class Item
     /**
      * @param Image[] $images
      */
-    public function setImages(array $images): static
+    public function setImages(array $images): Item
     {
         $this->images = $images;
         $this->rebuildItemImages();
@@ -465,7 +466,7 @@ class Item
         return $this;
     }
 
-    public function addImage(Image $image, ?int $position): static
+    public function addImage(Image $image, ?int $position): Item
     {
         $arrayPosition = array_search($image, $this->images, true);
         if (false !== $arrayPosition) {
@@ -481,7 +482,7 @@ class Item
         return $this;
     }
 
-    public function removeImage(Image $image): static
+    public function removeImage(Image $image): Item
     {
         if (false !== ($arrayPosition = array_search($image, $this->images, true))) {
             unset($this->images[$arrayPosition]);
@@ -557,7 +558,7 @@ class Item
                 }
             }
 
-            $this->itemImages->add((new ItemImage())
+            $this->itemImages->add(new ItemImage()
                 ->setItem($this)
                 ->setImage($image)
                 ->setPosition($position)

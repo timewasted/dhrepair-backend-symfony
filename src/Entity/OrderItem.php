@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
 #[ORM\Index(name: 'order_id', columns: ['order_id'])]
-class OrderItem
+final class OrderItem
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -49,7 +49,7 @@ class OrderItem
         return $this->orderInfo;
     }
 
-    public function setOrderInfo(?Order $orderInfo): static
+    public function setOrderInfo(?Order $orderInfo): OrderItem
     {
         $this->orderInfo = $orderInfo;
 
@@ -61,7 +61,7 @@ class OrderItem
         return $this->quantity;
     }
 
-    public function setQuantity(int $quantity): static
+    public function setQuantity(int $quantity): OrderItem
     {
         $this->quantity = $quantity;
 
@@ -73,7 +73,7 @@ class OrderItem
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): OrderItem
     {
         $this->name = $name;
 
@@ -85,7 +85,7 @@ class OrderItem
         return $this->sku;
     }
 
-    public function setSku(string $sku): static
+    public function setSku(string $sku): OrderItem
     {
         $this->sku = $sku;
 
@@ -97,7 +97,7 @@ class OrderItem
         return $this->cost;
     }
 
-    public function setCost(int $cost): static
+    public function setCost(int $cost): OrderItem
     {
         $this->cost = $cost;
 

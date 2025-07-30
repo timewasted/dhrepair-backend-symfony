@@ -101,7 +101,7 @@ class ReadCartTest extends WebTestCase
 
     private function createCartItem(User $user, int $itemId, int $quantity): CartItem
     {
-        return (new CartItem())
+        return new CartItem()
             ->setUser($user)
             ->setItem($this->itemRepository->find($itemId))
             ->setQuantity($quantity)

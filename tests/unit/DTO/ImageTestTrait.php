@@ -10,7 +10,7 @@ trait ImageTestTrait
 {
     protected function createImage(): Image
     {
-        return (new Image())
+        return new Image()
             ->setImage(bin2hex(random_bytes(16)))
             ->setImageHash(bin2hex(random_bytes(16)))
             ->setTitle(bin2hex(random_bytes(16)))

@@ -11,10 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /** @psalm-suppress UnusedClass */
-class AuthenticationFailureHandler extends AbstractAuthenticationFailureHandler
+final class AuthenticationFailureHandler extends AbstractAuthenticationFailureHandler
 {
     public const string MSG_FAILURE = 'Invalid authorization token';
 
+    #[\Override]
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         $response = array_merge([

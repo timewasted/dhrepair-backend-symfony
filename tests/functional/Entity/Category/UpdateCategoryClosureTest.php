@@ -158,7 +158,7 @@ class UpdateCategoryClosureTest extends KernelTestCase
 
     private function createCategory(?Category $parent): Category
     {
-        return (new Category())
+        return new Category()
             ->setParent($parent)
             ->setName(bin2hex(random_bytes(16)))
             ->setDescription(bin2hex(random_bytes(16)))

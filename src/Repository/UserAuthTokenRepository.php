@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<UserAuthToken>
  */
-class UserAuthTokenRepository extends ServiceEntityRepository
+final class UserAuthTokenRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

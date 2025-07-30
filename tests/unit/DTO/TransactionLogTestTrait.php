@@ -10,7 +10,7 @@ trait TransactionLogTestTrait
 {
     protected function createTransactionLog(): TransactionLog
     {
-        return (new TransactionLog())
+        return new TransactionLog()
             ->setReferencedId(bin2hex(random_bytes(16)))
             ->setTransactionId(bin2hex(random_bytes(16)))
             ->setAction(bin2hex(random_bytes(16)))

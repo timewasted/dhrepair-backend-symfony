@@ -6,7 +6,7 @@ namespace App\DTO;
 
 use App\Entity\TransactionLog;
 
-readonly class ReadTransactionLogResponse implements \JsonSerializable
+final readonly class ReadTransactionLogResponse implements \JsonSerializable
 {
     private array $jsonData;
 
@@ -33,6 +33,7 @@ readonly class ReadTransactionLogResponse implements \JsonSerializable
         $this->jsonData = $jsonData;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return $this->jsonData;

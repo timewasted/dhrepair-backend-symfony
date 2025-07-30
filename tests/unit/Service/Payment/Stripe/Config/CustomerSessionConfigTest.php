@@ -12,8 +12,8 @@ class CustomerSessionConfigTest extends TestCase
 {
     public function testToArray(): void
     {
-        $config = (new CustomerSessionConfig())
-            ->setComponentConfig((new PaymentElementConfig())
+        $config = new CustomerSessionConfig()
+            ->setComponentConfig(new PaymentElementConfig()
                 ->setEnabled(true)
                 ->setFeaturePaymentMethodRedisplayEnabled(true)
                 ->setFeaturePaymentMethodRemoveEnabled(false)

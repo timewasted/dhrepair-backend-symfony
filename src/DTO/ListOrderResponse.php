@@ -6,7 +6,7 @@ namespace App\DTO;
 
 use App\Entity\Order;
 
-readonly class ListOrderResponse implements \JsonSerializable
+final readonly class ListOrderResponse implements \JsonSerializable
 {
     use OrderResponseTrait;
 
@@ -25,6 +25,7 @@ readonly class ListOrderResponse implements \JsonSerializable
         $this->jsonData = $jsonData;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return $this->jsonData;

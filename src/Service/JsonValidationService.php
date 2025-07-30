@@ -11,7 +11,7 @@ use App\Exception\JsonValidation\SchemaNotFoundException;
 use Opis\JsonSchema\Validator;
 use Symfony\Component\HttpFoundation\Request;
 
-readonly class JsonValidationService
+final readonly class JsonValidationService
 {
     public function __construct(
         private Validator $validator,

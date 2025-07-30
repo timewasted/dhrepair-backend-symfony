@@ -278,13 +278,12 @@ class DenormalizeTest extends TestCase
             ]);
         $this->repository->expects($this->exactly(2))->method('findOneBy')
             ->with($this->callback(static function (array $criteria) {
-                /** @var int $invocations */
                 static $invocations = 0;
 
                 return match (++$invocations) {
                     1 => ['foobar' => 123] === $criteria,
                     2 => ['foobar' => 456] === $criteria,
-                    default => throw new \LogicException('Invalid number of invocations')
+                    default => throw new \LogicException('Invalid number of invocations'),
                 };
             }))
             ->willReturnOnConsecutiveCalls(new \stdClass(), null);
@@ -309,13 +308,12 @@ class DenormalizeTest extends TestCase
             ]);
         $this->repository->expects($this->exactly(2))->method('findOneBy')
             ->with($this->callback(static function (array $criteria) {
-                /** @var int $invocations */
                 static $invocations = 0;
 
                 return match (++$invocations) {
                     1 => ['foobar' => 123] === $criteria,
                     2 => ['foobar' => 456] === $criteria,
-                    default => throw new \LogicException('Invalid number of invocations')
+                    default => throw new \LogicException('Invalid number of invocations'),
                 };
             }))
             ->willReturnOnConsecutiveCalls(new \stdClass(), null);
@@ -340,13 +338,12 @@ class DenormalizeTest extends TestCase
             ]);
         $this->repository->expects($this->exactly(2))->method('findOneBy')
             ->with($this->callback(static function (array $criteria) {
-                /** @var int $invocations */
                 static $invocations = 0;
 
                 return match (++$invocations) {
                     1 => ['foobar' => 123] === $criteria,
                     2 => ['foobar' => 456] === $criteria,
-                    default => throw new \LogicException('Invalid number of invocations')
+                    default => throw new \LogicException('Invalid number of invocations'),
                 };
             }))
             ->willReturnOnConsecutiveCalls(new \stdClass(), null);
@@ -413,13 +410,12 @@ class DenormalizeTest extends TestCase
             ]);
         $this->repository->expects($this->exactly(2))->method('findOneBy')
             ->with($this->callback(static function (array $criteria) {
-                /** @var int $invocations */
                 static $invocations = 0;
 
                 return match (++$invocations) {
                     1 => ['foobar' => 123] === $criteria,
                     2 => ['foobar' => 456] === $criteria,
-                    default => throw new \LogicException('Invalid number of invocations')
+                    default => throw new \LogicException('Invalid number of invocations'),
                 };
             }))
             ->willReturn($repoResult);

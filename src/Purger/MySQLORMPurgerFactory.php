@@ -9,12 +9,14 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Purger\PurgerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-readonly class MySQLORMPurgerFactory implements PurgerFactory
+/** @template-implements PurgerFactory<PurgerInterface> */
+final readonly class MySQLORMPurgerFactory implements PurgerFactory
 {
     public function __construct(private bool $disableForeignKeyChecks = false)
     {
     }
 
+    #[\Override]
     public function createForEntityManager(
         ?string $emName,
         EntityManagerInterface $em,

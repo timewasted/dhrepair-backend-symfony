@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route('/store', name: 'store_cart_')]
-class CartController extends AbstractController
+final class CartController extends AbstractController
 {
     #[Route('/cart', name: 'read', methods: ['GET'])]
     public function read(

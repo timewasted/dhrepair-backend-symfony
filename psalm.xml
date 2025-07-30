@@ -30,13 +30,10 @@
                 <referencedMethod name="/^App\\Entity\\[\w]+::(get|is|set|add|remove|update|on).*$/"/>
                 <referencedMethod name="/^App\\Repository\\[\w]+Repository::(__construct|remove|save)$/"/>
                 <referencedMethod name="/::__construct$/"/>
+                <!-- FIXME: Remove the following suppression(s) until Stripe integration is more fleshed out -->
+                <directory name="src/Service/Payment/"/>
             </errorLevel>
         </PossiblyUnusedMethod>
-        <PossiblyUnusedParam>
-            <errorLevel type="suppress">
-                <directory name="src/Repository"/>
-            </errorLevel>
-        </PossiblyUnusedParam>
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <directory name="src/DTO"/>
@@ -48,5 +45,10 @@
                 <directory name="src/DataFixtures"/>
             </errorLevel>
         </UnusedClass>
+        <UnusedParam>
+            <errorLevel type="suppress">
+                <directory name="src/Repository"/>
+            </errorLevel>
+        </UnusedParam>
     </issueHandlers>
 </psalm>

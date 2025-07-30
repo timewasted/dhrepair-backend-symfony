@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<OrderItem>
  */
-class OrderItemRepository extends ServiceEntityRepository
+final class OrderItemRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

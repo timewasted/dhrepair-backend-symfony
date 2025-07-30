@@ -33,6 +33,6 @@ class CheckPassportSubscriberTest extends TestCase
         $event = $this->createMock(CheckPassportEvent::class);
         $event->expects($this->once())->method('getPassport')->willReturn($passport);
 
-        (new CheckPassportSubscriber())->onCheckPassport($event);
+        new CheckPassportSubscriber()->onCheckPassport($event);
     }
 }

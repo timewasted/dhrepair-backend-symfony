@@ -31,7 +31,7 @@ class JsonValidationExceptionSubscriberTest extends TestCase
         $throwable = new \RuntimeException();
 
         $event = new ExceptionEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, $throwable);
-        (new JsonValidationExceptionSubscriber())->onKernelException($event);
+        new JsonValidationExceptionSubscriber()->onKernelException($event);
 
         $this->assertNull($event->getResponse());
     }
@@ -41,10 +41,10 @@ class JsonValidationExceptionSubscriberTest extends TestCase
         $kernel = $this->createMock(HttpKernelInterface::class);
         $request = Request::create('/');
         $error = $this->createMock(ValidationError::class);
-        $throwable = (new JsonValidationException())->setError($error);
+        $throwable = new JsonValidationException()->setError($error);
 
         $event = new ExceptionEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, $throwable);
-        (new JsonValidationExceptionSubscriber())->onKernelException($event);
+        new JsonValidationExceptionSubscriber()->onKernelException($event);
 
         $this->assertNotNull($event->getResponse());
         $this->assertInstanceOf(JsonResponse::class, $event->getResponse());

@@ -27,13 +27,7 @@ class TestEventDispatcher extends EventDispatcher
 
     public function eventDispatched(string $className): bool
     {
-        foreach ($this->eventsDispatched as $event) {
-            if ($event instanceof $className) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->eventsDispatched, static fn (object $event) => $event instanceof $className);
     }
 
     /**

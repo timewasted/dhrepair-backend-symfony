@@ -6,7 +6,7 @@ namespace App\DTO;
 
 use App\Entity\Manufacturer;
 
-readonly class ReadManufacturerResponse implements \JsonSerializable
+final readonly class ReadManufacturerResponse implements \JsonSerializable
 {
     private array $jsonData;
 
@@ -26,7 +26,8 @@ readonly class ReadManufacturerResponse implements \JsonSerializable
         $this->jsonData = $jsonData;
     }
 
-    public function jsonSerialize(): mixed
+    #[\Override]
+    public function jsonSerialize(): array
     {
         return $this->jsonData;
     }

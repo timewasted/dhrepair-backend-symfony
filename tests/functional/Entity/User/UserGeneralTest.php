@@ -43,7 +43,7 @@ class UserGeneralTest extends KernelTestCase
     {
         $username = 'THIS iš ä țèşť';
         $email = 'TEST@EXAMPLE.COM';
-        $user = (new User())
+        $user = new User()
             ->setUsername($username)
             ->setEmail($email)
             ->setPasswordPlain('test123')
@@ -59,7 +59,7 @@ class UserGeneralTest extends KernelTestCase
         $this->assertSame(mb_convert_case($email, MB_CASE_LOWER, 'UTF-8'), $user->getEmailCanonical());
         $this->assertNotNull($user->getPassword());
         $this->assertNull($user->getPasswordPlain());
-        $this->assertEqualsWithDelta((new \DateTimeImmutable())->getTimestamp(), $user->getCreatedAt()?->getTimestamp(), 2);
+        $this->assertEqualsWithDelta(new \DateTimeImmutable()->getTimestamp(), $user->getCreatedAt()?->getTimestamp(), 2);
         $this->assertSame([User::ROLE_USER], $user->getRoles());
     }
 

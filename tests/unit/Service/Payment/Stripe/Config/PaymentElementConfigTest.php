@@ -11,7 +11,7 @@ class PaymentElementConfigTest extends TestCase
 {
     public function testToArray(): void
     {
-        $config = (new PaymentElementConfig())
+        $config = new PaymentElementConfig()
             ->setEnabled(true)
             ->setFeaturePaymentMethodRedisplayEnabled(true)
             ->setFeaturePaymentMethodRemoveEnabled(false)

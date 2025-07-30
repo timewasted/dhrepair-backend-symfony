@@ -10,7 +10,7 @@ trait CategoryTestTrait
 {
     protected function createCategory(?Category $parent = null): Category
     {
-        return (new Category())
+        return new Category()
             ->setParent($parent)
             ->setName(bin2hex(random_bytes(16)))
             ->setSlug(bin2hex(random_bytes(16)))

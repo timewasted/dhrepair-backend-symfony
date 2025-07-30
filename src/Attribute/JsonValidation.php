@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Attribute;
 
 #[\Attribute(\Attribute::IS_REPEATABLE | \Attribute::TARGET_METHOD)]
-readonly class JsonValidation
+final readonly class JsonValidation
 {
     public function __construct(
         private string $schema,
         private ?string $dataPath = null,
         private ?array $globals = null,
-        private ?array $slots = null
+        private ?array $slots = null,
     ) {
     }
 

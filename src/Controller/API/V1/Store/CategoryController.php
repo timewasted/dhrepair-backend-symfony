@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/store', name: 'store_category_')]
-class CategoryController extends AbstractController
+final class CategoryController extends AbstractController
 {
     #[Route('/categories', name: 'list', methods: ['GET'])]
     public function list(CategoryRepository $repository): Response

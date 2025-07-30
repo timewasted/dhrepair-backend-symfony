@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(name: 'transaction_id', fields: ['transactionId'])]
 #[ORM\Index(name: 'order_id', columns: ['order_id'])]
-class TransactionLog
+final class TransactionLog
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -63,7 +63,7 @@ class TransactionLog
         return $this->orderInfo;
     }
 
-    public function setOrderInfo(?Order $orderInfo): static
+    public function setOrderInfo(?Order $orderInfo): TransactionLog
     {
         $this->orderInfo = $orderInfo;
 
@@ -75,7 +75,7 @@ class TransactionLog
         return $this->referencedId;
     }
 
-    public function setReferencedId(?string $referencedId): static
+    public function setReferencedId(?string $referencedId): TransactionLog
     {
         $this->referencedId = $referencedId;
 
@@ -87,7 +87,7 @@ class TransactionLog
         return $this->transactionId;
     }
 
-    public function setTransactionId(string $transactionId): static
+    public function setTransactionId(string $transactionId): TransactionLog
     {
         $this->transactionId = $transactionId;
 
@@ -99,7 +99,7 @@ class TransactionLog
         return $this->action;
     }
 
-    public function setAction(string $action): static
+    public function setAction(string $action): TransactionLog
     {
         $this->action = $action;
 
@@ -111,7 +111,7 @@ class TransactionLog
         return $this->amount;
     }
 
-    public function setAmount(int $amount): static
+    public function setAmount(int $amount): TransactionLog
     {
         $this->amount = $amount;
 
@@ -123,7 +123,7 @@ class TransactionLog
         return $this->isSuccess;
     }
 
-    public function setIsSuccess(bool $isSuccess): static
+    public function setIsSuccess(bool $isSuccess): TransactionLog
     {
         $this->isSuccess = $isSuccess;
 
@@ -135,7 +135,7 @@ class TransactionLog
         return $this->isAvsSuccess;
     }
 
-    public function setIsAvsSuccess(?bool $isAvsSuccess): static
+    public function setIsAvsSuccess(?bool $isAvsSuccess): TransactionLog
     {
         $this->isAvsSuccess = $isAvsSuccess;
 
@@ -147,7 +147,7 @@ class TransactionLog
         return $this->isCvv2Success;
     }
 
-    public function setIsCvv2Success(?bool $isCvv2Success): static
+    public function setIsCvv2Success(?bool $isCvv2Success): TransactionLog
     {
         $this->isCvv2Success = $isCvv2Success;
 
@@ -159,7 +159,7 @@ class TransactionLog
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): TransactionLog
     {
         $this->createdAt = $createdAt;
 
